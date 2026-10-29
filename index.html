@@ -1,0 +1,3027 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Anatomy Study Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* App-shell layout: dark-first, bottom nav, mobile-optimized */
+:root {
+  --bg: #0F0F0F;
+  --bg-elevated: #1A1A1A;
+  --bg-card: #212121;
+  --fg: #F1F1F1;
+  --fg-secondary: #AAAAAA;
+  --fg-dim: #717171;
+  --accent: #3EA6FF;
+  --accent-glow: rgba(62,166,255,0.15);
+  --red: #FF4E45;
+  --border: #2A2A2A;
+  --pill-bg: #272727;
+  --pill-active-bg: #F1F1F1;
+  --pill-active-fg: #0F0F0F;
+  --cat-skeletal: #3EA6FF;
+  --cat-joints: #C489F1;
+  --cat-muscular: #FF8C5A;
+  --cat-prepostop: #1DB954;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Roboto', 'Inter', system-ui, sans-serif;
+  --nav-height: 56px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #FFFFFF;
+    --bg-elevated: #F2F2F2;
+    --bg-card: #FFFFFF;
+    --fg: #0F0F0F;
+    --fg-secondary: #606060;
+    --fg-dim: #909090;
+    --accent: #065FD4;
+    --accent-glow: rgba(6,95,212,0.1);
+    --red: #CC0000;
+    --border: #E5E5E5;
+    --pill-bg: #F2F2F2;
+    --pill-active-bg: #0F0F0F;
+    --pill-active-fg: #FFFFFF;
+    --cat-skeletal: #065FD4;
+    --cat-joints: #7B2D8B;
+    --cat-muscular: #C2452D;
+    --cat-prepostop: #158A3C;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #FFFFFF;
+  --bg-elevated: #F2F2F2;
+  --bg-card: #FFFFFF;
+  --fg: #0F0F0F;
+  --fg-secondary: #606060;
+  --fg-dim: #909090;
+  --accent: #065FD4;
+  --accent-glow: rgba(6,95,212,0.1);
+  --red: #CC0000;
+  --border: #E5E5E5;
+  --pill-bg: #F2F2F2;
+  --pill-active-bg: #0F0F0F;
+  --pill-active-fg: #FFFFFF;
+  --cat-skeletal: #065FD4;
+  --cat-joints: #7B2D8B;
+  --cat-muscular: #C2452D;
+  --cat-prepostop: #158A3C;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.55;
+  height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 100;
+  background: var(--bg);
+}
+
+/* ===== APP HEADER ===== */
+.app-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: var(--bg);
+  padding: 14px 0 6px;
+}
+.header-top { display: flex; align-items: center; justify-content: space-between; }
+.app-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -0.3px;
+}
+.app-sub {
+  font-size: 12px;
+  color: var(--fg-dim);
+  margin-top: 2px;
+}
+
+/* Progress badge */
+.progress-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: var(--pill-bg);
+  color: var(--fg-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font);
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.progress-pill.bump {
+  animation: pillBump 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes pillBump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Completion celebration */
+.complete-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s;
+}
+.complete-card {
+  background: linear-gradient(135deg, var(--bg-card), #1a2a1a);
+  border: 2px solid #1DB954;
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  animation: bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 60px rgba(29,185,84,0.2);
+  max-width: 300px;
+}
+.complete-emoji { font-size: 56px; margin-bottom: 12px; }
+.complete-title { font-size: 22px; font-weight: 800; color: #1DB954; margin-bottom: 6px; }
+.complete-sub { font-size: 14px; color: var(--fg-secondary); margin-bottom: 16px; line-height: 1.5; }
+.complete-btn {
+  padding: 10px 28px;
+  border-radius: 24px;
+  border: none;
+  background: #1DB954;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Got-it / Review buttons on flash cards */
+.fc-action-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  justify-content: center;
+}
+.fc-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--fg-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+}
+.fc-action-btn:active { transform: scale(0.93); }
+.fc-action-btn.got-it {
+  border-color: #1DB954;
+  color: #1DB954;
+}
+.fc-action-btn.got-it:active, .fc-action-btn.got-it.flash {
+  background: #1DB954;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(29,185,84,0.4);
+}
+.fc-action-btn.review {
+  border-color: var(--cat-muscular);
+  color: var(--cat-muscular);
+}
+.fc-action-btn.review:active, .fc-action-btn.review.flash {
+  background: var(--cat-muscular);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255,140,90,0.4);
+}
+/* Green/orange flash on the card */
+.fc-card.flash-green .fc-face { box-shadow: 0 0 40px rgba(29,185,84,0.5); }
+.fc-card.flash-orange .fc-face { box-shadow: 0 0 40px rgba(255,140,90,0.5); }
+
+/* ===== CATEGORY PILLS (horizontal scroll) ===== */
+.pills-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 8px 0 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.pills-row::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--fg-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pill.active {
+  background: var(--pill-active-bg);
+  color: var(--pill-active-fg);
+  font-weight: 600;
+}
+
+/* ===== TAB CONTENT ===== */
+.tab-view { display: none; padding-bottom: calc(var(--nav-height) + 24px + env(safe-area-inset-bottom, 0px)); }
+.tab-view.active { display: block; }
+
+/* ===== STUDY GUIDE: ACCORDION CARDS ===== */
+.topic-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.topic-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.topic-header:active { background: var(--bg-elevated); }
+.cat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cat-dot.skeletal { background: var(--cat-skeletal); }
+.cat-dot.joints { background: var(--cat-joints); }
+.cat-dot.muscular { background: var(--cat-muscular); }
+.cat-dot.prepostop { background: var(--cat-prepostop); }
+.topic-title {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+  min-width: 0;
+}
+.topic-chevron {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--fg-dim);
+  transition: transform 0.2s;
+}
+.topic-card.open .topic-chevron { transform: rotate(180deg); }
+.topic-body {
+  display: none;
+  padding: 0 16px 16px;
+}
+.topic-card.open .topic-body {
+  display: block;
+  animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+.topic-body h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 12px 0 6px;
+}
+.topic-body h3:first-child { margin-top: 0; }
+.topic-body ul {
+  padding-left: 18px;
+  margin-bottom: 4px;
+}
+.topic-body li {
+  font-size: 14px;
+  color: var(--fg);
+  margin-bottom: 5px;
+  line-height: 1.55;
+}
+.topic-body li strong { color: var(--fg); }
+.key-term {
+  color: var(--accent);
+  font-weight: 600;
+}
+.topic-img {
+  width: 100%;
+  max-width: 380px;
+  display: block;
+  margin: 10px auto 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.topic-img-row {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 14px;
+  justify-content: center;
+}
+.topic-img-row img {
+  flex: 1;
+  min-width: 0;
+  max-width: 180px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.img-caption {
+  font-size: 11px;
+  color: var(--fg-dim);
+  text-align: center;
+  margin: -8px 0 12px;
+  font-style: italic;
+}
+
+/* ===== FLASH CARDS ===== */
+.fc-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0 12px;
+}
+.fc-counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-dim);
+  font-variant-numeric: tabular-nums;
+}
+.fc-shuffle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--fg-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.fc-shuffle-btn:active { background: var(--border); }
+
+.fc-card-area {
+  position: relative;
+  min-height: 260px;
+  perspective: 1200px;
+  margin-bottom: 16px;
+  touch-action: pan-y;
+}
+.fc-card {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+}
+.fc-front {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+.fc-back {
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  transform: rotateY(180deg);
+}
+.fc-cat-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #fff;
+}
+.fc-cat-tag.skeletal { background: var(--cat-skeletal); }
+.fc-cat-tag.joints { background: var(--cat-joints); }
+.fc-cat-tag.muscular { background: var(--cat-muscular); }
+.fc-cat-tag.prepostop { background: var(--cat-prepostop); }
+.fc-q-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-dim);
+  margin-bottom: 12px;
+}
+.fc-q-text {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--fg);
+}
+.fc-a-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.fc-a-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg);
+  white-space: pre-line;
+}
+.fc-tap-hint {
+  position: absolute;
+  bottom: 14px;
+  font-size: 11px;
+  color: var(--fg-dim);
+}
+
+.fc-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.fc-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--fg);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.fc-nav-btn:active { background: var(--border); transform: scale(0.95); }
+.fc-nav-btn:disabled { opacity: 0.25; }
+.fc-pos-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  min-width: 70px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== PROGRESS BAR ===== */
+.fc-progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 16px 0 4px;
+  overflow: hidden;
+}
+.fc-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* ===== PODCASTS ===== */
+.pod-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+.pod-icon.yt { background: #FF0000; }
+.pod-icon.sp { background: #1DB954; }
+.pod-info { flex: 1; min-width: 0; }
+.pod-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+.pod-platform {
+  font-size: 12px;
+  color: var(--fg-dim);
+  margin-bottom: 4px;
+}
+.pod-desc {
+  font-size: 13px;
+  color: var(--fg-secondary);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+.pod-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.pod-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: #fff;
+}
+.pod-tag.skeletal { background: var(--cat-skeletal); }
+.pod-tag.joints { background: var(--cat-joints); }
+.pod-tag.muscular { background: var(--cat-muscular); }
+
+/* ===== BOTTOM NAV BAR ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 60;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: none;
+  background: transparent;
+  color: var(--fg-dim);
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.15s;
+}
+.nav-item.active { color: var(--fg); }
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ===== MISC ===== */
+@media (min-width: 600px) {
+  body { max-width: 520px; margin: 0 auto; }
+}
+
+.section-empty {
+  text-align: center;
+  color: var(--fg-dim);
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
+/* ===== SECTION DIVIDERS ===== */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0 8px;
+  margin-top: 8px;
+}
+.section-divider:first-child { margin-top: 0; padding-top: 8px; }
+.sd-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sd-dot.skeletal { background: var(--cat-skeletal); }
+.sd-dot.joints { background: var(--cat-joints); }
+.sd-dot.muscular { background: var(--cat-muscular); }
+.sd-dot.prepostop { background: var(--cat-prepostop); }
+.sd-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.sd-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.sd-count {
+  font-size: 11px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+/* ===== GAMES TAB ===== */
+.games-header {
+  text-align: center; padding: 20px 0 8px;
+}
+.games-title { font-size: 22px; font-weight: 800; color: var(--fg); margin-bottom: 4px; }
+.games-sub { font-size: 13px; color: var(--fg-dim); }
+.game-picker { display: flex; flex-direction: column; gap: 14px; padding: 8px 0; }
+.game-pick-card {
+  display: flex; align-items: center; gap: 16px; padding: 20px 18px;
+  border: none; border-radius: 16px;
+  cursor: pointer; font-family: var(--font); transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+  text-align: left; position: relative; overflow: hidden;
+}
+.game-pick-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: 16px;
+  opacity: 0; transition: opacity 0.25s;
+  background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08), transparent 70%);
+}
+.game-pick-card:active { transform: scale(0.96); }
+.game-pick-card:active::before { opacity: 1; }
+.game-pick-card[data-game="quiz"] {
+  background: linear-gradient(135deg, #1a237e, #283593);
+  box-shadow: 0 4px 20px rgba(26,35,126,0.4);
+}
+.game-pick-card[data-game="match"] {
+  background: linear-gradient(135deg, #004d40, #00695c);
+  box-shadow: 0 4px 20px rgba(0,77,64,0.4);
+}
+.game-pick-card[data-game="tf"] {
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+  box-shadow: 0 4px 20px rgba(74,20,140,0.4);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .game-pick-card[data-game="quiz"] {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    box-shadow: 0 4px 16px rgba(30,136,229,0.15);
+  }
+  :root:not([data-theme="dark"]) .game-pick-card[data-game="match"] {
+    background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+    box-shadow: 0 4px 16px rgba(0,150,136,0.15);
+  }
+  :root:not([data-theme="dark"]) .game-pick-card[data-game="tf"] {
+    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+    box-shadow: 0 4px 16px rgba(156,39,176,0.15);
+  }
+  :root:not([data-theme="dark"]) .game-pick-name { color: #1a1a1a; }
+  :root:not([data-theme="dark"]) .game-pick-desc { color: #555; }
+}
+:root[data-theme="light"] .game-pick-card[data-game="quiz"] {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  box-shadow: 0 4px 16px rgba(30,136,229,0.15);
+}
+:root[data-theme="light"] .game-pick-card[data-game="match"] {
+  background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+  box-shadow: 0 4px 16px rgba(0,150,136,0.15);
+}
+:root[data-theme="light"] .game-pick-card[data-game="tf"] {
+  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+  box-shadow: 0 4px 16px rgba(156,39,176,0.15);
+}
+:root[data-theme="light"] .game-pick-name { color: #1a1a1a; }
+:root[data-theme="light"] .game-pick-desc { color: #555; }
+.game-pick-icon {
+  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.game-pick-info { flex: 1; }
+.game-pick-name { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.game-pick-desc { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.game-pick-arrow {
+  width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5;
+  color: #fff;
+}
+.game-back-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; margin-bottom: 10px;
+  border: 1px solid var(--border); border-radius: 20px; background: var(--bg-elevated);
+  color: var(--accent); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s;
+}
+.game-back-btn:active { transform: scale(0.95); opacity: 0.7; }
+.game-view { display: none; }
+.game-view.active { display: block; animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1); }
+
+/* ===== QUIZ GAME ===== */
+.quiz-intro {
+  text-align: center; padding: 48px 20px;
+  background: linear-gradient(180deg, rgba(62,166,255,0.06), transparent);
+  border-radius: var(--radius); margin-top: 4px;
+}
+.quiz-intro-emoji { font-size: 56px; margin-bottom: 14px; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.quiz-intro-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.quiz-intro-sub { font-size: 14px; color: var(--fg-secondary); margin-bottom: 24px; line-height: 1.5; }
+.quiz-start-btn {
+  padding: 14px 40px; border-radius: 28px; border: none;
+  background: linear-gradient(135deg, #3EA6FF, #1976D2); color: #fff; font-family: var(--font);
+  font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(62,166,255,0.35);
+}
+.quiz-start-btn:active { transform: scale(0.94); box-shadow: 0 2px 8px rgba(62,166,255,0.25); }
+.quiz-area { display: none; }
+.quiz-area.active { display: block; }
+.quiz-progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.quiz-progress-label { font-size: 13px; font-weight: 600; color: var(--fg-dim); }
+.quiz-score-label {
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  background: var(--accent-glow); padding: 3px 10px; border-radius: 8px;
+}
+.quiz-progress-bar-bg { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+.quiz-progress-bar-fill {
+  height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(0.22,1,0.36,1);
+  background: linear-gradient(90deg, #3EA6FF, #6DD5FF);
+  box-shadow: 0 0 8px rgba(62,166,255,0.3);
+}
+.quiz-q-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 20px; margin-bottom: 16px; animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.quiz-q-cat {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 3px 8px; border-radius: 4px; color: #fff; display: inline-block; margin-bottom: 12px;
+}
+.quiz-q-cat.skeletal { background: var(--cat-skeletal); }
+.quiz-q-cat.joints { background: var(--cat-joints); }
+.quiz-q-cat.muscular { background: var(--cat-muscular); }
+.quiz-q-cat.prepostop { background: var(--cat-prepostop); }
+.quiz-q-text { font-size: 17px; font-weight: 600; line-height: 1.45; margin-bottom: 4px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  border-radius: 12px; border: 2px solid var(--border);
+  background: var(--bg-elevated); cursor: pointer; font-family: var(--font);
+  font-size: 14px; color: var(--fg); text-align: left; transition: all 0.2s cubic-bezier(0.22,1,0.36,1); line-height: 1.45;
+}
+.quiz-option:active { transform: scale(0.97); }
+.quiz-option .opt-letter {
+  width: 32px; height: 32px; border-radius: 10px; background: var(--pill-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: var(--fg-secondary); flex-shrink: 0;
+  transition: all 0.2s;
+}
+.quiz-option.correct {
+  border-color: #1DB954; background: rgba(29,185,84,0.12);
+  box-shadow: 0 0 16px rgba(29,185,84,0.2);
+}
+.quiz-option.correct .opt-letter { background: #1DB954; color: #fff; }
+.quiz-option.wrong {
+  border-color: var(--red); background: rgba(255,78,69,0.12);
+  box-shadow: 0 0 16px rgba(255,78,69,0.15);
+}
+.quiz-option.wrong .opt-letter { background: var(--red); color: #fff; }
+.quiz-option.disabled { pointer-events: none; opacity: 0.5; }
+.quiz-next-btn {
+  display: none; margin: 18px auto 0; padding: 12px 32px; border-radius: 24px;
+  border: none; background: linear-gradient(135deg, #3EA6FF, #1976D2); color: #fff; font-family: var(--font);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 3px 12px rgba(62,166,255,0.3);
+}
+.quiz-next-btn.visible { display: block; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.quiz-next-btn:active { transform: scale(0.94); }
+.quiz-result {
+  display: none; text-align: center; padding: 48px 20px;
+  animation: bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.quiz-result.active {
+  display: flex; flex-direction: column; align-items: center;
+}
+.quiz-result-emoji { font-size: 64px; margin-bottom: 14px; }
+.quiz-result-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.quiz-result-score {
+  font-size: 15px; color: var(--fg-secondary); margin-bottom: 24px;
+  background: var(--bg-elevated); padding: 10px 20px; border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.quiz-result-btn {
+  padding: 14px 40px; border-radius: 28px; border: none;
+  background: linear-gradient(135deg, #3EA6FF, #1976D2); color: #fff; font-family: var(--font);
+  font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(62,166,255,0.35);
+}
+.quiz-result-btn:active { transform: scale(0.94); }
+
+/* ===== MATCHING GAME ===== */
+.match-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 0;
+}
+.match-tile {
+  padding: 16px 12px; border-radius: 12px; border: 2px solid var(--border);
+  background: var(--bg-card); cursor: pointer; font-family: var(--font);
+  font-size: 12px; color: var(--fg); text-align: center;
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+  line-height: 1.4; min-height: 68px; display: flex; align-items: center; justify-content: center;
+  word-break: break-word; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: relative; overflow: hidden;
+}
+.match-tile::after {
+  content: ''; position: absolute; inset: 0; border-radius: 12px;
+  background: radial-gradient(circle at 50% 50%, rgba(62,166,255,0.12), transparent 70%);
+  opacity: 0; transition: opacity 0.2s;
+}
+.match-tile:active { transform: scale(0.94); }
+.match-tile.selected {
+  border-color: var(--accent); background: var(--accent-glow);
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(62,166,255,0.08);
+  transform: scale(1.03);
+}
+.match-tile.selected::after { opacity: 1; }
+.match-tile.matched {
+  border-color: #1DB954; background: rgba(29,185,84,0.15);
+  pointer-events: none; animation: matchPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 16px rgba(29,185,84,0.2);
+}
+.match-tile.matched::before {
+  content: '\2713'; position: absolute; top: 4px; right: 8px;
+  font-size: 14px; font-weight: 700; color: #1DB954;
+}
+.match-tile.wrong-flash { border-color: var(--red); background: rgba(255,78,69,0.1); animation: shake 0.4s; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes matchPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.match-stats {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; margin-bottom: 6px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 12px;
+}
+.match-stat { font-size: 13px; font-weight: 600; color: var(--fg-dim); }
+.match-stat span { color: var(--accent); font-weight: 700; }
+.match-timer {
+  font-size: 15px; font-weight: 700; color: var(--fg);
+  font-variant-numeric: tabular-nums; background: var(--bg-elevated);
+  padding: 4px 12px; border-radius: 8px;
+}
+
+/* ===== TRUE / FALSE GAME ===== */
+.tf-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 32px 22px; text-align: center; margin-bottom: 16px;
+  animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  position: relative; overflow: hidden;
+}
+.tf-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--cat-skeletal), var(--cat-joints), var(--cat-muscular), var(--cat-prepostop));
+}
+.tf-cat {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 6px; color: #fff; display: inline-block; margin-bottom: 16px;
+}
+.tf-cat.skeletal { background: var(--cat-skeletal); }
+.tf-cat.joints { background: var(--cat-joints); }
+.tf-cat.muscular { background: var(--cat-muscular); }
+.tf-cat.prepostop { background: var(--cat-prepostop); }
+.tf-statement {
+  font-size: 17px; font-weight: 600; line-height: 1.55; margin-bottom: 8px;
+  padding: 0 4px;
+}
+.tf-btns { display: flex; gap: 14px; justify-content: center; margin-top: 20px; }
+.tf-btn {
+  flex: 1; max-width: 150px; padding: 16px 20px; border-radius: 14px;
+  border: 2.5px solid var(--border); background: var(--bg-elevated);
+  font-family: var(--font); font-size: 16px; font-weight: 800; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1); color: var(--fg);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.tf-btn:active { transform: scale(0.92); }
+.tf-btn.true-btn {
+  border-color: #1DB954; color: #1DB954;
+  box-shadow: 0 2px 10px rgba(29,185,84,0.15);
+}
+.tf-btn.true-btn:active, .tf-btn.true-btn.flash {
+  background: #1DB954; color: #fff;
+  box-shadow: 0 4px 20px rgba(29,185,84,0.4);
+}
+.tf-btn.false-btn {
+  border-color: var(--red); color: var(--red);
+  box-shadow: 0 2px 10px rgba(255,78,69,0.1);
+}
+.tf-btn.false-btn:active, .tf-btn.false-btn.flash {
+  background: var(--red); color: #fff;
+  box-shadow: 0 4px 20px rgba(255,78,69,0.3);
+}
+.tf-feedback {
+  margin-top: 18px; padding: 14px 18px; border-radius: 12px;
+  font-size: 13px; line-height: 1.5; display: none; text-align: left;
+}
+.tf-feedback.show { display: block; animation: fadeSlideUp 0.3s; }
+.tf-feedback.correct {
+  background: rgba(29,185,84,0.1); border: 1px solid #1DB954; color: #1DB954;
+}
+.tf-feedback.wrong {
+  background: rgba(255,78,69,0.1); border: 1px solid var(--red); color: var(--red);
+}
+
+/* ===== DOPAMINE ANIMATIONS ===== */
+
+/* Staggered fade-in for cards on load / tab switch */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50% { box-shadow: 0 0 18px 4px var(--accent-glow); }
+}
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.08); }
+  70% { transform: scale(0.96); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes confettiBurst {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+@keyframes streakPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+@keyframes navBounce {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+  60% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+@keyframes borderGlow {
+  0%,100% { border-color: var(--border); }
+  50% { border-color: var(--accent); }
+}
+
+/* Animated topic cards */
+.topic-card.anim-in {
+  animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* Smooth accordion — styles already in main block */
+
+/* Flash card satisfying spring flip */
+.fc-card {
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.fc-card.slide-right { animation: slideRight 0.35s cubic-bezier(0.22,1,0.36,1); }
+.fc-card.slide-left { animation: slideLeft 0.35s cubic-bezier(0.22,1,0.36,1); }
+
+/* Progress bar shimmer */
+.fc-progress-bar {
+  background: linear-gradient(90deg, var(--accent) 0%, #6DD5FF 50%, var(--accent) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease infinite;
+}
+
+/* Active nav item glow */
+.nav-item.active .nav-icon {
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+.nav-item.active {
+  animation: navBounce 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Pill pop on click */
+.pill {
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+}
+.pill:active {
+  transform: scale(0.92);
+}
+.pill.active {
+  animation: popIn 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Topic card hover/tap effect */
+.topic-header {
+  transition: background 0.15s, transform 0.15s;
+}
+.topic-header:active {
+  transform: scale(0.98);
+  background: var(--bg-elevated);
+}
+
+/* Streak badge */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #FF6B35, #FF4E45);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  animation: streakPulse 1.5s ease infinite;
+}
+.streak-badge svg { width: 14px; height: 14px; }
+
+/* Confetti particles */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+.confetti-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confettiFall 1.2s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(120px) rotate(720deg) scale(0); opacity: 0; }
+}
+
+/* Pod cards animated & clickable */
+.pod-card {
+  display: flex;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.pod-card:active {
+  transform: scale(0.97);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+.pod-card.anim-in {
+  animation: fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.pod-card:last-child { border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.pod-link-hint {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pod-link-hint svg { width: 12px; height: 12px; }
+
+/* Section headers in Listen */
+.listen-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.listen-section-title:first-child { margin-top: 8px; }
+.listen-section-title .section-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+.listen-section-title .section-icon.yt { background: #FF0000; }
+.listen-section-title .section-icon.sp { background: #1DB954; }
+
+/* Tab view fade */
+.tab-view {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.tab-view.active {
+  opacity: 1;
+}
+
+/* Flip celebration burst */
+.flip-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flip-burst .ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  animation: confettiBurst 0.5s ease-out forwards;
+}
+
+/* Card counter pop */
+.fc-counter-pop {
+  animation: popIn 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Shuffle spin */
+@keyframes shuffleSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.fc-shuffle-btn.spinning svg {
+  animation: shuffleSpin 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+</style>
+
+<!-- ===== APP HEADER ===== -->
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">Anatomy Study Hub</div>
+      <div class="app-sub">Skeletal &bull; Joints &bull; Muscular &bull; Pre/Post Op</div>
+    </div>
+    <div class="progress-pill" id="progress-pill">&#x1F4DA; <span id="cards-done">0</span> cards studied</div>
+  </div>
+</div>
+
+<!-- ==================== STUDY GUIDE ==================== -->
+<div id="view-guide" class="tab-view active">
+  <div class="pills-row" data-scope="guide">
+    <button class="pill active" data-cat="all">All Topics</button>
+    <button class="pill" data-cat="skeletal">Skeletal</button>
+    <button class="pill" data-cat="joints">Joints</button>
+    <button class="pill" data-cat="muscular">Muscular</button>
+    <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+  </div>
+  <div id="guide-list">
+    <div class="section-divider" data-cat="skeletal"><span class="sd-dot skeletal"></span><span class="sd-label">Skeletal System</span><span class="sd-line"></span><span class="sd-count">10 topics</span></div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Overview &amp; Composition</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/cab6e8fa2aec9cc3f228ec79459c2e9b.png" alt="Long bone anatomy — femur showing compact bone, spongy bone, bone marrow, Haversian canal, periosteum, and blood vessels">
+        <div class="img-caption">Long bone anatomy — compact &amp; spongy bone, marrow, periosteum</div>
+        <img class="topic-img" src="images/a58cab1c24fe2819e3fd97f4deb7c76a.png" alt="Full human skeleton labeled — showing axial skeleton (blue) and appendicular skeleton (beige) with all major bone names">
+        <div class="img-caption">Full skeleton — axial (blue) &amp; appendicular (beige) bones labeled</div>
+        <ul>
+          <li>The skeletal system is composed of <strong>bones, joints, cartilage, ligaments, and tendons</strong></li>
+          <li>The body has <strong>206 bones</strong></li>
+          <li>Bone tissue is living tissue containing inorganic substances like calcium and phosphorus</li>
+          <li>Bones are hard, rigid structures covered by a membrane called a <span class="key-term">periosteum</span></li>
+          <li>The skeleton gives us our basic shape</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Functions of the Skeletal System</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 300 160" style="width:100%;max-width:320px;display:block;margin:10px auto 4px"><rect width="300" height="160" fill="#fff" rx="8"/>
+        <text x="150" y="18" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif" fill="#333">5 Functions of the Skeleton</text>
+        <rect x="10" y="30" width="130" height="24" rx="4" fill="#3EA6FF" opacity=".85"/><text x="75" y="46" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#fff" font-weight="600">1. Support</text>
+        <rect x="160" y="30" width="130" height="24" rx="4" fill="#3EA6FF" opacity=".75"/><text x="225" y="46" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#fff" font-weight="600">2. Protection</text>
+        <rect x="10" y="60" width="130" height="24" rx="4" fill="#3EA6FF" opacity=".65"/><text x="75" y="76" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#fff" font-weight="600">3. Movement</text>
+        <rect x="160" y="60" width="130" height="24" rx="4" fill="#3EA6FF" opacity=".55"/><text x="225" y="76" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#fff" font-weight="600">4. Store Minerals</text>
+        <rect x="85" y="90" width="130" height="24" rx="4" fill="#3EA6FF" opacity=".45"/><text x="150" y="106" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#fff" font-weight="600">5. Blood Cell Production</text>
+        <text x="150" y="130" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#999">Ca²⁺ &amp; phosphorus stored in bones</text>
+        <text x="150" y="145" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#999">Red marrow → RBCs, WBCs, platelets</text>
+        </svg>
+        <h3>1. Support</h3>
+        <ul>
+          <li>The main job of the skeleton is to provide support for the body</li>
+          <li>Without a skeleton, the body would collapse into a heap</li>
+          <li>The skeleton is strong but light</li>
+        </ul>
+        <h3>2. Protection</h3>
+        <ul><li>Bones protect important organs (brain by cranium, heart by thoracic cage)</li></ul>
+        <h3>3. Movement</h3>
+        <ul>
+          <li>Bones provide the structure for muscles to attach so our bodies can move</li>
+          <li>Tendons are tough inelastic bands that attach muscle to bone</li>
+        </ul>
+        <h3>4. Stores Important Minerals</h3>
+        <ul>
+          <li><strong>Calcium:</strong> Helps muscles, nerves, and cells work normally; 90% stored in bones and teeth; body cannot make calcium</li>
+          <li><strong>Phosphorus:</strong> Works with calcium to build bones; requires vitamin D for proper absorption</li>
+        </ul>
+        <h3>5. Blood Cell Production &amp; Storage</h3>
+        <ul>
+          <li>In some bones is jelly-like <span class="key-term">bone marrow</span>, where new blood cells are produced</li>
+          <li><strong>Red marrow:</strong> Produces red blood cells, white blood cells, and platelets</li>
+          <li><strong>Yellow marrow:</strong> Stored as fat; produces some white blood cells</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Types of Bone Tissue</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/617a4f8893d64ebff24f4155031e4c68.png" alt="Bone cross-section showing articular cartilage, red bone marrow, epiphyseal line, marrow cavity, and yellow bone marrow">
+        <div class="img-caption">Bone cross-section — compact &amp; spongy bone, red &amp; yellow marrow</div>
+        <h3>Compact Bone</h3>
+        <ul><li>Hard and dense</li><li>Composes the shaft of long bones and the outer layer of bones</li></ul>
+        <h3>Spongy Bone</h3>
+        <ul><li>Light, with more spaces</li><li>Found at the end of long bones and center of other bones</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Bone Shapes &amp; Sizes</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 320 140" style="width:100%;max-width:340px;display:block;margin:10px auto 4px"><rect width="320" height="140" fill="#fff" rx="8"/>
+        <text x="160" y="18" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif" fill="#333">4 Types of Bones</text>
+        <rect x="12" y="28" width="24" height="72" rx="10" fill="#3EA6FF" opacity=".8"/><text x="24" y="118" text-anchor="middle" font-size="10" font-weight="600" font-family="sans-serif" fill="#333">Long</text><text x="24" y="130" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Femur</text>
+        <rect x="70" y="40" width="36" height="36" rx="6" fill="#3EA6FF" opacity=".65"/><text x="88" y="118" text-anchor="middle" font-size="10" font-weight="600" font-family="sans-serif" fill="#333">Short</text><text x="88" y="130" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Carpals</text>
+        <rect x="140" y="38" width="60" height="16" rx="7" fill="#3EA6FF" opacity=".5"/><ellipse cx="170" cy="58" rx="28" ry="8" fill="#3EA6FF" opacity=".5"/><text x="170" y="118" text-anchor="middle" font-size="10" font-weight="600" font-family="sans-serif" fill="#333">Flat</text><text x="170" y="130" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Ribs, Skull</text>
+        <path d="M240,35 L260,42 L250,55 L265,65 L245,75 L255,88 L240,95 L250,100" fill="none" stroke="#3EA6FF" stroke-width="6" stroke-linecap="round" opacity=".7"/><text x="256" y="118" text-anchor="middle" font-size="10" font-weight="600" font-family="sans-serif" fill="#333">Irregular</text><text x="256" y="130" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Vertebrae</text>
+        </svg>
+        <h3>Long Bones</h3>
+        <ul>
+          <li>Bear the weight of the body (especially femur and tibia)</li>
+          <li>Longer than they are wide</li>
+          <li>Regions: <span class="key-term">Diaphysis</span> (shaft), <span class="key-term">Epiphysis</span> (ends), <span class="key-term">Epiphyseal disc</span> (growth plate), <span class="key-term">Medullary cavity</span>, <span class="key-term">Periosteum</span>, <span class="key-term">Articular cartilage</span></li>
+        </ul>
+        <h3>Short Bones</h3>
+        <ul><li>Shaped like cubes; found in wrists (carpals) and ankles (tarsals)</li></ul>
+        <h3>Flat Bones</h3>
+        <ul>
+          <li>Thin, flat, and curved (ribs, sternum, cranium, shoulder)</li>
+          <li>Functions: protection, muscle attachment, blood cell production</li>
+        </ul>
+        <h3>Irregular Bones</h3>
+        <ul><li>Differently shaped (hip bones, vertebrae, some skull bones)</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Bone Growth (Ossification)</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <h3>Growing Taller</h3>
+        <ul>
+          <li>Occurs at the <span class="key-term">epiphyseal disc</span> (growth plate)</li>
+          <li><span class="key-term">Osteoblasts</span> invade cartilage in the disc, mature into <span class="key-term">osteocytes</span></li>
+          <li>Affected by hormones: growth hormone, estrogen, testosterone</li>
+          <li>Estrogen fuses the growth plate earlier than testosterone</li>
+        </ul>
+        <h3>Epiphyseal Plate Injury</h3>
+        <ul><li>A break in the growth plate area can lead to decreased bone growth and a shortened or crooked limb</li></ul>
+        <h3>Stimulating Bone Growth</h3>
+        <ul><li>Weight bearing and exercise keeps calcium in bones and increases bone mass</li></ul>
+        <h3>Bone Surface Markings</h3>
+        <ul>
+          <li>Bumpy, irregular surface with ridges, projections, depressions, and grooves</li>
+          <li>Serve as attachment points for muscles, tendons, and ligaments</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Axial Skeleton: Skull</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/bd8b7d43272a3d9082636c0eeafb621b.png" alt="Skull diagram showing cranium and facial bones labeled — frontal, parietal, temporal, occipital, sphenoid, ethmoid, mandible, maxilla, zygomatic, nasal">
+        <div class="img-caption">Skull — Cranium (8 bones) + Face (14 bones) = 22 total</div>
+        <h3>Cranium (8 bones)</h3>
+        <ul><li>Protects the brain: Frontal (1), Parietal (2), Temporal (2), Occipital (1), Sphenoid (1), Ethmoid (1)</li></ul>
+        <h3>Facial Bones (14)</h3>
+        <ul><li>Mandible (1), Maxilla (2), Palatine (2), Zygomatic (2), Lacrimal (2), Nasal (2), Vomer (1)</li></ul>
+        <h3>Sinuses</h3>
+        <ul><li>Air-filled cavities that lighten the skull and modulate voice: Frontal, Ethmoidal, Sphenoidal, Maxillary</li></ul>
+        <h3>Fontanels</h3>
+        <ul>
+          <li>Soft spots on an infant's skull, not yet converted to bone</li>
+          <li>Allow for cranial growth; bulging = increased pressure; sunken = dehydration</li>
+        </ul>
+        <h3>Hyoid Bone</h3>
+        <ul><li>Below mandible; U-shaped; floats in front of cervical vertebrae; anchors tongue; swallowing</li></ul>
+        <h3>Ear Ossicles (3 per ear)</h3>
+        <ul><li>Malleus, Incus, Stapes</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Vertebral Column</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/ebba772e6e34ec88cff0b1e49f860480.png" alt="Vertebral column showing cervical (7), thoracic (12), lumbar (5), sacrum, and coccyx regions color-coded">
+        <div class="img-caption">Vertebral column — cervical, thoracic, lumbar, sacrum &amp; coccyx</div>
+        <ul><li>Supports head and thorax; encases spinal cord; provides flexibility</li></ul>
+        <h3>Cervical (7) &mdash; Neck</h3>
+        <ul>
+          <li><strong>Atlas (C1):</strong> Articulates with occipital bone; head nods YES</li>
+          <li><strong>Axis (C2):</strong> Pivoting point; head says NO</li>
+        </ul>
+        <h3>Thoracic (12)</h3>
+        <ul><li>Each articulates with a pair of ribs (T1&ndash;T12)</li></ul>
+        <h3>Lumbar (5)</h3>
+        <ul><li>Largest and heaviest; most common site for slipped disc (L1&ndash;L5)</li></ul>
+        <h3>Sacrum &amp; Coccyx</h3>
+        <ul><li>Sacrum: 5 fused bones. Coccyx: 3&ndash;5 fused bones</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Thoracic Cage</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/7873597f4573e019a6c43fe8cc1229d0.png" alt="Thoracic cage showing sternum, 12 pairs of ribs (true, false, floating), and xiphoid process">
+        <div class="img-caption">Thoracic cage — sternum, ribs &amp; xiphoid process</div>
+        <ul>
+          <li><strong>Sternum</strong> (breastbone)</li>
+          <li><strong>12 pairs of ribs:</strong> 7 true, 5 false (including 2 floating)</li>
+          <li>Each rib connects to a thoracic vertebra</li>
+          <li><strong>Xiphoid process:</strong> Teardrop-shaped bone below sternum; must locate during CPR</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="skeletal">
+      <div class="topic-header"><span class="cat-dot skeletal"></span><span class="topic-title">Appendicular Skeleton</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/a7079851d73d5c15c2bbb984f1a0838a.png" alt="Appendicular skeleton — upper limbs showing humerus, radius, ulna, carpals, metacarpals, phalanges">
+        <div class="img-caption">Upper limbs — humerus, radius, ulna, hand bones</div>
+        <img class="topic-img" src="images/d2d99dbf3af71b31b3131707f9b47c06.png" alt="Appendicular skeleton — lower limbs showing femur, patella, tibia, fibula, tarsals, metatarsals">
+        <div class="img-caption">Lower limbs — femur, tibia, fibula, foot bones</div>
+        <h3>Upper Limbs</h3>
+        <ul>
+          <li><strong>Humerus:</strong> Arm bone; fits into scapula cavity; allows arm rotation</li>
+          <li><strong>Radius:</strong> Lateral (thumb) side of forearm</li>
+          <li><strong>Ulna:</strong> Longer bone, medial side; olecranon process = bony elbow</li>
+          <li><strong>Hand:</strong> 8 carpals, 5 metacarpals, 14 phalanges</li>
+        </ul>
+        <h3>Pelvic Girdle</h3>
+        <ul><li>Weight bearing, lower limb attachment, pelvic organ protection</li></ul>
+        <h3>Lower Limbs</h3>
+        <ul>
+          <li><strong>Femur:</strong> Longest &amp; strongest bone; forms hip joint and knee</li>
+          <li><strong>Acetabulum:</strong> Receives head of femur; allows thigh rotation</li>
+          <li><strong>Patella:</strong> Kneecap; protects front of knee</li>
+          <li><strong>Tibia:</strong> Shin bone; medial malleolus at distal end</li>
+          <li><strong>Fibula:</strong> Thin, beside tibia; not part of knee; lateral malleolus</li>
+        </ul>
+        <h3>Foot</h3>
+        <ul>
+          <li><strong>Ankle:</strong> 7 tarsals (talus &amp; calcaneus bear most weight)</li>
+          <li><strong>Instep:</strong> 5 metatarsals</li>
+          <li><strong>Toes:</strong> 14 phalanges</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-divider" data-cat="joints"><span class="sd-dot joints"></span><span class="sd-label">Joints</span><span class="sd-line"></span><span class="sd-count">7 topics</span></div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Joints Overview</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 300 130" style="width:100%;max-width:320px;display:block;margin:10px auto 4px"><rect width="300" height="130" fill="#fff" rx="8"/>
+        <text x="150" y="18" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif" fill="#333">3 Types of Joints</text>
+        <rect x="8" y="30" width="88" height="70" rx="6" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1"/>
+        <rect x="25" y="45" width="22" height="35" rx="2" fill="#BA68C8"/><rect x="55" y="45" width="22" height="35" rx="2" fill="#BA68C8"/>
+        <line x1="47" y1="50" x2="55" y2="50" stroke="#CE93D8" stroke-width="2" stroke-dasharray="2,2"/>
+        <text x="52" y="110" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Immovable</text>
+        <text x="52" y="122" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Skull sutures</text>
+        <rect x="106" y="30" width="88" height="70" rx="6" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1"/>
+        <rect x="120" y="45" width="22" height="35" rx="2" fill="#BA68C8"/><rect x="156" y="45" width="22" height="35" rx="2" fill="#BA68C8"/>
+        <rect x="142" y="48" width="14" height="28" rx="2" fill="#E1BEE7"/>
+        <text x="150" y="110" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Slightly Movable</text>
+        <text x="150" y="122" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Vertebral joints</text>
+        <rect x="204" y="30" width="88" height="70" rx="6" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1"/>
+        <ellipse cx="232" cy="62" rx="12" ry="18" fill="#BA68C8"/><ellipse cx="260" cy="62" rx="12" ry="18" fill="#BA68C8"/>
+        <ellipse cx="246" cy="62" rx="10" ry="12" fill="#FCE4EC" stroke="#CE93D8" stroke-width=".8"/>
+        <text x="248" y="110" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Freely Movable</text>
+        <text x="248" y="122" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Synovial joints</text>
+        </svg>
+        <img class="topic-img" src="images/ba0bc8267d911617b42bcc25b29da8b2.png" alt="Skull sutures — example of immovable joints where cranial bones fuse together">
+        <div class="img-caption">Skull sutures — immovable joints holding cranium together</div>
+        <ul>
+          <li><strong>Functions:</strong> Hold bones together; allow movement</li>
+          <li><span class="key-term">Rheumatology:</span> Branch of science that studies joint diseases</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Types of Joints</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <h3>Immovable</h3>
+        <ul><li>Permit no movement (e.g. skull sutures)</li></ul>
+        <h3>Slightly Movable</h3>
+        <img class="topic-img" src="images/bc3c57e06d84f94d4b3c5daee6b676ea.jpg" alt="Slightly movable joints — vertebral column joints and symphysis pubis">
+        <div class="img-caption">Slightly movable joints — vertebrae &amp; symphysis pubis</div>
+        <ul><li>Examples: symphysis pubis, vertebral column joints</li></ul>
+        <h3>Freely Movable (Synovial)</h3>
+        <ul><li>Allow the greatest range of motion</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Synovial Joint Composition</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/fa0726ee31845ae6a8479e6005408601.png" alt="Synovial joint structure showing articular cartilage, synovial fluid, joint capsule, synovial membrane, and bursa">
+        <div class="img-caption">Synovial joint — capsule, cartilage, synovial fluid &amp; membrane</div>
+        <img class="topic-img" src="images/d57994a83dea842bac19507eb36554fb.png" alt="Detailed synovial joint cross-section showing bone, cartilage, and fluid-filled cavity">
+        <div class="img-caption">Synovial joint cross-section — bursa &amp; meniscus</div>
+        <ul>
+          <li><strong>Articular cartilage:</strong> Smooth surface within the joint</li>
+          <li><strong>Meniscus:</strong> Only in the knee; C-shaped; shock absorber</li>
+          <li><strong>Cartilage:</strong> Made of collagen &amp; elastin; protects, smooths movement, absorbs shock</li>
+          <li><strong>Joint capsule:</strong> Fibrous sleeve enclosing the joint</li>
+          <li><strong>Synovial membrane:</strong> Lines capsule; secretes synovial fluid</li>
+          <li><strong>Synovial fluid:</strong> Lubricates bones; consistency of egg white</li>
+          <li><strong>Bursa:</strong> Fluid-filled sac reducing friction; protects tendons</li>
+          <li><strong>Supporting ligaments:</strong> Join bones, stabilize joint; can tear or stretch</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Types of Freely Movable Joints</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 320 165" style="width:100%;max-width:340px;display:block;margin:10px auto 4px"><rect width="320" height="165" fill="#fff" rx="8"/>
+        <text x="160" y="16" text-anchor="middle" font-size="11" font-weight="700" font-family="sans-serif" fill="#333">5 Types of Freely Movable Joints</text>
+        <g transform="translate(12,24)"><rect width="52" height="52" rx="6" fill="#F3E5F5"/>
+        <rect x="10" y="10" width="12" height="32" rx="2" fill="#AB47BC"/><rect x="26" y="16" width="16" height="26" rx="2" fill="#CE93D8" transform="rotate(-20,34,29)"/>
+        <text x="26" y="72" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Hinge</text>
+        <text x="26" y="83" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Elbow, Knee</text></g>
+        <g transform="translate(72,24)"><rect width="52" height="52" rx="6" fill="#F3E5F5"/>
+        <circle cx="26" cy="30" r="16" fill="#CE93D8" stroke="#AB47BC" stroke-width="1"/><circle cx="26" cy="30" r="8" fill="#AB47BC"/>
+        <text x="26" y="72" text-anchor="middle" font-size="9" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Ball &amp; Socket</text>
+        <text x="26" y="83" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Shoulder, Hip</text></g>
+        <g transform="translate(132,24)"><rect width="52" height="52" rx="6" fill="#F3E5F5"/>
+        <rect x="16" y="8" width="20" height="36" rx="10" fill="#CE93D8"/><rect x="22" y="18" width="8" height="16" rx="4" fill="#AB47BC"/>
+        <path d="M26,18 Q32,26 26,34" fill="none" stroke="#fff" stroke-width="1.5"/>
+        <text x="26" y="72" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Pivot</text>
+        <text x="26" y="83" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Atlas-Axis</text></g>
+        <g transform="translate(192,24)"><rect width="52" height="52" rx="6" fill="#F3E5F5"/>
+        <path d="M10,30 Q26,15 42,30" fill="none" stroke="#AB47BC" stroke-width="3"/><path d="M10,32 Q26,47 42,32" fill="none" stroke="#CE93D8" stroke-width="3"/>
+        <text x="26" y="72" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Saddle</text>
+        <text x="26" y="83" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Thumb</text></g>
+        <g transform="translate(252,24)"><rect width="52" height="52" rx="6" fill="#F3E5F5"/>
+        <rect x="10" y="14" width="32" height="10" rx="2" fill="#AB47BC"/><rect x="10" y="28" width="32" height="10" rx="2" fill="#CE93D8"/>
+        <path d="M20,28 L32,28" stroke="#fff" stroke-width="1"/>
+        <text x="26" y="72" text-anchor="middle" font-size="9.5" font-weight="600" font-family="sans-serif" fill="#7B1FA2">Gliding</text>
+        <text x="26" y="83" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Wrist, Spine</text></g>
+        <text x="160" y="108" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#333" font-weight="600">Shoulder = most ROM, most dislocated</text>
+        <text x="160" y="122" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#333" font-weight="600">Knee = hinge + meniscus (easy to tear)</text>
+        <text x="160" y="136" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#333" font-weight="600">Hip = ball-and-socket, common fracture site</text>
+        <text x="160" y="155" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#888">Atlas (C1) = nods YES | Axis (C2) = says NO</text>
+        </svg>
+        <ul>
+          <li><strong>Hinge:</strong> Elbows, knees, fingers, jaw</li>
+          <li><strong>Ball-and-socket:</strong> Shoulders, hips</li>
+          <li><strong>Pivot:</strong> Atlas-axis joint</li>
+          <li><strong>Saddle:</strong> Thumb</li>
+          <li><strong>Gliding:</strong> Wrist, spine, ankles</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Joint Names &amp; Specific Joints</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li><strong>Tibiofemoral (knee):</strong> Hinge; extra cartilage padding; meniscus easily torn</li>
+          <li><strong>Humeroulnar (elbow):</strong> Hinge joint</li>
+          <li><strong>Metacarpophalangeal (wrist):</strong> Metacarpal &amp; phalange</li>
+          <li><strong>Glenohumeral (shoulder):</strong> Ball-and-socket; great ROM; easily dislocated</li>
+          <li><strong>Coxal (hip):</strong> Ball-and-socket; femur &amp; acetabulum; fractures common</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Types of Joint Movement</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li><strong>Flexion-Extension</strong></li>
+          <li><strong>Inversion-Eversion</strong></li>
+          <li><strong>Supination-Pronation</strong></li>
+          <li><strong>Abduction-Adduction</strong></li>
+          <li><strong>Dorsiflexion-Plantar flexion</strong></li>
+          <li><strong>Hyperextension</strong></li>
+          <li><strong>Circumduction</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="joints">
+      <div class="topic-header"><span class="cat-dot joints"></span><span class="topic-title">Tendons &amp; Ligaments</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/14194c20afd6f919819bde6def23a635.png" alt="Tendons and ligaments diagram showing how tendons attach muscle to bone and ligaments attach bone to bone">
+        <div class="img-caption">Tendons (muscle→bone) vs. Ligaments (bone→bone)</div>
+        <img class="topic-img" src="images/0f3024299ab5f28b4591c3d566679702.png" alt="Knee joint showing ACL, PCL, MCL, LCL ligaments">
+        <div class="img-caption">Knee ligaments — ACL, PCL, MCL &amp; LCL</div>
+        <h3>Tendons</h3>
+        <ul>
+          <li>Cordlike fibrous connective tissue</li>
+          <li>Attach <strong>muscle to bone</strong></li>
+          <li>Provide traction for movement</li>
+        </ul>
+        <h3>Ligaments</h3>
+        <ul>
+          <li>Fibrous connective tissue</li>
+          <li>Attach <strong>bone to bone</strong></li>
+          <li>Stretchy (prevents tearing when joints bend)</li>
+          <li>Prevent dislocations</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-divider" data-cat="muscular"><span class="sd-dot muscular"></span><span class="sd-label">Muscular System</span><span class="sd-line"></span><span class="sd-count">9 topics</span></div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscle Facts</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 320 140" style="width:100%;max-width:340px;display:block;margin:10px auto 4px"><rect width="320" height="140" fill="#fff" rx="8"/>
+        <text x="160" y="18" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif" fill="#333">Muscle Quick Facts</text>
+        <rect x="10" y="28" width="95" height="44" rx="6" fill="#FFF3E0" stroke="#FF8C5A" stroke-width="1"/>
+        <text x="57" y="46" text-anchor="middle" font-size="18" font-weight="800" font-family="sans-serif" fill="#E65100">600+</text>
+        <text x="57" y="62" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#888">muscles in body</text>
+        <rect x="113" y="28" width="95" height="44" rx="6" fill="#FFF3E0" stroke="#FF8C5A" stroke-width="1"/>
+        <text x="160" y="46" text-anchor="middle" font-size="18" font-weight="800" font-family="sans-serif" fill="#E65100">40-50%</text>
+        <text x="160" y="62" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#888">of body weight</text>
+        <rect x="216" y="28" width="95" height="44" rx="6" fill="#FFF3E0" stroke="#FF8C5A" stroke-width="1"/>
+        <text x="263" y="46" text-anchor="middle" font-size="18" font-weight="800" font-family="sans-serif" fill="#E65100">85%</text>
+        <text x="263" y="62" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#888">body heat from muscles</text>
+        <text x="10" y="96" font-size="9" font-family="sans-serif" fill="#333">Largest: <tspan font-weight="700">Gluteus maximus</tspan></text>
+        <text x="10" y="110" font-size="9" font-family="sans-serif" fill="#333">Smallest: <tspan font-weight="700">Stapedius</tspan> (inner ear)</text>
+        <text x="10" y="124" font-size="9" font-family="sans-serif" fill="#333">Hardest working: <tspan font-weight="700">Heart</tspan></text>
+        <text x="10" y="138" font-size="9" font-family="sans-serif" fill="#333">Busiest: <tspan font-weight="700">Eye muscles</tspan></text>
+        </svg>
+        <img class="topic-img" src="images/cecd79a02acc24d5dcca03dd4a7f7e11.jpg" alt="Muscle nicknames cartoon — common names for muscles like biceps, triceps, quads, abs, glutes, etc.">
+        <div class="img-caption">Muscle nicknames — common names you already know</div>
+        <ul>
+          <li>More than <strong>600 muscles</strong> in the body</li>
+          <li>Made up of special <span class="key-term">muscle fibers</span></li>
+          <li>Largest: <strong>gluteus maximus</strong></li>
+          <li>Smallest: <strong>stapedius</strong> (inner ear)</li>
+          <li><strong>40&ndash;50%</strong> of total body weight</li>
+          <li>Work in pairs: one shortens, the other lengthens</li>
+          <li>Busiest muscles control eye movements</li>
+          <li>Hardest working muscle: the <strong>heart</strong></li>
+          <li><strong>85%</strong> of body heat from muscle contraction</li>
+          <li>Shivering = involuntary contraction to increase body temperature</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Types of Muscles</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/d211fe128af4377fd3b4b44b4c81ac1c.jpg" alt="Three types of muscle tissue — skeletal (striated, voluntary), smooth (nonstriated, involuntary), cardiac (striated, involuntary, heart only)">
+        <div class="img-caption">3 muscle types — skeletal, smooth &amp; cardiac</div>
+        <h3>Skeletal Muscle</h3>
+        <ul><li>Striated and <strong>voluntary</strong>; causes movement of the skeleton</li></ul>
+        <h3>Smooth Muscle (Visceral)</h3>
+        <ul><li>Nonstriated and <strong>involuntary</strong>; enables organs to function</li></ul>
+        <h3>Cardiac Muscle</h3>
+        <ul><li>Found <strong>only in the heart</strong>; striated and involuntary; cells fit tightly to conduct electrical signals</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Skeletal Muscle Functions &amp; Structure</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/0f256add8524f0789ea1b1f6b186f5f9.png" alt="Skeletal muscle structure showing muscle → fascicle → muscle fiber → myofibril with epimysium, perimysium, and endomysium layers">
+        <div class="img-caption">Muscle structure — fascicles, fibers &amp; myofibrils</div>
+        <h3>Functions</h3>
+        <ul><li>Produce movement, maintain posture, stabilize joints, produce heat, limited regeneration</li></ul>
+        <h3>Structure</h3>
+        <ul>
+          <li>Muscle fibers &rarr; <span class="key-term">fascicle</span> &rarr; muscle</li>
+          <li><strong>Fascia:</strong> Connective tissue surrounding organs, muscles, etc.</li>
+          <li>Layers: <span class="key-term">Epimysium</span> (outer), <span class="key-term">Perimysium</span> (middle), <span class="key-term">Endomysium</span> (inner)</li>
+          <li><strong>Tendons:</strong> Attach muscle to bone for movement</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscle Parts &amp; Naming</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <svg viewBox="0 0 300 170" style="width:100%;max-width:320px;display:block;margin:10px auto 4px"><rect width="300" height="170" fill="#fff" rx="8"/>
+        <text x="150" y="16" text-anchor="middle" font-size="11" font-weight="700" font-family="sans-serif" fill="#333">Muscle Parts: Origin → Belly → Insertion</text>
+        <rect x="20" y="50" width="30" height="90" rx="4" fill="#E8D5B7" stroke="#8B7355" stroke-width="1.5"/>
+        <text x="35" y="155" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#8B7355" font-weight="600">Bone A</text>
+        <rect x="250" y="50" width="30" height="90" rx="4" fill="#E8D5B7" stroke="#8B7355" stroke-width="1.5"/>
+        <text x="265" y="155" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#8B7355" font-weight="600">Bone B</text>
+        <line x1="50" y1="70" x2="90" y2="70" stroke="#BF360C" stroke-width="3"/>
+        <ellipse cx="150" cy="70" rx="60" ry="22" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.5"/>
+        <line x1="210" y1="70" x2="250" y2="70" stroke="#BF360C" stroke-width="3"/>
+        <text x="70" y="42" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#BF360C" font-weight="600">Tendon</text>
+        <text x="230" y="42" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#BF360C" font-weight="600">Tendon</text>
+        <line x1="70" y1="45" x2="70" y2="65" stroke="#BF360C" stroke-width=".6" stroke-dasharray="2,2"/>
+        <line x1="230" y1="45" x2="230" y2="65" stroke="#BF360C" stroke-width=".6" stroke-dasharray="2,2"/>
+        <circle cx="55" cy="70" r="6" fill="#C62828"/><text x="55" y="110" text-anchor="middle" font-size="9" font-weight="700" font-family="sans-serif" fill="#C62828">ORIGIN</text><text x="55" y="122" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">No movement</text>
+        <text x="150" y="74" text-anchor="middle" font-size="10" font-weight="700" font-family="sans-serif" fill="#BF360C">BELLY</text>
+        <text x="150" y="110" text-anchor="middle" font-size="9" font-weight="600" font-family="sans-serif" fill="#E64A19">Body (center)</text>
+        <circle cx="245" cy="70" r="6" fill="#2E7D32"/><text x="245" y="110" text-anchor="middle" font-size="9" font-weight="700" font-family="sans-serif" fill="#2E7D32">INSERTION</text><text x="245" y="122" text-anchor="middle" font-size="7.5" font-family="sans-serif" fill="#888">Movement here</text>
+        </svg>
+        <h3>Parts</h3>
+        <ul>
+          <li><strong>Origin:</strong> Where it starts (no movement)</li>
+          <li><strong>Body:</strong> Center / belly of the muscle</li>
+          <li><strong>Insertion:</strong> Where it ends (movement occurs)</li>
+        </ul>
+        <h3>Naming Conventions (7 ways)</h3>
+        <ul>
+          <li>Size, Shape, Direction of fibers, Location, Number of origins, Origin &amp; insertion, Muscle action</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscle Terminology</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li><strong>Tonus:</strong> Partial contraction present in all healthy muscles at rest</li>
+          <li><strong>Hypertrophy:</strong> Growth from overuse</li>
+          <li><strong>Atrophy:</strong> Wasting from disuse, poor innervation, or aging</li>
+          <li><strong>Contracture:</strong> Abnormal fibrous formation; freezes in flexed position</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscles: Head &amp; Neck</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/961d63dc65edf1d86eb2cd637241d0d1.jpg" alt="Anterior (front) view of human muscular system showing all major muscles labeled — pectoralis, deltoid, biceps, rectus abdominis, quadriceps, tibialis anterior">
+        <div class="img-caption">Anterior (front) muscles — all major muscles labeled</div>
+        <h3>Facial Muscles</h3>
+        <ul>
+          <li><strong>Frontalis:</strong> Raises eyebrows, wrinkles forehead</li>
+          <li><strong>Orbicularis oculi:</strong> Closes eye; winking, blinking</li>
+          <li><strong>Levator palpebrae superioris:</strong> Lifts eyelid</li>
+          <li><strong>Orbicularis oris:</strong> Closes mouth, forms words</li>
+          <li><strong>Buccinator:</strong> Flattens cheek; positions food</li>
+          <li><strong>Zygomaticus:</strong> Smiling muscle</li>
+          <li><strong>Platysma:</strong> Pouting, opening mouth wide</li>
+        </ul>
+        <h3>Chewing (Mastication)</h3>
+        <ul><li><strong>Masseter</strong> &amp; <strong>Temporalis:</strong> Close the jaw</li></ul>
+        <h3>Neck</h3>
+        <ul>
+          <li><strong>Sternocleidomastoid:</strong> Flexion &amp; rotation of head</li>
+          <li><strong>Scalene muscles (3):</strong> Synergists with sternocleidomastoid</li>
+          <li><strong>Trapezius:</strong> Extension &amp; hyperextension of head</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscles: Trunk</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/917a8f9cc5dfda9aba7b2a952e02627a.jpg" alt="Trunk muscles — abdominal wall showing rectus abdominis, obliques, transversus abdominis">
+        <div class="img-caption">Trunk muscles — abdominal wall &amp; obliques</div>
+        <img class="topic-img" src="images/fcffabc5eb880ff2a006ea7ca2edec01.jpg" alt="Back muscles showing erector spinae, latissimus dorsi, and trapezius">
+        <div class="img-caption">Back muscles — erector spinae &amp; latissimus dorsi</div>
+        <h3>Breathing</h3>
+        <ul>
+          <li><strong>Intercostal muscles</strong> (internal &amp; external)</li>
+          <li><strong>Diaphragm:</strong> Primarily responsible for breathing</li>
+        </ul>
+        <h3>Abdominal Wall</h3>
+        <ul><li>Internal oblique, External oblique, Transversus abdominis, Rectus abdominis</li></ul>
+        <h3>Back</h3>
+        <ul><li><strong>Erector spinae:</strong> Cranium to sacrum; maintains erect posture</li></ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscles: Shoulder, Arm &amp; Forearm</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <h3>Shoulder &amp; Arm</h3>
+        <ul>
+          <li><strong>Trapezius:</strong> Shrugs shoulders</li>
+          <li><strong>Serratus anterior:</strong> Lowers shoulders, pushing</li>
+          <li><strong>Pectoralis major:</strong> Moves arm across chest</li>
+          <li><strong>Latissimus dorsi:</strong> &ldquo;Swimmer&rsquo;s muscle&rdquo;</li>
+          <li><strong>Deltoid:</strong> Abducts arm; injection site</li>
+          <li><strong>Teres major:</strong> Extends arm at shoulder</li>
+          <li><strong>Rotator cuff:</strong> Stabilizes shoulder; injury-prone</li>
+        </ul>
+        <h3>Forearm</h3>
+        <ul>
+          <li><strong>Biceps brachii:</strong> Flexes forearm</li>
+          <li><strong>Triceps brachii:</strong> Extends forearm; push-ups</li>
+          <li><strong>Brachialis &amp; Brachioradialis:</strong> Flex forearm</li>
+          <li><strong>Supinators &amp; Pronators:</strong> Rotate forearm</li>
+        </ul>
+      </div>
+    </div>
+    <div class="topic-card" data-cat="muscular">
+      <div class="topic-header"><span class="cat-dot muscular"></span><span class="topic-title">Muscles: Leg &amp; Foot</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/8e3b977d009af42efc35c4eb2aeb9c33.jpg" alt="Posterior (back) view of human muscular system showing trapezius, latissimus dorsi, erector spinae, gluteus maximus, hamstrings, gastrocnemius">
+        <div class="img-caption">Posterior (back) muscles — all major muscles labeled</div>
+        <img class="topic-img" src="images/0115258d8e23ad4133ca31deea9ad710.jpg" alt="Leg muscles detailed view showing quadriceps, hamstrings, gastrocnemius, soleus, tibialis anterior">
+        <div class="img-caption">Leg muscles — quads, hamstrings, calves &amp; more</div>
+        <h3>Anterior (Front)</h3>
+        <ul>
+          <li><strong>Quadriceps femoris (4):</strong> Rectus femoris, Vastus lateralis, medialis, intermedius &mdash; extend leg at knee</li>
+          <li><strong>Sartorius:</strong> Cross-legged position</li>
+          <li><strong>Tibialis anterior:</strong> Dorsiflexion &amp; inversion</li>
+          <li><strong>Peroneus longus:</strong> Everts foot, supports arch</li>
+        </ul>
+        <h3>Posterior (Back)</h3>
+        <ul>
+          <li><strong>Hamstrings (3):</strong> Biceps femoris, Semitendinosus, Semimembranosus &mdash; leg flexion, thigh extension</li>
+          <li><strong>Gastrocnemius &amp; Soleus:</strong> Form the calf; plantar flexion</li>
+          <li><strong>Achilles (calcaneal) tendon:</strong> Connects calf to heel</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-divider" data-cat="prepostop"><span class="sd-dot prepostop"></span><span class="sd-label">Pre &amp; Post Op Care</span><span class="sd-line"></span><span class="sd-count">18 topics</span></div>
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Pre-Operative Care Overview</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/de4bfe9b332e1de1d1a9a5b57721fb40.jpg" alt="Pre-operative care" loading="lazy">
+        <p>Care and procedures done <strong>before</strong> a person has surgery.</p>
+        <ul>
+          <li>Surgery can be <strong>emergency</strong> or <strong>elective</strong> (scheduled)</li>
+          <li>This is a general guide for ALL surgical procedures</li>
+          <li>Always be aware of specific care for specific surgeries</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Pre-Op Checklist (Day of Surgery)</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/3e8890ea658cc4c6080d5a4844fc459b.jpg" alt="Pre-op checklist" loading="lazy">
+        <p>Everything that needs to happen before the patient goes to the OR.</p>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Skin Prep &amp; Hygiene</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/80a2a36c2abf8cec10eb58fecf5cfa49.png" alt="Surgical scrub brush" loading="lazy">
+        <ul>
+          <li>Bath/shower the night before AND morning of surgery with <strong>chlorhexidine scrub</strong> (antibacterial soap)</li>
+          <li>Reduces risk of infection at surgical site</li>
+          <li><strong>No</strong> deodorant, perfume, or lotion &mdash; leaves residue hard to wash off</li>
+          <li><strong>All nail polish removed</strong> &mdash; so pulse ox can read oxygen saturation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">ID, Allergies &amp; Jewelry</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/6b52aa4f070bcbfb1a54bc6c73fafd60.jpg" alt="Hospital ID and allergy bracelet" loading="lazy">
+        <ul>
+          <li>Patient must wear bracelet with <strong>correct identification</strong></li>
+          <li><strong>Allergy bracelet</strong> must be on</li>
+          <li>Remove <strong>all jewelry</strong>, piercings, and contact lenses</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Consent &amp; Bloodwork</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/3e8235e37b3f7ec3c1124e07aa9e56ab.jpg" alt="Surgical consent form" loading="lazy">
+        <ul>
+          <li>No surgery without a <strong>signed consent</strong></li>
+          <li>LPN/Nurse ensures consent is in the chart</li>
+          <li><strong>Doctor&rsquo;s responsibility</strong> to ensure it is signed</li>
+          <li>Recent <strong>bloodwork results</strong> must be in chart</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">NPO, Elimination &amp; Clothing</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/43344fe4ab467d6d81a7a003ef3a1d08.jpg" alt="Patient in hospital gown" loading="lazy">
+        <ul>
+          <li><strong>NPO</strong> (nothing by mouth) &mdash; minimizes aspiration risk during anesthesia</li>
+          <li>May take essential meds with doctor&rsquo;s permission</li>
+          <li>Can rinse mouth or brush teeth without swallowing</li>
+          <li>Patient must <strong>void before going to OR</strong> &mdash; prevents retention/incontinence during surgery</li>
+          <li>Bowel evacuation recommended morning of surgery</li>
+          <li>Must wear <strong>hospital gown</strong>, remove underwear</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Prosthesis &amp; Shave Prep</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li><strong>Dentures must be removed</strong> &mdash; ensure proper identification and store safely</li>
+          <li>Hearing aids and glasses <strong>may go with patient</strong> if impairment is profound</li>
+          <li>Limb prosthesis removed</li>
+          <li>Shave prep: depends on hospital policy &mdash; some surgeons prefer to do it in OR</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Psychological Preparation</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li>Surgery is <strong>always a source of stress</strong></li>
+          <li>Advise patient when surgery will take place and how the scenario will play out</li>
+          <li>Discuss post-op meds and <strong>pain control</strong></li>
+          <li>Discuss need for <strong>early mobilization</strong></li>
+          <li>Teach <strong>deep breathing, coughing exercises</strong>, and how to use incentive spirometer</li>
+          <li><strong>No surprises</strong> &mdash; make sure they know what&rsquo;s going to happen</li>
+          <li>A well-informed patient is more relaxed</li>
+          <li>Keep the <strong>family informed</strong> &mdash; they can be more anxious than the patient</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Room Prep &amp; Waiting for Patient</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/775b6a25f6f26691fc40c9c533a529ed.jpg" alt="Empty hospital bed ready for patient" loading="lazy">
+        <ul>
+          <li>Ensure room is prepared &mdash; clean, tidy, <strong>bed flat</strong></li>
+          <li>Have all required equipment in room</li>
+          <li>Reassure the family who may be waiting</li>
+          <li>Inform family when patient is in recovery room</li>
+          <li>Prepare family for <strong>what to expect</strong> when patient returns to floor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Post-Op Care Goals</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/a36ba802e24a2642fb5d4eb0b9c1fa1c.jpg" alt="Post-operative patient care" loading="lazy">
+        <p>General post-operative care goals:</p>
+        <ul>
+          <li>Ensure <strong>safety and comfort</strong> of the patient</li>
+          <li>Prevention of <strong>post-operative complications</strong></li>
+          <li>Return patient to highest level of <strong>autonomy</strong> ASAP</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">7 P&rsquo;s &mdash; Neurovascular Signs</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <p>Check these signs post-op:</p>
+        <ol>
+          <li><strong>Pain</strong></li>
+          <li><strong>Pallor</strong></li>
+          <li><strong>Paresthesia</strong> (numbness)</li>
+          <li><strong>Paralysis</strong></li>
+          <li><strong>Polar Temp</strong> (Poikilothermia)</li>
+          <li><strong>Puffiness</strong> (edema)</li>
+          <li><strong>Pulselessness</strong></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Incentive Spirometry &amp; Early Mobilization</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/ef79f996bfbf382d54ba7ffc4bf0e011.jpg" alt="Patient using incentive spirometer" loading="lazy">
+        <ul>
+          <li><strong>Incentive spirometry every hour</strong> (q1h)</li>
+          <li>Early mobilization is key to quicker recovery</li>
+          <li>Up in chair ASAP &mdash; day 0 or day 1</li>
+          <li>Even if there are tubes everywhere</li>
+          <li>Ensure adequate <strong>pain medication before ambulating</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Post-Op Elimination &amp; IV</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/d8b31ed76e15cd53ec637249dd24c6b1.jpg" alt="IV line" loading="lazy">
+        <ul>
+          <li><strong>Urinary retention</strong> is common post-op</li>
+          <li>Urine output must be monitored</li>
+          <li>Bladder scanner can be used</li>
+          <li>May need in-and-out catheterization if no urine output by prescribed time</li>
+          <li>Once patient is drinking well, <strong>IV is usually discontinued</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Pain Management &amp; PCA</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <img class="topic-img" src="images/9dc6f9777e332aa4005617fd885ebc4a.jpg" alt="PCA pump" loading="lazy">
+        <ul>
+          <li>Evaluate pain <strong>frequently</strong></li>
+          <li>Patient won&rsquo;t cooperate with mobilizing if they&rsquo;re in pain</li>
+          <li>Use <strong>pain scale</strong> and <strong>PQRSTU</strong> assessment</li>
+          <li><strong>PCA</strong> (Patient Controlled Analgesia) may be prescribed</li>
+          <li>Opioid side effects: constipation, weakness, dizziness, falls, <strong>respiratory depression</strong></li>
+        </ul>
+        <img class="topic-img" src="images/a11e515ddd391a086d4d3f7c3ff8cf59.jpg" alt="Pain scale" loading="lazy">
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Wound Care &amp; Drains</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li>Monitor wound frequently for <strong>signs of bleeding</strong></li>
+          <li><strong>Demarcate</strong> (mark) any drainage on the dressing</li>
+          <li>Reinforce dressing if necessary &mdash; <strong>do not remove</strong></li>
+          <li>Advise MD, document, and report</li>
+          <li>Empty drains every shift and PRN</li>
+          <li>Surgeon usually removes the initial dressing</li>
+          <li>Follow TNP for wound management</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Opioids &amp; Narcan</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li>An opiate is a <strong>narcotic analgesic</strong> &mdash; natural or synthetic opium</li>
+          <li>Most important side effect to watch for: <strong>respiratory depression</strong></li>
+          <li><strong>Narcan</strong> (naloxone) reverses opioid effects</li>
+          <li><strong>Narcotic naive</strong> = patient not used to opioids &mdash; higher risk of side effects</li>
+          <li>Only available by prescription</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Pain Assessment (PQRSTU)</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <p>Pain effects: fatigue, decreased coping, potentially debilitating, slower recovery, decreased mobility.</p>
+        <p><strong>PQRSTU:</strong></p>
+        <ul>
+          <li><strong>P</strong> &mdash; Provocation / Palliation (what makes it worse/better)</li>
+          <li><strong>Q</strong> &mdash; Quality (sharp, dull, burning)</li>
+          <li><strong>R</strong> &mdash; Region / Radiation (where, does it spread)</li>
+          <li><strong>S</strong> &mdash; Severity (0-10 scale)</li>
+          <li><strong>T</strong> &mdash; Timing (when did it start, constant or intermittent)</li>
+          <li><strong>U</strong> &mdash; Understanding (patient&rsquo;s perception of pain)</li>
+        </ul>
+        <p><strong>Objective signs:</strong> what you can observe (facial grimacing, guarding, vital sign changes).</p>
+        <p><strong>Subjective symptoms:</strong> what the patient tells you.</p>
+      </div>
+    </div>
+
+    <div class="topic-card" data-cat="prepostop">
+      <div class="topic-header"><span class="cat-dot prepostop"></span><span class="topic-title">Non-Pharmacologic Pain Interventions</span><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="topic-body">
+        <ul>
+          <li>Positioning and repositioning</li>
+          <li>Ice/heat therapy</li>
+          <li>Distraction (music, TV, conversation)</li>
+          <li>Relaxation techniques and deep breathing</li>
+          <li>Massage</li>
+          <li>Guided imagery</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FLASH CARDS ==================== -->
+<div id="view-cards" class="tab-view">
+  <div class="pills-row" data-scope="cards">
+    <button class="pill active" data-cat="all">All Cards</button>
+    <button class="pill" data-cat="skeletal">Skeletal</button>
+    <button class="pill" data-cat="joints">Joints</button>
+    <button class="pill" data-cat="muscular">Muscular</button>
+    <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+  </div>
+  <div class="fc-top-bar">
+    <span class="fc-counter" id="fc-total"></span>
+    <button class="fc-shuffle-btn" id="fc-shuffle-btn">&#x1f500; Shuffle</button>
+  </div>
+  <div class="fc-progress"><div class="fc-progress-bar" id="fc-progress-bar"></div></div>
+  <div class="fc-card-area">
+    <div class="fc-card" id="flashcard">
+      <div class="fc-face fc-front">
+        <span class="fc-cat-tag" id="fc-badge"></span>
+        <span class="fc-q-label">Question</span>
+        <div class="fc-q-text" id="fc-question"></div>
+        <span class="fc-tap-hint">Tap to flip</span>
+      </div>
+      <div class="fc-face fc-back">
+        <span class="fc-a-label">Answer</span>
+        <div class="fc-a-text" id="fc-answer"></div>
+        <span class="fc-tap-hint">Tap to return</span>
+      </div>
+    </div>
+  </div>
+  <div class="fc-action-row">
+    <button class="fc-action-btn review" id="fc-review">Got it wrong</button>
+    <button class="fc-action-btn got-it" id="fc-gotit">Got it right</button>
+  </div>
+  <div class="fc-nav-row">
+    <button class="fc-nav-btn" id="fc-prev" aria-label="Previous">&#8592;</button>
+    <span class="fc-pos-label" id="fc-pos">1 / 1</span>
+    <button class="fc-nav-btn" id="fc-next" aria-label="Next">&#8594;</button>
+  </div>
+</div>
+
+<!-- ==================== LISTEN ==================== -->
+<div id="view-pods" class="tab-view">
+  <div class="pills-row" data-scope="listen">
+    <button class="pill active" data-listencat="all">All</button>
+    <button class="pill" data-listencat="yt">YouTube</button>
+    <button class="pill" data-listencat="sp">Spotify</button>
+  </div>
+
+  <!-- YOUTUBE -->
+  <div class="listen-section-title" data-listentype="yt"><div class="section-icon yt">&#9654;</div>YouTube Videos</div>
+
+  <a href="https://www.youtube.com/watch?v=rDGqkMHPDqE" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">Crash Course: Skeletal System</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; 10 min</div>
+      <div class="pod-desc">Hank Green breaks down bones in the most fun way possible. Animated, fast-paced, and actually entertaining.</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=DLxYDoN634c" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">Crash Course: Joints</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; 10 min</div>
+      <div class="pod-desc">Same Crash Course energy but all about joints. Hinge, ball-and-socket, pivot — all explained with sick animations.</div>
+      <div class="pod-tags"><span class="pod-tag joints">Joints</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=Ktv-CaOt6UQ" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">Crash Course: Muscles Part 1</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; 10 min</div>
+      <div class="pod-desc">Muscle types, how they work, and why your body is basically a machine. Part 1 of 2.</div>
+      <div class="pod-tags"><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=I80Xx7pA9hQ" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">Crash Course: Muscles Part 2</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; 10 min</div>
+      <div class="pod-desc">Part 2 goes deeper into how muscles actually contract. Perfect before an exam.</div>
+      <div class="pod-tags"><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=VmcQfCcGScY" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">The Muscle Song (Memorize Fast!)</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; Catchy song</div>
+      <div class="pod-desc">A catchy song that helps you memorize all the major muscles. Sounds dumb but it WORKS. You&rsquo;ll be singing it during the exam.</div>
+      <div class="pod-tags"><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=1tZhtJXqF1A" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">Muscles in 3 Minutes!</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; 3 min</div>
+      <div class="pod-desc">Speed review of all major muscles. Perfect when you&rsquo;re cramming the night before and need a quick refresher.</div>
+      <div class="pod-tags"><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=XiTmqC_JyzU" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
+    <div class="pod-icon yt">&#9654;</div>
+    <div class="pod-info">
+      <div class="pod-name">LevelUpRN: Musculoskeletal</div>
+      <div class="pod-platform">YouTube &bull; Free &bull; Nursing-focused</div>
+      <div class="pod-desc">Made BY nursing students FOR nursing students. Covers exactly what&rsquo;s on nursing exams. No fluff, just what you need to know.</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span><span class="pod-tag joints">Joints</span><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in YouTube</div>
+    </div>
+  </a>
+
+  <!-- SPOTIFY -->
+  <div class="listen-section-title" data-listentype="sp"><div class="section-icon sp">&#9835;</div>Spotify Podcasts</div>
+
+  <a href="https://open.spotify.com/show/3OBia9eOBNqA3uZZUvWMoY" target="_blank" rel="noopener" class="pod-card" data-listentype="sp">
+    <div class="pod-icon sp">&#9835;</div>
+    <div class="pod-info">
+      <div class="pod-name">Nursing School Week by Week</div>
+      <div class="pod-platform">Spotify &bull; Free &bull; Podcast</div>
+      <div class="pod-desc">Two nursing students talk you through every week of school. Real talk, no textbook vibes. Great for commutes.</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span><span class="pod-tag joints">Joints</span><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in Spotify</div>
+    </div>
+  </a>
+
+  <a href="https://open.spotify.com/show/2ynjQfkZOsPAl0lcigou6E" target="_blank" rel="noopener" class="pod-card" data-listentype="sp">
+    <div class="pod-icon sp">&#9835;</div>
+    <div class="pod-info">
+      <div class="pod-name">Straight A Nursing</div>
+      <div class="pod-platform">Spotify &bull; Free &bull; Podcast</div>
+      <div class="pod-desc">Study tips + content reviews in a chill conversational style. Like studying with a friend who already passed.</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in Spotify</div>
+    </div>
+  </a>
+
+  <a href="https://open.spotify.com/show/4q70TGBydw6Mks4c44vvrv" target="_blank" rel="noopener" class="pod-card" data-listentype="sp">
+    <div class="pod-icon sp">&#9835;</div>
+    <div class="pod-info">
+      <div class="pod-name">Anatomy Bites</div>
+      <div class="pod-platform">Spotify &bull; Free &bull; Podcast</div>
+      <div class="pod-desc">Short episodes that break down anatomy topics bite by bite. Easy to digest (pun intended). Perfect for study breaks.</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span><span class="pod-tag joints">Joints</span><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in Spotify</div>
+    </div>
+  </a>
+
+  <a href="https://open.spotify.com/show/5AoZcFymDhQS5u2AQl011U" target="_blank" rel="noopener" class="pod-card" data-listentype="sp">
+    <div class="pod-icon sp">&#9835;</div>
+    <div class="pod-info">
+      <div class="pod-name">A.T. Anatomy &amp; Physiology</div>
+      <div class="pod-platform">Spotify &bull; Free &bull; Podcast</div>
+      <div class="pod-desc">Super focused on A&amp;P topics. Play it while you work out, clean, or cook. Passive learning is still learning!</div>
+      <div class="pod-tags"><span class="pod-tag skeletal">Skeletal</span><span class="pod-tag muscular">Muscular</span></div>
+      <div class="pod-link-hint"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>Open in Spotify</div>
+    </div>
+  </a>
+</div>
+
+<!-- ==================== GAMES ==================== -->
+<div id="view-games" class="tab-view">
+
+  <!-- GAME PICKER -->
+  <div id="game-picker" class="game-view active">
+    <div class="games-header">
+      <div class="games-title">Study Games</div>
+      <div class="games-sub">Pick a game and test what you know</div>
+    </div>
+    <div class="game-picker">
+      <button class="game-pick-card" data-game="quiz">
+        <div class="game-pick-icon">&#x1F9E0;</div>
+        <div class="game-pick-info">
+          <div class="game-pick-name">Quiz</div>
+          <div class="game-pick-desc">10 multiple choice questions — pick the right answer</div>
+        </div>
+        <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <button class="game-pick-card" data-game="match">
+        <div class="game-pick-icon">&#x1F3AF;</div>
+        <div class="game-pick-info">
+          <div class="game-pick-name">Matching</div>
+          <div class="game-pick-desc">Match terms to their definitions as fast as you can</div>
+        </div>
+        <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <button class="game-pick-card" data-game="tf">
+        <div class="game-pick-icon">&#x2705;</div>
+        <div class="game-pick-info">
+          <div class="game-pick-name">True or False</div>
+          <div class="game-pick-desc">Read a statement and decide — is it true or false?</div>
+        </div>
+        <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="game-quiz" class="game-view">
+    <button class="game-back-btn" id="quiz-back">&#x2190; All Games</button>
+    <div class="pills-row" data-scope="quiz">
+      <button class="pill active" data-cat="all">All Topics</button>
+      <button class="pill" data-cat="skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints">Joints</button>
+      <button class="pill" data-cat="muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+    </div>
+    <div class="quiz-intro" id="quiz-intro">
+      <div class="quiz-intro-emoji">&#x1F9E0;</div>
+      <div class="quiz-intro-title">Quiz Time</div>
+      <div class="quiz-intro-sub">10 random multiple choice questions.<br>Pick the right answer!</div>
+      <button class="quiz-start-btn" id="quiz-start">Start Quiz</button>
+    </div>
+    <div class="quiz-area" id="quiz-area">
+      <div class="quiz-progress-row">
+        <span class="quiz-progress-label" id="quiz-progress-label">Question 1 / 10</span>
+        <span class="quiz-score-label" id="quiz-score-label">Score: 0</span>
+      </div>
+      <div class="quiz-progress-bar-bg"><div class="quiz-progress-bar-fill" id="quiz-bar"></div></div>
+      <div class="quiz-q-card" id="quiz-q-card">
+        <div class="quiz-q-cat" id="quiz-q-cat"></div>
+        <div class="quiz-q-text" id="quiz-q-text"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <button class="quiz-next-btn" id="quiz-next">Next Question</button>
+    </div>
+    <div class="quiz-result" id="quiz-result">
+      <div class="quiz-result-emoji" id="quiz-result-emoji"></div>
+      <div class="quiz-result-title" id="quiz-result-title"></div>
+      <div class="quiz-result-score" id="quiz-result-score"></div>
+      <button class="quiz-result-btn" id="quiz-again">Play Again</button>
+    </div>
+  </div>
+
+  <!-- MATCHING -->
+  <div id="game-match" class="game-view">
+    <button class="game-back-btn" id="match-back">&#x2190; All Games</button>
+    <div class="pills-row" data-scope="match">
+      <button class="pill active" data-cat="all">All Topics</button>
+      <button class="pill" data-cat="skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints">Joints</button>
+      <button class="pill" data-cat="muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+    </div>
+    <div class="match-stats">
+      <div class="match-stat">Matched: <span id="match-count">0</span> / <span id="match-total">6</span></div>
+      <div class="match-timer" id="match-timer">0:00</div>
+    </div>
+    <div class="match-grid" id="match-grid"></div>
+    <div class="quiz-result" id="match-result">
+      <div class="quiz-result-emoji" id="match-result-emoji"></div>
+      <div class="quiz-result-title" id="match-result-title"></div>
+      <div class="quiz-result-score" id="match-result-score"></div>
+      <button class="quiz-result-btn" id="match-again">Play Again</button>
+    </div>
+  </div>
+
+  <!-- TRUE / FALSE -->
+  <div id="game-tf" class="game-view">
+    <button class="game-back-btn" id="tf-back">&#x2190; All Games</button>
+    <div class="pills-row" data-scope="tf">
+      <button class="pill active" data-cat="all">All Topics</button>
+      <button class="pill" data-cat="skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints">Joints</button>
+      <button class="pill" data-cat="muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+    </div>
+    <div class="quiz-progress-row">
+      <span class="quiz-progress-label" id="tf-progress-label">Question 1 / 10</span>
+      <span class="quiz-score-label" id="tf-score-label">Score: 0</span>
+    </div>
+    <div class="quiz-progress-bar-bg"><div class="quiz-progress-bar-fill" id="tf-bar"></div></div>
+    <div class="tf-card" id="tf-card">
+      <div class="tf-cat" id="tf-cat"></div>
+      <div class="tf-statement" id="tf-statement"></div>
+      <div class="tf-btns">
+        <button class="tf-btn true-btn" id="tf-true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> TRUE</button>
+        <button class="tf-btn false-btn" id="tf-false"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> FALSE</button>
+      </div>
+      <div class="tf-feedback" id="tf-feedback"></div>
+    </div>
+    <button class="quiz-next-btn" id="tf-next">Next Question</button>
+    <div class="quiz-result" id="tf-result">
+      <div class="quiz-result-emoji" id="tf-result-emoji"></div>
+      <div class="quiz-result-title" id="tf-result-title"></div>
+      <div class="quiz-result-score" id="tf-result-score"></div>
+      <button class="quiz-result-btn" id="tf-again">Play Again</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== BOTTOM NAV BAR ===== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="guide">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+    Study
+  </button>
+  <button class="nav-item" data-view="cards">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 10h2v2H6zm0 4h2v2H6zm4-4h8v2h-8zm0 4h8v2h-8z"/></svg>
+    Cards
+  </button>
+  <button class="nav-item" data-view="games">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 16.09l-1.09-7.66A3.996 3.996 0 0016.53 5H7.47a3.996 3.996 0 00-3.96 3.43L2.42 16.09a3.003 3.003 0 002.97 3.41 2.99 2.99 0 002.54-1.4l1.44-2.32A1 1 0 0110.22 15h3.56a1 1 0 01.85.48l1.44 2.32a2.99 2.99 0 002.54 1.4c1.96 0 3.42-1.82 2.97-3.41zM8.5 11.5H7v1.5H5.5v-1.5H4V10h1.5V8.5H7V10h1.5v1.5zm6 1a1 1 0 110-2 1 1 0 010 2zm2.5-2.5a1 1 0 110-2 1 1 0 010 2z"/></svg>
+    Games
+  </button>
+  <button class="nav-item" data-view="pods">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    Listen
+  </button>
+</nav>
+
+<script>
+// ===== FLASH CARD DATA =====
+const allCards=[{cat:"skeletal",q:"How many bones are in the human body?",a:"206 bones"},{cat:"skeletal",q:"What are the 5 components of the skeletal system?",a:"Bones, joints, cartilage, ligaments, and tendons"},{cat:"skeletal",q:"What is the periosteum?",a:"A membrane that covers hard, rigid bone structures"},{cat:"skeletal",q:"What are the 5 functions of the skeletal system?",a:"1. Support\n2. Protection\n3. Movement\n4. Stores minerals (calcium & phosphorus)\n5. Blood cell production & storage"},{cat:"skeletal",q:"What is bone marrow?",a:"Jelly-like tissue in some bones where new blood cells are constantly produced"},{cat:"skeletal",q:"What does red marrow produce?",a:"Red blood cells, white blood cells, and platelets"},{cat:"skeletal",q:"What does yellow marrow do?",a:"Stored as fat and produces some white blood cells"},{cat:"skeletal",q:"What is compact bone?",a:"Hard, dense bone that composes the shaft of long bones and outer layer of bones"},{cat:"skeletal",q:"What is spongy bone?",a:"Light bone with more spaces, found at ends of long bones and center of other bones"},{cat:"skeletal",q:"What are the 4 types of bones?",a:"Long, Short, Flat, and Irregular"},{cat:"skeletal",q:"What are characteristics of long bones?",a:"Bear body weight (especially femur & tibia); longer than they are wide"},{cat:"skeletal",q:"What are the regions of a long bone?",a:"Diaphysis (shaft), Epiphysis (ends), Epiphyseal disc (growth plate), Medullary cavity, Periosteum, Articular cartilage"},{cat:"skeletal",q:"What are short bones? Give examples.",a:"Cube-shaped; found in wrists (carpals) and ankles (tarsals)"},{cat:"skeletal",q:"What are flat bones? Give examples.",a:"Thin, flat, curved. Examples: ribs, sternum, cranium, shoulder. Functions: protection, muscle attachment, blood cell production"},{cat:"skeletal",q:"What are irregular bones? Give examples.",a:"Differently shaped; hip bones, vertebrae, some skull bones"},{cat:"skeletal",q:"Where does ossification occur?",a:"At the epiphyseal disc (growth plate). Osteoblasts invade cartilage and mature into osteocytes"},{cat:"skeletal",q:"What hormones affect bone growth?",a:"Growth hormone, estrogen, and testosterone. Estrogen fuses the growth plate earlier."},{cat:"skeletal",q:"What happens if a child's growth plate is injured?",a:"Can lead to decreased bone growth and a shortened or crooked limb"},{cat:"skeletal",q:"What stimulates bone growth?",a:"Weight bearing and exercise — keeps calcium in bones and increases bone mass"},{cat:"skeletal",q:"How many bones make up the cranium?",a:"8: Frontal (1), Parietal (2), Temporal (2), Occipital (1), Sphenoid (1), Ethmoid (1)"},{cat:"skeletal",q:"How many facial bones are there?",a:"14: Mandible (1), Maxilla (2), Palatine (2), Zygomatic (2), Lacrimal (2), Nasal (2), Vomer (1)"},{cat:"skeletal",q:"What are sinuses?",a:"Air-filled cavities that lighten the skull and modulate voice. Types: Frontal, Ethmoidal, Sphenoidal, Maxillary"},{cat:"skeletal",q:"What are fontanels?",a:"Soft spots on infant skull not yet converted to bone; allow cranial growth"},{cat:"skeletal",q:"Describe the hyoid bone.",a:"Below mandible; U-shaped; floats in front of cervical vertebrae; anchors tongue; swallowing"},{cat:"skeletal",q:"What are the 3 ear ossicles?",a:"Malleus, Incus, and Stapes"},{cat:"skeletal",q:"What does Atlas (C1) do?",a:"Articulates with occipital bone; allows head to nod YES"},{cat:"skeletal",q:"What does Axis (C2) do?",a:"Pivoting point for skull rotation; allows head to say NO"},{cat:"skeletal",q:"How many vertebrae in each region?",a:"Cervical: 7, Thoracic: 12, Lumbar: 5"},{cat:"skeletal",q:"Why are lumbar vertebrae significant?",a:"Largest and heaviest; most common site for slipped disc"},{cat:"skeletal",q:"How many ribs in the thoracic cage?",a:"12 pairs: 7 true, 5 false (including 2 floating). Each connects to a thoracic vertebra"},{cat:"skeletal",q:"What is the xiphoid process?",a:"Teardrop bone below sternum; must locate during CPR to avoid breaking it"},{cat:"skeletal",q:"Describe the humerus.",a:"Arm bone; fits into scapula cavity for arm rotation; distal end attaches to forearm"},{cat:"skeletal",q:"Radius vs. Ulna?",a:"Radius: lateral (thumb) side. Ulna: longer, medial side; olecranon = bony elbow"},{cat:"skeletal",q:"How many bones in the hand?",a:"8 carpals (wrist), 5 metacarpals (palm), 14 phalanges"},{cat:"skeletal",q:"What is the femur?",a:"Thigh bone — longest & strongest; forms hip joint and knee"},{cat:"skeletal",q:"What is the acetabulum?",a:"Depression receiving head of femur; allows thigh rotation"},{cat:"skeletal",q:"Tibia vs. Fibula?",a:"Tibia: shin bone, weight-bearing, medial malleolus. Fibula: thin, non-weight-bearing, lateral malleolus"},{cat:"skeletal",q:"What bones make up the foot?",a:"7 tarsals (ankle), 5 metatarsals (instep), 14 phalanges (toes). Talus & calcaneus bear most weight"},{cat:"joints",q:"What are the two functions of joints?",a:"1. Hold bones together\n2. Allow movement"},{cat:"joints",q:"What is rheumatology?",a:"Branch of science studying joint diseases"},{cat:"joints",q:"What are the 3 types of joints?",a:"Immovable (skull sutures), Slightly movable (vertebral column), Freely movable (synovial)"},{cat:"joints",q:"What is articular cartilage?",a:"Forms a smooth surface within the joint"},{cat:"joints",q:"What is the meniscus?",a:"Only in the knee; C-shaped; shock absorber"},{cat:"joints",q:"What is cartilage made of?",a:"Collagen and elastin. Protects joint, allows smooth movement, absorbs shock"},{cat:"joints",q:"What is the joint capsule?",a:"Fibrous connective tissue enclosing the joint in a sleeve"},{cat:"joints",q:"What is synovial fluid?",a:"Lubricates bones to decrease friction; consistency of egg white"},{cat:"joints",q:"What is a bursa?",a:"Fluid-filled sac reducing friction; lined with synovial membrane; protects tendons"},{cat:"joints",q:"Name the 5 types of freely movable joints.",a:"Hinge (elbows, knees), Ball-and-socket (shoulders, hips), Pivot (atlas-axis), Saddle (thumb), Gliding (wrist, spine, ankles)"},{cat:"joints",q:"What type of joint is the knee?",a:"Tibiofemoral — hinge joint; extra cartilage; meniscus easily torn"},{cat:"joints",q:"What type of joint is the shoulder?",a:"Glenohumeral — ball-and-socket; great ROM; easily dislocated"},{cat:"joints",q:"What type of joint is the hip?",a:"Coxal — ball-and-socket; femur & acetabulum; fractures common"},{cat:"joints",q:"Name the 7 types of joint movement.",a:"Flexion-extension, Inversion-eversion, Supination-pronation, Abduction-adduction, Dorsiflexion-plantar flexion, Hyperextension, Circumduction"},{cat:"joints",q:"Tendons vs. Ligaments?",a:"Tendons: muscle to bone (movement)\nLigaments: bone to bone (stability, prevent dislocation)"},{cat:"muscular",q:"How many muscles in the body?",a:"More than 600"},{cat:"muscular",q:"What % of body weight are muscles?",a:"40–50%"},{cat:"muscular",q:"Largest vs. smallest muscle?",a:"Largest: gluteus maximus\nSmallest: stapedius (inner ear)"},{cat:"muscular",q:"Hardest working muscle?",a:"The heart"},{cat:"muscular",q:"How much body heat from muscles?",a:"85%. Shivering = involuntary contraction to raise temperature"},{cat:"muscular",q:"What are the 3 muscle types?",a:"Skeletal (striated, voluntary)\nSmooth (nonstriated, involuntary)\nCardiac (striated, involuntary — heart only)"},{cat:"muscular",q:"5 functions of skeletal muscles?",a:"1. Produce movement\n2. Maintain posture\n3. Stabilize joints\n4. Produce heat\n5. Limited regeneration"},{cat:"muscular",q:"What is a fascicle?",a:"A group of muscle fibers. Several fascicles make a muscle."},{cat:"muscular",q:"What is fascia?",a:"Thin connective tissue covering surrounding every organ, muscle, bone, nerve & blood vessel"},{cat:"muscular",q:"Name the 3 fascia layers.",a:"Epimysium (outer), Perimysium (middle), Endomysium (inner)"},{cat:"muscular",q:"What are the 3 parts of a muscle?",a:"Origin (start, no movement)\nBody / belly (center)\nInsertion (end, movement occurs)"},{cat:"muscular",q:"7 ways muscles are named?",a:"Size, Shape, Direction of fibers, Location, Number of origins, Origin & insertion, Muscle action"},{cat:"muscular",q:"What is muscle tonus?",a:"Partial contraction in all healthy muscles at rest"},{cat:"muscular",q:"Hypertrophy vs. Atrophy?",a:"Hypertrophy: growth from overuse\nAtrophy: wasting from disuse, poor innervation, or aging"},{cat:"muscular",q:"What is a contracture?",a:"Abnormal fibrous formation that freezes muscle in flexed position"},{cat:"muscular",q:"What does the zygomaticus do?",a:"The smiling muscle — corner of mouth to cheekbone"},{cat:"muscular",q:"Chewing muscles?",a:"Masseter & Temporalis — close the jaw"},{cat:"muscular",q:"What does the sternocleidomastoid do?",a:"Flexion and rotation of the head"},{cat:"muscular",q:"What is the diaphragm's role?",a:"Primarily responsible for breathing"},{cat:"muscular",q:"Abdominal wall muscles?",a:"Internal oblique, External oblique, Transversus abdominis, Rectus abdominis"},{cat:"muscular",q:"What does erector spinae do?",a:"Cranium to sacrum; maintains erect posture"},{cat:"muscular",q:"Latissimus dorsi nickname?",a:"'Swimmer's muscle' — brings arm behind body"},{cat:"muscular",q:"Why is the deltoid significant?",a:"Abducts arm; common site for intramuscular injection"},{cat:"muscular",q:"4 parts of quadriceps femoris?",a:"Rectus femoris, Vastus lateralis, Vastus medialis, Vastus intermedius — extend leg at knee"},{cat:"muscular",q:"3 hamstring muscles?",a:"Biceps femoris, Semitendinosus, Semimembranosus — leg flexion & thigh extension"},{cat:"muscular",q:"What is the Achilles tendon?",a:"Connects gastrocnemius & soleus (calf) to heel; plantar flexion"},{cat:"muscular",q:"What does sartorius do?",a:"Rotates legs for cross-legged sitting"},{cat:"muscular",q:"What does tibialis anterior do?",a:"Dorsiflexion and inversion of the foot"},{cat:"prepostop",q:"What is pre-operative care?",a:"Care given before surgery to prepare the patient physically and emotionally for the procedure"},{cat:"prepostop",q:"What is post-operative care?",a:"Care given after surgery to promote healing, prevent complications, and manage pain"},{cat:"prepostop",q:"What is included in pre-op skin prep?",a:"Shower or bath with antimicrobial soap the night before and morning of surgery to reduce skin bacteria"},{cat:"prepostop",q:"Why must nail polish be removed before surgery?",a:"Pulse oximeter reads oxygen saturation through the nail bed — polish interferes with accurate readings"},{cat:"prepostop",q:"What ID checks happen before surgery?",a:"Check patient ID band, allergy band, and blood bank band. Verify name, DOB, and procedure."},{cat:"prepostop",q:"What items must be removed before surgery?",a:"Jewelry, piercings, dentures, prosthetics, hearing aids, glasses, and contact lenses"},{cat:"prepostop",q:"What is surgical consent?",a:"A legal document signed by the patient (or guardian) confirming they understand the procedure, risks, and alternatives. Physician explains; nurse witnesses."},{cat:"prepostop",q:"What does NPO mean?",a:"Nothing by mouth (nil per os) — no food or drink, usually after midnight before surgery, to prevent aspiration"},{cat:"prepostop",q:"Why must the patient void before surgery?",a:"An empty bladder reduces risk of injury during abdominal or pelvic procedures and prevents post-op urinary retention"},{cat:"prepostop",q:"What does the patient wear to the OR?",a:"Hospital gown only — no underwear. Hair covered with a surgical cap. All personal items stored safely."},{cat:"prepostop",q:"What is psychological preparation for surgery?",a:"Assess anxiety, explain what to expect, answer questions, teach post-op exercises (deep breathing, coughing, leg exercises), and provide emotional support"},{cat:"prepostop",q:"What does the LPN do while the patient waits for surgery?",a:"Monitor vitals, ensure paperwork is complete, check that consent is signed, verify NPO status, start IV if ordered, and provide emotional support"},{cat:"prepostop",q:"What are the 3 goals of post-operative care?",a:"1. Prevent complications\n2. Promote healing\n3. Return patient to optimal function"},{cat:"prepostop",q:"What are the 7 P's of neurovascular assessment?",a:"Pain, Pulse, Pallor, Paresthesia (numbness/tingling), Paralysis, Pressure, Poikilothermia (cool to touch)"},{cat:"prepostop",q:"How often should a patient use the incentive spirometer after surgery?",a:"10 times every hour while awake — deep breathing expands lungs and prevents atelectasis and pneumonia"},{cat:"prepostop",q:"Why is early mobilization important after surgery?",a:"Prevents blood clots (DVT), pneumonia, constipation, pressure ulcers, and muscle weakness. Get moving ASAP."},{cat:"prepostop",q:"What elimination issues are monitored post-op?",a:"Urinary output (should void within 8 hours), bowel sounds (listen for return of peristalsis), and passing flatus"},{cat:"prepostop",q:"When is the IV discontinued after surgery?",a:"When the patient can tolerate oral fluids and medications without nausea or vomiting"},{cat:"prepostop",q:"What is PQRSTU for pain assessment?",a:"P = Provokes/Palliates\nQ = Quality\nR = Region/Radiates\nS = Severity (0-10)\nT = Timing\nU = Understanding (what patient believes is causing it)"},{cat:"prepostop",q:"What is a PCA pump?",a:"Patient-Controlled Analgesia — patient presses a button for pain medication. Has a lockout interval to prevent overdose."},{cat:"prepostop",q:"What are common opioid side effects?",a:"Respiratory depression, constipation, nausea/vomiting, sedation, itching, and urinary retention"},{cat:"prepostop",q:"What is Narcan (naloxone)?",a:"An opioid antagonist that reverses opioid effects, especially respiratory depression. Given IV for fastest action."},{cat:"prepostop",q:"What does narcotic naive mean?",a:"A patient who has not previously taken opioids — they are at higher risk for respiratory depression and side effects"},{cat:"prepostop",q:"What are wound care priorities post-op?",a:"Monitor for signs of infection (redness, swelling, warmth, drainage, fever). Keep dressings clean and dry. Note drain output."},{cat:"prepostop",q:"Name non-pharmacologic pain interventions.",a:"Repositioning, ice/heat, deep breathing, guided imagery, music therapy, massage, distraction, and elevation of the affected area"}];
+
+let filtered=[...allCards], idx=0;
+const $=id=>document.getElementById(id);
+
+// ===== SOUND ENGINE (Web Audio API) =====
+let audioCtx;
+function getAudio() {
+  if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  return audioCtx;
+}
+function playTone(freq, dur, type, vol) {
+  const ctx = getAudio(); if(!ctx) return;
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = type || 'sine';
+  o.frequency.value = freq;
+  g.gain.value = vol || 0.08;
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur||0.15));
+  o.connect(g); g.connect(ctx.destination);
+  o.start(); o.stop(ctx.currentTime + (dur||0.15));
+}
+function sfxFlip() { playTone(600, 0.08, 'sine', 0.06); setTimeout(()=>playTone(900, 0.06, 'sine', 0.04), 40); }
+function sfxCorrect() { playTone(523, 0.1, 'sine', 0.07); setTimeout(()=>playTone(659, 0.1, 'sine', 0.07), 80); setTimeout(()=>playTone(784, 0.15, 'sine', 0.07), 160); }
+function sfxWrong() { playTone(200, 0.18, 'square', 0.12); setTimeout(()=>playTone(150, 0.25, 'square', 0.12), 120); setTimeout(()=>playTone(120, 0.2, 'sawtooth', 0.1), 240); }
+function sfxLevelUp() { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f, 0.15, 'sine', 0.08), i*100)); }
+function sfxClick() { playTone(800, 0.04, 'sine', 0.04); }
+function sfxShuffle() { for(let i=0;i<5;i++) setTimeout(()=>playTone(400+Math.random()*600, 0.05, 'sine', 0.04), i*50); }
+function sfxSwipe() { playTone(500, 0.06, 'sine', 0.04); }
+
+// ===== HAPTIC =====
+function haptic(ms) { try { navigator.vibrate && navigator.vibrate(ms||15); } catch(e){} }
+
+// ===== PROGRESS TRACKING =====
+let cardsDone = 0, gotItSet = new Set();
+
+function bumpProgress() {
+  cardsDone++;
+  $('cards-done').textContent = cardsDone;
+  const pill = $('progress-pill');
+  pill.classList.remove('bump');
+  void pill.offsetHeight;
+  pill.classList.add('bump');
+}
+
+function showComplete() {
+  const ov = document.createElement('div');
+  ov.className = 'complete-overlay';
+  ov.innerHTML = `<div class="complete-card">
+    <div class="complete-emoji">&#x1F389;</div>
+    <div class="complete-title">Deck Complete!</div>
+    <div class="complete-sub">You went through all ${filtered.length} cards!</div>
+    <button class="complete-btn" onclick="this.closest('.complete-overlay').remove()">Keep studying</button>
+  </div>`;
+  document.body.appendChild(ov);
+  for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.6), i*200);
+  haptic(150);
+  sfxLevelUp();
+  setTimeout(()=>{ if(ov.parentElement) ov.remove(); }, 5000);
+}
+
+// ===== CONFETTI =====
+const confettiStyle = document.createElement('style');
+confettiStyle.textContent = `@keyframes confettiExplode { 0%{transform:translate(0,0) rotate(0) scale(1);opacity:1} 100%{transform:translate(var(--tx),var(--ty)) rotate(720deg) scale(0);opacity:0} }`;
+document.head.appendChild(confettiStyle);
+
+function spawnConfetti(x, y) {
+  const colors = ['#3EA6FF','#C489F1','#FF8C5A','#FF4E45','#1DB954','#FFD93D'];
+  const c = document.createElement('div');
+  c.className = 'confetti-container';
+  document.body.appendChild(c);
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[i % colors.length];
+    p.style.width = (6 + Math.random()*6) + 'px';
+    p.style.height = p.style.width;
+    p.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    const angle = (Math.PI * 2 * i) / 16;
+    const dist = 50 + Math.random() * 80;
+    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--ty', Math.sin(angle) * dist - 40 + 'px');
+    p.style.animation = `confettiExplode ${0.6+Math.random()*0.4}s cubic-bezier(0.22,1,0.36,1) forwards`;
+    c.appendChild(p);
+  }
+  setTimeout(() => c.remove(), 1200);
+}
+
+// ===== FLASH CARD RENDER =====
+function render(dir){
+  const c=filtered[idx]; if(!c)return;
+  const card = $('flashcard');
+  if (dir) {
+    card.classList.remove('slide-right','slide-left');
+    void card.offsetHeight;
+    card.classList.add(dir > 0 ? 'slide-right' : 'slide-left');
+    sfxSwipe(); haptic();
+  }
+  $('fc-question').textContent=c.q;
+  $('fc-answer').textContent=c.a;
+  $('fc-pos').textContent=`${idx+1} / ${filtered.length}`;
+  const total = $('fc-total');
+  total.textContent=`${filtered.length} cards`;
+  total.classList.remove('fc-counter-pop');
+  void total.offsetHeight;
+  total.classList.add('fc-counter-pop');
+  const b=$('fc-badge'); b.className='fc-cat-tag '+c.cat;
+  b.textContent=c.cat==='skeletal'?'Skeletal':c.cat==='joints'?'Joints':c.cat==='prepostop'?'Pre/Post Op':'Muscular';
+  card.classList.remove('flipped','flash-green','flash-orange');
+  $('fc-prev').disabled=idx===0;
+  $('fc-next').disabled=idx>=filtered.length-1;
+  $('fc-progress-bar').style.width=((idx+1)/filtered.length*100)+'%';
+}
+
+// Card flip
+$('flashcard').addEventListener('click',function(){
+  this.classList.toggle('flipped');
+  sfxFlip(); haptic();
+});
+
+// Nav buttons
+$('fc-prev').addEventListener('click',()=>{if(idx>0){idx--;render(-1)}});
+$('fc-next').addEventListener('click',()=>{
+  if(idx<filtered.length-1){idx++;render(1)}
+  else { showComplete(); }
+});
+
+// "Got it!" — mark as learned, confetti, next card
+$('fc-gotit').addEventListener('click',function(){
+  sfxCorrect(); haptic(30);
+  gotItSet.add(filtered[idx].q);
+  bumpProgress();
+  const card = $('flashcard');
+  card.classList.add('flash-green');
+  this.classList.add('flash');
+  setTimeout(()=>this.classList.remove('flash'), 300);
+  const rect = card.getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+  setTimeout(()=>{
+    if(idx < filtered.length-1){ idx++; render(1); }
+    else { showComplete(); }
+  }, 400);
+});
+
+// "Review" — needs more practice, next card
+$('fc-review').addEventListener('click',function(){
+  sfxWrong(); haptic(20);
+  const card = $('flashcard');
+  card.classList.add('flash-orange');
+  this.classList.add('flash');
+  setTimeout(()=>this.classList.remove('flash'), 300);
+  setTimeout(()=>{
+    if(idx < filtered.length-1){ idx++; render(1); }
+    else { showComplete(); }
+  }, 400);
+});
+
+// Shuffle
+$('fc-shuffle-btn').addEventListener('click',function(){
+  this.classList.add('spinning');
+  sfxShuffle(); haptic(40);
+  setTimeout(()=>this.classList.remove('spinning'), 500);
+  for(let i=filtered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[filtered[i],filtered[j]]=[filtered[j],filtered[i]]}
+  idx=0;render(1);
+  const rect = document.querySelector('.fc-card-area').getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/3);
+});
+
+// Swipe
+let sx=0,sy=0;
+const ca=document.querySelector('.fc-card-area');
+ca.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ca.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){
+    if(dx<0&&idx<filtered.length-1){idx++;render(1)}
+    else if(dx>0&&idx>0){idx--;render(-1)}
+  }
+});
+
+// ===== STAGGERED ANIMATION =====
+function animateCards(container, selector) {
+  const cards = container.querySelectorAll(selector);
+  cards.forEach((card, i) => {
+    card.classList.remove('anim-in');
+    card.style.opacity = '0';
+    setTimeout(() => {
+      card.style.opacity = '';
+      card.classList.add('anim-in');
+      card.style.animationDelay = (i * 0.05) + 's';
+    }, 10);
+  });
+}
+
+// Bottom nav
+document.querySelectorAll('.nav-item').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    sfxClick(); haptic();
+    document.querySelectorAll('.tab-view').forEach(v=>v.classList.remove('active'));
+    const view = document.getElementById('view-'+this.dataset.view);
+    view.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+    if (this.dataset.view === 'guide') animateCards(view, '.topic-card');
+    else if (this.dataset.view === 'pods') animateCards(view, '.pod-card');
+    else if (this.dataset.view === 'cards') {
+      const card = $('flashcard');
+      card.classList.remove('slide-right');
+      void card.offsetHeight;
+      card.classList.add('slide-right');
+    }
+    else if (this.dataset.view === 'games') {
+      showGamePicker();
+    }
+  });
+});
+
+// Accordion
+document.querySelectorAll('.topic-header').forEach(h=>{
+  h.addEventListener('click',()=>{
+    h.parentElement.classList.toggle('open');
+    sfxClick(); haptic();
+  });
+});
+
+// Category pills (Study Guide + Flash Cards)
+document.querySelectorAll('.pills-row').forEach(row=>{
+  row.querySelectorAll('.pill[data-cat]').forEach(p=>{
+    p.addEventListener('click',function(){
+      row.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+      this.classList.add('active');
+      sfxClick(); haptic();
+      const cat=this.dataset.cat, scope=row.dataset.scope;
+      if(scope==='guide'){
+        document.querySelectorAll('#guide-list .topic-card').forEach(c=>{
+          c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';
+        });
+        document.querySelectorAll('#guide-list .section-divider').forEach(d=>{
+          d.style.display=(cat==='all'||d.dataset.cat===cat)?'':'none';
+        });
+        animateCards(document.getElementById('guide-list'), '.topic-card:not([style*="display: none"])');
+      }else if(scope==='cards'){
+        filtered=cat==='all'?[...allCards]:allCards.filter(c=>c.cat===cat);
+        idx=0;render(1);
+      }
+    });
+  });
+});
+
+// Listen tab filter pills
+document.querySelectorAll('.pills-row[data-scope="listen"] .pill').forEach(p=>{
+  p.addEventListener('click',function(){
+    this.closest('.pills-row').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    sfxClick(); haptic();
+    const cat = this.dataset.listencat;
+    document.querySelectorAll('#view-pods [data-listentype]').forEach(el=>{
+      el.style.display = (cat==='all' || el.dataset.listentype===cat) ? '' : 'none';
+    });
+    animateCards(document.getElementById('view-pods'), '.pod-card:not([style*="display: none"])');
+  });
+});
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if($('view-cards').classList.contains('active')){
+    if(e.key==='ArrowLeft')$('fc-prev').click();
+    if(e.key==='ArrowRight')$('fc-next').click();
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();$('flashcard').click()}
+  }
+});
+
+// ===== QUIZ GAME =====
+let quizQuestions=[], quizIdx=0, quizScore=0, quizCat='all';
+
+function pickQuizQuestions() {
+  const pool = quizCat==='all' ? [...allCards] : allCards.filter(c=>c.cat===quizCat);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  quizQuestions = pool.slice(0, Math.min(10, pool.length));
+}
+
+function generateOptions(correctCard) {
+  const others = allCards.filter(c => c.a !== correctCard.a);
+  for(let i=others.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[others[i],others[j]]=[others[j],others[i]]}
+  const wrongAnswers = others.slice(0, 3).map(c => c.a);
+  const options = [correctCard.a, ...wrongAnswers];
+  for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]]}
+  return options;
+}
+
+function truncAnswer(a) { const s=a.split('\n')[0]; return s.length>100 ? s.substring(0,100)+'...' : s; }
+
+function startQuiz() {
+  quizIdx=0; quizScore=0;
+  pickQuizQuestions();
+  $('quiz-intro').style.display='none';
+  $('quiz-result').classList.remove('active');
+  $('quiz-area').classList.add('active');
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  const q = quizQuestions[quizIdx];
+  $('quiz-progress-label').textContent = `Question ${quizIdx+1} / ${quizQuestions.length}`;
+  $('quiz-score-label').textContent = `Score: ${quizScore}`;
+  $('quiz-bar').style.width = ((quizIdx)/quizQuestions.length*100)+'%';
+  const badge = $('quiz-q-cat');
+  badge.className = 'quiz-q-cat ' + q.cat;
+  badge.textContent = q.cat==='skeletal'?'Skeletal':q.cat==='joints'?'Joints':q.cat==='prepostop'?'Pre/Post Op':'Muscular';
+  $('quiz-q-text').textContent = q.q;
+  const opts = generateOptions(q);
+  const letters = ['A','B','C','D'];
+  const container = $('quiz-options');
+  container.innerHTML = '';
+  opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    const display = truncAnswer(opt);
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${display}</span>`;
+    btn._fullAnswer = opt;
+    btn.addEventListener('click', () => handleQuizAnswer(btn, opt, q.a, container));
+    container.appendChild(btn);
+  });
+  $('quiz-next').classList.remove('visible');
+  $('quiz-q-card').style.animation = 'none';
+  void $('quiz-q-card').offsetHeight;
+  $('quiz-q-card').style.animation = '';
+}
+
+function handleQuizAnswer(btn, selected, correct, container) {
+  const allBtns = container.querySelectorAll('.quiz-option');
+  allBtns.forEach(b => b.classList.add('disabled'));
+  const isCorrect = selected === correct;
+  if(isCorrect) {
+    btn.classList.add('correct');
+    quizScore++;
+    sfxCorrect(); haptic(30);
+    const rect = btn.getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width/2, rect.top);
+  } else {
+    btn.classList.add('wrong');
+    sfxWrong(); haptic(20);
+  }
+  allBtns.forEach(b => {
+    if(b._fullAnswer === correct) b.classList.add('correct');
+  });
+  $('quiz-score-label').textContent = `Score: ${quizScore}`;
+  if(quizIdx < quizQuestions.length - 1) {
+    $('quiz-next').classList.add('visible');
+  } else {
+    setTimeout(showQuizResult, 800);
+  }
+}
+
+function showQuizResult() {
+  $('quiz-area').classList.remove('active');
+  $('quiz-result').classList.add('active');
+  const pct = Math.round(quizScore/quizQuestions.length*100);
+  let emoji, title;
+  if(pct >= 90) { emoji='&#x1F3C6;'; title='Amazing!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  $('quiz-result-emoji').innerHTML = emoji;
+  $('quiz-result-title').textContent = title;
+  $('quiz-result-score').textContent = `You got ${quizScore} out of ${quizQuestions.length} (${pct}%)`;
+  if(pct >= 90) {
+    sfxLevelUp(); haptic(150);
+    for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
+  } else if(pct >= 50) {
+    sfxCorrect(); haptic(50);
+  }
+  $('quiz-bar').style.width = '100%';
+}
+
+$('quiz-start').addEventListener('click', startQuiz);
+$('quiz-next').addEventListener('click', () => { quizIdx++; renderQuizQ(); sfxSwipe(); haptic(); });
+$('quiz-again').addEventListener('click', () => { $('quiz-result').classList.remove('active'); startQuiz(); });
+
+// Quiz category pills
+document.querySelectorAll('.pills-row[data-scope="quiz"] .pill').forEach(p=>{
+  p.addEventListener('click',function(){
+    this.closest('.pills-row').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    sfxClick(); haptic();
+    quizCat = this.dataset.cat;
+    $('quiz-area').classList.remove('active');
+    $('quiz-result').classList.remove('active');
+    $('quiz-intro').style.display='';
+  });
+});
+
+// ===== GAMES HUB NAVIGATION =====
+function showGamePicker() {
+  document.querySelectorAll('#view-games .game-view').forEach(v=>v.classList.remove('active'));
+  $('game-picker').classList.add('active');
+}
+function openGame(name) {
+  document.querySelectorAll('#view-games .game-view').forEach(v=>v.classList.remove('active'));
+  $('game-'+name).classList.add('active');
+  sfxClick(); haptic();
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(name==='quiz') {
+    $('quiz-area').classList.remove('active');
+    $('quiz-result').classList.remove('active');
+    $('quiz-intro').style.display='';
+  } else if(name==='match') {
+    startMatch();
+  } else if(name==='tf') {
+    startTF();
+  }
+}
+document.querySelectorAll('.game-pick-card').forEach(c=>{
+  c.addEventListener('click',()=>openGame(c.dataset.game));
+});
+$('quiz-back').addEventListener('click', showGamePicker);
+$('match-back').addEventListener('click', ()=>{ clearInterval(matchTimerInterval); showGamePicker(); });
+$('tf-back').addEventListener('click', showGamePicker);
+
+// ===== MATCHING GAME =====
+let matchPairs=[], matchSelected=null, matchCount=0, matchTotal=6, matchTimerInterval=null, matchSeconds=0, matchCat='all';
+
+function startMatch() {
+  clearInterval(matchTimerInterval);
+  matchCount=0; matchSeconds=0; matchSelected=null;
+  const pool = matchCat==='all' ? [...allCards] : allCards.filter(c=>c.cat===matchCat);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  matchTotal = Math.min(6, pool.length);
+  matchPairs = pool.slice(0, matchTotal);
+  $('match-count').textContent='0';
+  $('match-total').textContent=matchTotal;
+  $('match-timer').textContent='0:00';
+  $('match-result').classList.remove('active');
+  const grid = $('match-grid');
+  grid.innerHTML = '';
+  const tiles = [];
+  matchPairs.forEach((card, i) => {
+    tiles.push({type:'q', idx:i, text: card.q.length>60 ? card.q.substring(0,60)+'...' : card.q, fullQ: card.q});
+    const shortA = card.a.split('\n')[0];
+    tiles.push({type:'a', idx:i, text: shortA.length>60 ? shortA.substring(0,60)+'...' : shortA, fullA: card.a});
+  });
+  for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tiles[i],tiles[j]]=[tiles[j],tiles[i]]}
+  tiles.forEach(t => {
+    const el = document.createElement('button');
+    el.className = 'match-tile';
+    el.textContent = t.text;
+    el.dataset.type = t.type;
+    el.dataset.idx = t.idx;
+    el.addEventListener('click', ()=> handleMatchTap(el));
+    grid.appendChild(el);
+  });
+  matchTimerInterval = setInterval(()=>{
+    matchSeconds++;
+    const m=Math.floor(matchSeconds/60), s=matchSeconds%60;
+    $('match-timer').textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
+}
+
+function handleMatchTap(el) {
+  if(el.classList.contains('matched') || el.classList.contains('wrong-flash')) return;
+  sfxClick(); haptic();
+  if(matchSelected) {
+    if(matchSelected === el) { el.classList.remove('selected'); matchSelected=null; return; }
+    const selIdx = matchSelected.dataset.idx;
+    const tapIdx = el.dataset.idx;
+    const selType = matchSelected.dataset.type;
+    const tapType = el.dataset.type;
+    if(selIdx === tapIdx && selType !== tapType) {
+      matchSelected.classList.remove('selected');
+      matchSelected.classList.add('matched');
+      el.classList.add('matched');
+      sfxCorrect(); haptic(30);
+      const rect = el.getBoundingClientRect();
+      spawnConfetti(rect.left+rect.width/2, rect.top);
+      matchCount++;
+      $('match-count').textContent = matchCount;
+      matchSelected = null;
+      if(matchCount >= matchTotal) {
+        clearInterval(matchTimerInterval);
+        setTimeout(showMatchResult, 600);
+      }
+    } else {
+      const prev = matchSelected;
+      prev.classList.remove('selected');
+      prev.classList.add('wrong-flash');
+      el.classList.add('wrong-flash');
+      sfxWrong(); haptic(20);
+      matchSelected = null;
+      setTimeout(()=>{ prev.classList.remove('wrong-flash'); el.classList.remove('wrong-flash'); }, 500);
+    }
+  } else {
+    el.classList.add('selected');
+    matchSelected = el;
+  }
+}
+
+function showMatchResult() {
+  $('match-result').classList.add('active');
+  const m=Math.floor(matchSeconds/60), s=matchSeconds%60;
+  const timeStr = m+':'+(s<10?'0':'')+s;
+  let emoji, title;
+  if(matchSeconds <= 30) { emoji='&#x26A1;'; title='Lightning Fast!'; }
+  else if(matchSeconds <= 60) { emoji='&#x1F525;'; title='Great Speed!'; }
+  else if(matchSeconds <= 120) { emoji='&#x1F31F;'; title='Nice Job!'; }
+  else { emoji='&#x1F4AA;'; title='You Did It!'; }
+  $('match-result-emoji').innerHTML = emoji;
+  $('match-result-title').textContent = title;
+  $('match-result-score').textContent = `All ${matchTotal} pairs matched in ${timeStr}`;
+  sfxLevelUp(); haptic(150);
+  for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
+}
+
+$('match-again').addEventListener('click', ()=>{ $('match-result').classList.remove('active'); startMatch(); });
+
+document.querySelectorAll('.pills-row[data-scope="match"] .pill').forEach(p=>{
+  p.addEventListener('click',function(){
+    this.closest('.pills-row').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    sfxClick(); haptic();
+    matchCat = this.dataset.cat;
+    startMatch();
+  });
+});
+
+// ===== TRUE / FALSE GAME =====
+let tfQuestions=[], tfIdx=0, tfScore=0, tfCat='all', tfAnswered=false;
+
+function catLabel(cat) {
+  return cat==='skeletal'?'Skeletal':cat==='joints'?'Joints':cat==='prepostop'?'Pre/Post Op':'Muscular';
+}
+
+function generateTFStatements() {
+  const pool = tfCat==='all' ? [...allCards] : allCards.filter(c=>c.cat===tfCat);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  const picked = pool.slice(0, Math.min(10, pool.length));
+  tfQuestions = picked.map(card => {
+    const isTrue = Math.random() > 0.5;
+    if(isTrue) {
+      const shortA = card.a.split('\n')[0];
+      return { cat: card.cat, statement: card.q + ' — ' + shortA, answer: true, explanation: card.a };
+    } else {
+      const others = allCards.filter(c => c.a !== card.a && c.cat === card.cat);
+      if(others.length === 0) {
+        const shortA = card.a.split('\n')[0];
+        return { cat: card.cat, statement: card.q + ' — ' + shortA, answer: true, explanation: card.a };
+      }
+      const wrong = others[Math.floor(Math.random()*others.length)];
+      const shortWrong = wrong.a.split('\n')[0];
+      return { cat: card.cat, statement: card.q + ' — ' + shortWrong, answer: false, explanation: 'The correct answer is: ' + card.a };
+    }
+  });
+}
+
+function startTF() {
+  tfIdx=0; tfScore=0; tfAnswered=false;
+  generateTFStatements();
+  $('tf-result').classList.remove('active');
+  $('tf-next').classList.remove('visible');
+  $('tf-card').style.display='';
+  $('tf-progress-label').style.display='';
+  $('tf-score-label').style.display='';
+  document.querySelector('#game-tf .quiz-progress-bar-bg').style.display='';
+  renderTF();
+}
+
+function renderTF() {
+  if(tfIdx >= tfQuestions.length) return;
+  tfAnswered = false;
+  const q = tfQuestions[tfIdx];
+  $('tf-progress-label').textContent = `Question ${tfIdx+1} / ${tfQuestions.length}`;
+  $('tf-score-label').textContent = `Score: ${tfScore}`;
+  $('tf-bar').style.width = ((tfIdx)/tfQuestions.length*100)+'%';
+  const badge = $('tf-cat');
+  badge.className = 'tf-cat ' + q.cat;
+  badge.textContent = catLabel(q.cat);
+  $('tf-statement').textContent = q.statement;
+  $('tf-feedback').className = 'tf-feedback';
+  $('tf-feedback').textContent = '';
+  $('tf-next').classList.remove('visible');
+  $('tf-true').disabled = false;
+  $('tf-false').disabled = false;
+  $('tf-true').classList.remove('flash');
+  $('tf-false').classList.remove('flash');
+  $('tf-card').style.animation = 'none';
+  void $('tf-card').offsetHeight;
+  $('tf-card').style.animation = '';
+}
+
+function handleTF(userSaidTrue) {
+  if(tfAnswered) return;
+  tfAnswered = true;
+  const q = tfQuestions[tfIdx];
+  const isCorrect = userSaidTrue === q.answer;
+  $('tf-true').disabled = true;
+  $('tf-false').disabled = true;
+  if(isCorrect) {
+    tfScore++;
+    sfxCorrect(); haptic(30);
+    if(userSaidTrue) $('tf-true').classList.add('flash');
+    else $('tf-false').classList.add('flash');
+    $('tf-feedback').className = 'tf-feedback show correct';
+    $('tf-feedback').textContent = 'Correct!';
+    const rect = $('tf-card').getBoundingClientRect();
+    spawnConfetti(rect.left+rect.width/2, rect.top+rect.height/2);
+  } else {
+    sfxWrong(); haptic(20);
+    if(userSaidTrue) $('tf-true').classList.add('flash');
+    else $('tf-false').classList.add('flash');
+    $('tf-feedback').className = 'tf-feedback show wrong';
+    $('tf-feedback').textContent = q.explanation;
+  }
+  $('tf-score-label').textContent = `Score: ${tfScore}`;
+  if(tfIdx < tfQuestions.length - 1) {
+    $('tf-next').classList.add('visible');
+  } else {
+    setTimeout(showTFResult, 800);
+  }
+}
+
+function showTFResult() {
+  $('tf-card').style.display='none';
+  $('tf-next').classList.remove('visible');
+  $('tf-progress-label').style.display='none';
+  $('tf-score-label').style.display='none';
+  document.querySelector('#game-tf .quiz-progress-bar-bg').style.display='none';
+  $('tf-result').classList.add('active');
+  const pct = Math.round(tfScore/tfQuestions.length*100);
+  let emoji, title;
+  if(pct >= 90) { emoji='&#x1F3C6;'; title='Amazing!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  $('tf-result-emoji').innerHTML = emoji;
+  $('tf-result-title').textContent = title;
+  $('tf-result-score').textContent = `You got ${tfScore} out of ${tfQuestions.length} (${pct}%)`;
+  $('tf-bar').style.width = '100%';
+  if(pct >= 90) {
+    sfxLevelUp(); haptic(150);
+    for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
+  } else if(pct >= 50) {
+    sfxCorrect(); haptic(50);
+  }
+}
+
+$('tf-true').addEventListener('click', ()=>handleTF(true));
+$('tf-false').addEventListener('click', ()=>handleTF(false));
+$('tf-next').addEventListener('click', ()=>{ tfIdx++; renderTF(); sfxSwipe(); haptic(); });
+$('tf-again').addEventListener('click', ()=>{ $('tf-result').classList.remove('active'); startTF(); });
+
+document.querySelectorAll('.pills-row[data-scope="tf"] .pill').forEach(p=>{
+  p.addEventListener('click',function(){
+    this.closest('.pills-row').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    sfxClick(); haptic();
+    tfCat = this.dataset.cat;
+    startTF();
+  });
+});
+
+// Init with load animation
+setTimeout(()=>animateCards(document.getElementById('view-guide'), '.topic-card'), 100);
+render();
+</script>
+
+</body></html>
