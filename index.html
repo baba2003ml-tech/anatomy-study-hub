@@ -1,6 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anatomy Study Hub</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<style>:root{color-scheme:light;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}</style>
+</head>
+<body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap">
 <style>
 /* App-shell layout: dark-first, bottom nav, mobile-optimized */
@@ -692,6 +698,10 @@ body::before {
   background: linear-gradient(135deg, #4a148c, #6a1b9a);
   box-shadow: 0 4px 20px rgba(74,20,140,0.4);
 }
+.game-pick-card[data-game="imgid"] {
+  background: linear-gradient(135deg, #b71c1c, #d32f2f);
+  box-shadow: 0 4px 20px rgba(183,28,28,0.4);
+}
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) .game-pick-card[data-game="quiz"] {
     background: linear-gradient(135deg, #e3f2fd, #bbdefb);
@@ -704,6 +714,10 @@ body::before {
   :root:not([data-theme="dark"]) .game-pick-card[data-game="tf"] {
     background: linear-gradient(135deg, #f3e5f5, #e1bee7);
     box-shadow: 0 4px 16px rgba(156,39,176,0.15);
+  }
+  :root:not([data-theme="dark"]) .game-pick-card[data-game="imgid"] {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    box-shadow: 0 4px 16px rgba(211,47,47,0.15);
   }
   :root:not([data-theme="dark"]) .game-pick-name { color: #1a1a1a; }
   :root:not([data-theme="dark"]) .game-pick-desc { color: #555; }
@@ -719,6 +733,10 @@ body::before {
 :root[data-theme="light"] .game-pick-card[data-game="tf"] {
   background: linear-gradient(135deg, #f3e5f5, #e1bee7);
   box-shadow: 0 4px 16px rgba(156,39,176,0.15);
+}
+:root[data-theme="light"] .game-pick-card[data-game="imgid"] {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  box-shadow: 0 4px 16px rgba(211,47,47,0.15);
 }
 :root[data-theme="light"] .game-pick-name { color: #1a1a1a; }
 :root[data-theme="light"] .game-pick-desc { color: #555; }
@@ -902,6 +920,255 @@ body::before {
   font-size: 15px; font-weight: 700; color: var(--fg);
   font-variant-numeric: tabular-nums; background: var(--bg-elevated);
   padding: 4px 12px; border-radius: 8px;
+}
+
+/* ===== KAHOOT / SPEED ROUND ===== */
+.kh-screen { padding: 0; }
+.kh-hud {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.kh-q-num { font-size: 13px; font-weight: 700; color: var(--fg-dim); }
+.kh-pts-total {
+  font-size: 14px; font-weight: 800; color: #f57c00;
+  background: rgba(245,124,0,0.12); padding: 4px 12px; border-radius: 8px;
+}
+.kh-timer-bar {
+  height: 8px; background: var(--border); border-radius: 4px;
+  margin-bottom: 14px; overflow: hidden;
+}
+.kh-timer-fill {
+  height: 100%; border-radius: 4px; width: 100%;
+  background: linear-gradient(90deg, #f57c00, #ff9800);
+  transition: width 0.25s linear;
+}
+.kh-timer-fill.urgent { background: linear-gradient(90deg, #d32f2f, #f44336); }
+.kh-timer-fill.done { transition: none; }
+.kh-question-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 20px; text-align: center; margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1); position: relative;
+  animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.kh-time-left {
+  position: absolute; top: 12px; right: 16px;
+  font-size: 28px; font-weight: 900; color: var(--fg-dim);
+  font-variant-numeric: tabular-nums; opacity: 0.5;
+  line-height: 1;
+}
+.kh-time-left.urgent { color: #d32f2f; opacity: 1; animation: pulse 0.5s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.kh-q-text {
+  font-size: 18px; font-weight: 700; line-height: 1.45;
+  padding: 0 32px 0 0;
+}
+.kh-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.kh-btn {
+  padding: 18px 14px; border-radius: 12px; border: none;
+  font-family: var(--font); font-size: 14px; font-weight: 700;
+  color: #fff; cursor: pointer; text-align: center; line-height: 1.35;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 68px; word-break: break-word;
+  position: relative; overflow: hidden;
+}
+.kh-btn:active { transform: scale(0.94); }
+.kh-btn.disabled { pointer-events: none; opacity: 0.35; }
+.kh-btn.correct-pick { opacity: 1; box-shadow: 0 0 20px rgba(255,255,255,0.3); transform: scale(1.03); }
+.kh-btn.wrong-pick { opacity: 0.6; }
+.kh-btn:nth-child(1) { background: #e21b3c; }
+.kh-btn:nth-child(2) { background: #1368ce; }
+.kh-btn:nth-child(3) { background: #d89e00; }
+.kh-btn:nth-child(4) { background: #26890c; }
+.kh-shape {
+  width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7;
+}
+.kh-feedback {
+  text-align: center; padding: 14px 0 4px;
+  font-size: 15px; font-weight: 700; min-height: 40px;
+}
+.kh-feedback .kh-fb-correct { color: #1DB954; }
+.kh-feedback .kh-fb-wrong { color: var(--red); }
+.kh-feedback .kh-fb-timeout { color: var(--fg-dim); }
+.kh-feedback .kh-fb-pts {
+  display: block; font-size: 22px; font-weight: 900; margin-top: 2px;
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.kh-streak {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  background: rgba(245,124,0,0.15); color: #f57c00;
+  padding: 2px 10px; border-radius: 10px; margin-top: 4px;
+}
+.kh-breakdown {
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  margin-bottom: 20px; margin-top: 8px;
+}
+.kh-stat {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 18px; border-radius: 12px;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  min-width: 80px;
+}
+.kh-stat-val { font-size: 22px; font-weight: 800; color: var(--fg); }
+.kh-stat-label { font-size: 11px; color: var(--fg-secondary); margin-top: 2px; }
+.kh-shape { display: inline-flex; vertical-align: middle; margin-right: 6px; }
+
+/* ===== LIVE MULTIPLAYER ===== */
+.game-pick-card[data-game="live"] {
+  background: linear-gradient(135deg, #b71c1c, #e53935);
+  box-shadow: 0 4px 20px rgba(183,28,28,0.5);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .game-pick-card[data-game="live"] {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    box-shadow: 0 4px 16px rgba(211,47,47,0.15);
+  }
+}
+:root[data-theme="light"] .game-pick-card[data-game="live"] {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  box-shadow: 0 4px 16px rgba(211,47,47,0.15);
+}
+.live-screen { display: none; flex-direction: column; align-items: center; padding: 20px 0; }
+.live-screen.active { display: flex; }
+.live-center { text-align: center; width: 100%; max-width: 420px; }
+.live-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.live-sub { font-size: 14px; color: var(--fg-secondary); margin-bottom: 20px; line-height: 1.5; }
+.live-spinner {
+  width: 36px; height: 36px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 20px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.live-role-row { display: flex; gap: 14px; justify-content: center; margin-bottom: 16px; }
+.live-role-btn {
+  flex: 1; max-width: 180px; padding: 22px 14px; border-radius: 16px;
+  border: 2px solid var(--border); background: var(--bg-card); cursor: pointer;
+  text-align: center; transition: all 0.2s; font-family: var(--font);
+}
+.live-role-btn:hover { border-color: var(--accent); background: var(--accent-glow); }
+.live-role-btn .live-role-icon { font-size: 32px; margin-bottom: 6px; }
+.live-role-btn .live-role-label { font-size: 15px; font-weight: 700; color: var(--fg); }
+.live-role-btn .live-role-desc { font-size: 12px; color: var(--fg-secondary); margin-top: 4px; }
+.live-input {
+  width: 100%; max-width: 300px; padding: 14px 16px; border-radius: 12px;
+  border: 2px solid var(--border); background: var(--bg-elevated);
+  color: var(--fg); font-family: var(--font); font-size: 16px; font-weight: 600;
+  text-align: center; outline: none; margin-bottom: 16px;
+}
+.live-input:focus { border-color: var(--accent); }
+.live-input::placeholder { color: var(--fg-dim); }
+.live-action-btn {
+  display: inline-block; padding: 14px 36px; border-radius: 30px; border: none;
+  font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer;
+  color: #fff; transition: all 0.2s;
+}
+.live-action-btn.host { background: #e53935; }
+.live-action-btn.host:hover { background: #c62828; }
+.live-action-btn.join { background: #1368ce; }
+.live-action-btn.join:hover { background: #0d47a1; }
+.live-action-btn:disabled { opacity: 0.4; pointer-events: none; }
+.live-plist {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  margin: 16px 0; min-height: 40px;
+}
+.live-ptag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.live-ptag.host-tag { background: rgba(229,57,53,0.15); color: #e53935; }
+.live-ptag.player-tag { background: rgba(19,104,206,0.15); color: #5b9ef5; }
+.live-count { font-size: 14px; color: var(--fg-secondary); margin-bottom: 12px; }
+.live-board {
+  width: 100%; max-width: 400px; margin: 0 auto;
+  background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border);
+  overflow: hidden;
+}
+.live-brow {
+  display: flex; align-items: center; padding: 12px 16px;
+  border-bottom: 1px solid var(--border); gap: 12px;
+}
+.live-brow:last-child { border-bottom: none; }
+.live-brank {
+  font-size: 18px; font-weight: 900; width: 32px; text-align: center;
+  flex-shrink: 0;
+}
+.live-brank.gold { color: #f9a825; }
+.live-brank.silver { color: #90a4ae; }
+.live-brank.bronze { color: #a1887f; }
+.live-bname { flex: 1; font-size: 14px; font-weight: 600; }
+.live-bscore { font-size: 15px; font-weight: 800; color: #f57c00; display: flex; align-items: center; gap: 6px; }
+.live-round-pts { font-size: 12px; font-weight: 600; color: #4caf50; }
+.live-round-pts.zero { color: var(--fg-secondary); opacity: 0.5; }
+.live-ans-count {
+  font-size: 13px; color: var(--fg-secondary); margin-top: 12px;
+}
+.live-waiting-dots::after {
+  content: ''; animation: dots 1.4s steps(4,end) infinite;
+}
+@keyframes dots {
+  0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; }
+}
+.live-pts-avail {
+  text-align: center; font-size: 13px; font-weight: 700; color: #f57c00;
+  margin: 4px 0 0; letter-spacing: 0.3px;
+  transition: color 0.3s;
+}
+.live-pts-avail.low { color: #e53935; }
+.live-speed-lock { text-align: center; margin-top: 4px; }
+.live-speed-bar-bg {
+  width: 100%; max-width: 200px; height: 8px; border-radius: 4px;
+  background: var(--border); margin: 8px auto; overflow: hidden;
+}
+.live-speed-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #f57c00, #4caf50);
+  transition: width 0.4s ease;
+}
+.live-correct-answer {
+  max-width: 400px; margin: 0 auto 8px; padding: 10px 16px;
+  background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.3);
+  border-radius: 12px; text-align: center; font-size: 14px; color: #4caf50;
+}
+.live-correct-answer strong { font-weight: 700; }
+.live-your-result {
+  max-width: 400px; margin: 0 auto 12px; text-align: center;
+  font-size: 15px; font-weight: 700; padding: 6px 0;
+}
+.live-your-result.got-it { color: #4caf50; }
+.live-your-result.missed { color: #e53935; }
+.live-your-result.no-answer { color: var(--fg-secondary); }
+.live-winner {
+  font-size: 48px; margin-bottom: 8px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.live-winner-name {
+  font-size: 26px; font-weight: 900; margin-bottom: 4px;
+  background: linear-gradient(135deg, #f9a825, #ff6f00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.live-winner-score { font-size: 15px; color: var(--fg-secondary); margin-bottom: 20px; }
+
+/* ===== IMAGE ID GAME ===== */
+.imgid-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 20px 16px; margin-bottom: 16px; text-align: center;
+  animation: fadeSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.imgid-prompt {
+  font-size: 15px; font-weight: 700; color: var(--fg-secondary); margin-bottom: 14px;
+}
+.imgid-img-wrap {
+  border-radius: 12px; overflow: hidden; background: #000;
+  max-height: 260px; display: flex; align-items: center; justify-content: center;
+}
+.imgid-img {
+  width: 100%; max-height: 260px; object-fit: contain; display: block;
 }
 
 /* ===== TRUE / FALSE GAME ===== */
@@ -2213,6 +2480,14 @@ body::before {
       <div class="games-sub">Pick a game and test what you know</div>
     </div>
     <div class="game-picker">
+      <button class="game-pick-card" data-game="live">
+        <div class="game-pick-icon">&#x1F3AE;</div>
+        <div class="game-pick-info">
+          <div class="game-pick-name">Live Game</div>
+          <div class="game-pick-desc">Multiplayer! Host a live quiz and compete head-to-head</div>
+        </div>
+        <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
       <button class="game-pick-card" data-game="quiz">
         <div class="game-pick-icon">&#x1F9E0;</div>
         <div class="game-pick-info">
@@ -2234,6 +2509,14 @@ body::before {
         <div class="game-pick-info">
           <div class="game-pick-name">True or False</div>
           <div class="game-pick-desc">Read a statement and decide — is it true or false?</div>
+        </div>
+        <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <button class="game-pick-card" data-game="imgid">
+        <div class="game-pick-icon">&#x1F4F7;</div>
+        <div class="game-pick-info">
+          <div class="game-pick-name">Image ID</div>
+          <div class="game-pick-desc">See an anatomy image and identify what it shows</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
@@ -2300,6 +2583,28 @@ body::before {
     </div>
   </div>
 
+  <!-- IMAGE ID -->
+  <div id="game-imgid" class="game-view">
+    <button class="game-back-btn" id="imgid-back">&#x2190; All Games</button>
+    <div class="quiz-progress-row">
+      <span class="quiz-progress-label" id="imgid-progress-label">Question 1 / 8</span>
+      <span class="quiz-score-label" id="imgid-score-label">Score: 0</span>
+    </div>
+    <div class="quiz-progress-bar-bg"><div class="quiz-progress-bar-fill" id="imgid-bar"></div></div>
+    <div class="imgid-card" id="imgid-card">
+      <div class="imgid-prompt">What does this image show?</div>
+      <div class="imgid-img-wrap"><img class="imgid-img" id="imgid-img" src="" alt="Identify this anatomy image"></div>
+    </div>
+    <div class="quiz-options" id="imgid-options"></div>
+    <button class="quiz-next-btn" id="imgid-next">Next Question</button>
+    <div class="quiz-result" id="imgid-result">
+      <div class="quiz-result-emoji" id="imgid-result-emoji"></div>
+      <div class="quiz-result-title" id="imgid-result-title"></div>
+      <div class="quiz-result-score" id="imgid-result-score"></div>
+      <button class="quiz-result-btn" id="imgid-again">Play Again</button>
+    </div>
+  </div>
+
   <!-- TRUE / FALSE -->
   <div id="game-tf" class="game-view">
     <button class="game-back-btn" id="tf-back">&#x2190; All Games</button>
@@ -2333,6 +2638,142 @@ body::before {
     </div>
   </div>
 
+  <!-- LIVE MULTIPLAYER -->
+  <div id="game-live" class="game-view">
+    <button class="game-back-btn" id="live-back">&#x2190; All Games</button>
+
+    <div class="live-screen active" id="live-init">
+      <div class="live-center">
+        <div class="live-spinner"></div>
+        <div class="live-sub">Connecting to live room&hellip;</div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-noroom">
+      <div class="live-center">
+        <div style="font-size:48px;margin-bottom:12px">&#x1F512;</div>
+        <div class="live-title">Can't Connect</div>
+        <div class="live-sub" style="max-width:340px;margin:0 auto">
+          To play Live Game you need:<br><br>
+          <strong>1.</strong> An internet connection<br>
+          <strong>2.</strong> The game code from your host<br><br>
+          <span style="color:var(--fg-dim);font-size:13px">Host: start the game and share the 4-digit code with your class</span>
+          <div id="live-diag" style="margin-top:14px;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--red);word-break:break-word"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-role">
+      <div class="live-center">
+        <div style="font-size:42px;margin-bottom:8px">&#x1F3AE;</div>
+        <div class="live-title">Live Game</div>
+        <div class="live-sub">Choose your role</div>
+        <div class="live-role-row">
+          <button class="live-role-btn" id="live-pick-host">
+            <div class="live-role-icon">&#x1F451;</div>
+            <div class="live-role-label">Host</div>
+            <div class="live-role-desc">Control the game, pick questions</div>
+          </button>
+          <button class="live-role-btn" id="live-pick-player">
+            <div class="live-role-icon">&#x1F3C3;</div>
+            <div class="live-role-label">Player</div>
+            <div class="live-role-desc">Join and compete</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-setup">
+      <div class="live-center">
+        <div style="background:var(--accent);color:#000;padding:12px 24px;border-radius:12px;margin-bottom:16px;text-align:center">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:0.7">Game Code</div>
+          <div id="live-game-code-display" style="font-size:42px;font-weight:800;letter-spacing:8px;font-family:monospace">----</div>
+          <div style="font-size:12px;opacity:0.7">Share this code with your class</div>
+        </div>
+        <div class="live-title">&#x1F451; Set Up Game</div>
+        <div class="live-sub">Pick a category and start when players join</div>
+        <div class="pills-row" data-scope="live" style="margin-bottom:16px">
+          <button class="pill active" data-cat="all">All Topics</button>
+          <button class="pill" data-cat="skeletal">Skeletal</button>
+          <button class="pill" data-cat="joints">Joints</button>
+          <button class="pill" data-cat="muscular">Muscular</button>
+          <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+        </div>
+        <div class="live-count" id="live-lobby-count">Waiting for players&hellip;</div>
+        <div class="live-plist" id="live-lobby-players"></div>
+        <button class="live-action-btn host" id="live-start-btn" disabled>Start Game</button>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-join">
+      <div class="live-center">
+        <div style="font-size:42px;margin-bottom:8px">&#x270D;&#xFE0F;</div>
+        <div class="live-title" id="live-join-title">Join a Game</div>
+        <div class="live-sub" id="live-join-subtitle">Enter the code from your host</div>
+        <div id="live-code-wrap">
+          <input class="live-input" id="live-code-input" type="text" placeholder="Game code" maxlength="4" autocomplete="off" inputmode="numeric" style="margin-bottom:10px;text-align:center;letter-spacing:8px;font-size:24px;font-weight:700">
+        </div>
+        <input class="live-input" id="live-name-input" type="text" placeholder="Your name" maxlength="20" autocomplete="off">
+        <br>
+        <button class="live-action-btn join" id="live-join-btn">Join Game</button>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-wait">
+      <div class="live-center">
+        <div class="live-spinner"></div>
+        <div class="live-title">You're In!</div>
+        <div class="live-sub">Waiting for host to start<span class="live-waiting-dots"></span></div>
+        <div class="live-plist" id="live-wait-players"></div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-q">
+      <div class="live-center">
+        <div class="kh-hud">
+          <div class="kh-q-num" id="live-qnum">1 / 10</div>
+          <div class="kh-pts-total" id="live-pts-total">0 pts</div>
+        </div>
+        <div class="kh-timer-bar"><div class="kh-timer-fill" id="live-timer-fill"></div></div>
+        <div class="live-pts-avail" id="live-pts-avail">1000 pts available</div>
+        <div class="kh-question-card">
+          <div class="kh-time-left" id="live-time-left">15</div>
+          <div class="kh-q-text" id="live-q-text"></div>
+        </div>
+        <div class="kh-grid" id="live-grid"></div>
+        <div class="kh-feedback" id="live-feedback"></div>
+        <div class="live-ans-count" id="live-ans-count"></div>
+        <div id="live-reveal-early-wrap" style="display:none;margin-top:12px">
+          <button class="live-action-btn host" id="live-reveal-early" style="font-size:14px;padding:10px 24px">Reveal Answer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-reveal">
+      <div class="live-center">
+        <div class="live-title" id="live-reveal-title">Leaderboard</div>
+        <div class="live-correct-answer" id="live-correct-answer"></div>
+        <div class="live-your-result" id="live-your-result"></div>
+        <div class="live-board" id="live-reveal-board"></div>
+        <div style="margin-top:16px" id="live-next-wrap">
+          <button class="live-action-btn host" id="live-next-btn">Next Question</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-screen" id="live-final">
+      <div class="live-center">
+        <div class="live-winner">&#x1F3C6;</div>
+        <div class="live-winner-name" id="live-winner-name"></div>
+        <div class="live-winner-score" id="live-winner-score"></div>
+        <div class="live-board" id="live-final-board"></div>
+        <div style="margin-top:20px">
+          <button class="live-action-btn host" id="live-play-again">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ===== BOTTOM NAV BAR ===== -->
@@ -2355,12 +2796,42 @@ body::before {
   </button>
 </nav>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 // ===== FLASH CARD DATA =====
 const allCards=[{cat:"skeletal",q:"How many bones are in the human body?",a:"206 bones"},{cat:"skeletal",q:"What are the 5 components of the skeletal system?",a:"Bones, joints, cartilage, ligaments, and tendons"},{cat:"skeletal",q:"What is the periosteum?",a:"A membrane that covers hard, rigid bone structures"},{cat:"skeletal",q:"What are the 5 functions of the skeletal system?",a:"1. Support\n2. Protection\n3. Movement\n4. Stores minerals (calcium & phosphorus)\n5. Blood cell production & storage"},{cat:"skeletal",q:"What is bone marrow?",a:"Jelly-like tissue in some bones where new blood cells are constantly produced"},{cat:"skeletal",q:"What does red marrow produce?",a:"Red blood cells, white blood cells, and platelets"},{cat:"skeletal",q:"What does yellow marrow do?",a:"Stored as fat and produces some white blood cells"},{cat:"skeletal",q:"What is compact bone?",a:"Hard, dense bone that composes the shaft of long bones and outer layer of bones"},{cat:"skeletal",q:"What is spongy bone?",a:"Light bone with more spaces, found at ends of long bones and center of other bones"},{cat:"skeletal",q:"What are the 4 types of bones?",a:"Long, Short, Flat, and Irregular"},{cat:"skeletal",q:"What are characteristics of long bones?",a:"Bear body weight (especially femur & tibia); longer than they are wide"},{cat:"skeletal",q:"What are the regions of a long bone?",a:"Diaphysis (shaft), Epiphysis (ends), Epiphyseal disc (growth plate), Medullary cavity, Periosteum, Articular cartilage"},{cat:"skeletal",q:"What are short bones? Give examples.",a:"Cube-shaped; found in wrists (carpals) and ankles (tarsals)"},{cat:"skeletal",q:"What are flat bones? Give examples.",a:"Thin, flat, curved. Examples: ribs, sternum, cranium, shoulder. Functions: protection, muscle attachment, blood cell production"},{cat:"skeletal",q:"What are irregular bones? Give examples.",a:"Differently shaped; hip bones, vertebrae, some skull bones"},{cat:"skeletal",q:"Where does ossification occur?",a:"At the epiphyseal disc (growth plate). Osteoblasts invade cartilage and mature into osteocytes"},{cat:"skeletal",q:"What hormones affect bone growth?",a:"Growth hormone, estrogen, and testosterone. Estrogen fuses the growth plate earlier."},{cat:"skeletal",q:"What happens if a child's growth plate is injured?",a:"Can lead to decreased bone growth and a shortened or crooked limb"},{cat:"skeletal",q:"What stimulates bone growth?",a:"Weight bearing and exercise — keeps calcium in bones and increases bone mass"},{cat:"skeletal",q:"How many bones make up the cranium?",a:"8: Frontal (1), Parietal (2), Temporal (2), Occipital (1), Sphenoid (1), Ethmoid (1)"},{cat:"skeletal",q:"How many facial bones are there?",a:"14: Mandible (1), Maxilla (2), Palatine (2), Zygomatic (2), Lacrimal (2), Nasal (2), Vomer (1)"},{cat:"skeletal",q:"What are sinuses?",a:"Air-filled cavities that lighten the skull and modulate voice. Types: Frontal, Ethmoidal, Sphenoidal, Maxillary"},{cat:"skeletal",q:"What are fontanels?",a:"Soft spots on infant skull not yet converted to bone; allow cranial growth"},{cat:"skeletal",q:"Describe the hyoid bone.",a:"Below mandible; U-shaped; floats in front of cervical vertebrae; anchors tongue; swallowing"},{cat:"skeletal",q:"What are the 3 ear ossicles?",a:"Malleus, Incus, and Stapes"},{cat:"skeletal",q:"What does Atlas (C1) do?",a:"Articulates with occipital bone; allows head to nod YES"},{cat:"skeletal",q:"What does Axis (C2) do?",a:"Pivoting point for skull rotation; allows head to say NO"},{cat:"skeletal",q:"How many vertebrae in each region?",a:"Cervical: 7, Thoracic: 12, Lumbar: 5"},{cat:"skeletal",q:"Why are lumbar vertebrae significant?",a:"Largest and heaviest; most common site for slipped disc"},{cat:"skeletal",q:"How many ribs in the thoracic cage?",a:"12 pairs: 7 true, 5 false (including 2 floating). Each connects to a thoracic vertebra"},{cat:"skeletal",q:"What is the xiphoid process?",a:"Teardrop bone below sternum; must locate during CPR to avoid breaking it"},{cat:"skeletal",q:"Describe the humerus.",a:"Arm bone; fits into scapula cavity for arm rotation; distal end attaches to forearm"},{cat:"skeletal",q:"Radius vs. Ulna?",a:"Radius: lateral (thumb) side. Ulna: longer, medial side; olecranon = bony elbow"},{cat:"skeletal",q:"How many bones in the hand?",a:"8 carpals (wrist), 5 metacarpals (palm), 14 phalanges"},{cat:"skeletal",q:"What is the femur?",a:"Thigh bone — longest & strongest; forms hip joint and knee"},{cat:"skeletal",q:"What is the acetabulum?",a:"Depression receiving head of femur; allows thigh rotation"},{cat:"skeletal",q:"Tibia vs. Fibula?",a:"Tibia: shin bone, weight-bearing, medial malleolus. Fibula: thin, non-weight-bearing, lateral malleolus"},{cat:"skeletal",q:"What bones make up the foot?",a:"7 tarsals (ankle), 5 metatarsals (instep), 14 phalanges (toes). Talus & calcaneus bear most weight"},{cat:"joints",q:"What are the two functions of joints?",a:"1. Hold bones together\n2. Allow movement"},{cat:"joints",q:"What is rheumatology?",a:"Branch of science studying joint diseases"},{cat:"joints",q:"What are the 3 types of joints?",a:"Immovable (skull sutures), Slightly movable (vertebral column), Freely movable (synovial)"},{cat:"joints",q:"What is articular cartilage?",a:"Forms a smooth surface within the joint"},{cat:"joints",q:"What is the meniscus?",a:"Only in the knee; C-shaped; shock absorber"},{cat:"joints",q:"What is cartilage made of?",a:"Collagen and elastin. Protects joint, allows smooth movement, absorbs shock"},{cat:"joints",q:"What is the joint capsule?",a:"Fibrous connective tissue enclosing the joint in a sleeve"},{cat:"joints",q:"What is synovial fluid?",a:"Lubricates bones to decrease friction; consistency of egg white"},{cat:"joints",q:"What is a bursa?",a:"Fluid-filled sac reducing friction; lined with synovial membrane; protects tendons"},{cat:"joints",q:"Name the 5 types of freely movable joints.",a:"Hinge (elbows, knees), Ball-and-socket (shoulders, hips), Pivot (atlas-axis), Saddle (thumb), Gliding (wrist, spine, ankles)"},{cat:"joints",q:"What type of joint is the knee?",a:"Tibiofemoral — hinge joint; extra cartilage; meniscus easily torn"},{cat:"joints",q:"What type of joint is the shoulder?",a:"Glenohumeral — ball-and-socket; great ROM; easily dislocated"},{cat:"joints",q:"What type of joint is the hip?",a:"Coxal — ball-and-socket; femur & acetabulum; fractures common"},{cat:"joints",q:"Name the 7 types of joint movement.",a:"Flexion-extension, Inversion-eversion, Supination-pronation, Abduction-adduction, Dorsiflexion-plantar flexion, Hyperextension, Circumduction"},{cat:"joints",q:"Tendons vs. Ligaments?",a:"Tendons: muscle to bone (movement)\nLigaments: bone to bone (stability, prevent dislocation)"},{cat:"muscular",q:"How many muscles in the body?",a:"More than 600"},{cat:"muscular",q:"What % of body weight are muscles?",a:"40–50%"},{cat:"muscular",q:"Largest vs. smallest muscle?",a:"Largest: gluteus maximus\nSmallest: stapedius (inner ear)"},{cat:"muscular",q:"Hardest working muscle?",a:"The heart"},{cat:"muscular",q:"How much body heat from muscles?",a:"85%. Shivering = involuntary contraction to raise temperature"},{cat:"muscular",q:"What are the 3 muscle types?",a:"Skeletal (striated, voluntary)\nSmooth (nonstriated, involuntary)\nCardiac (striated, involuntary — heart only)"},{cat:"muscular",q:"5 functions of skeletal muscles?",a:"1. Produce movement\n2. Maintain posture\n3. Stabilize joints\n4. Produce heat\n5. Limited regeneration"},{cat:"muscular",q:"What is a fascicle?",a:"A group of muscle fibers. Several fascicles make a muscle."},{cat:"muscular",q:"What is fascia?",a:"Thin connective tissue covering surrounding every organ, muscle, bone, nerve & blood vessel"},{cat:"muscular",q:"Name the 3 fascia layers.",a:"Epimysium (outer), Perimysium (middle), Endomysium (inner)"},{cat:"muscular",q:"What are the 3 parts of a muscle?",a:"Origin (start, no movement)\nBody / belly (center)\nInsertion (end, movement occurs)"},{cat:"muscular",q:"7 ways muscles are named?",a:"Size, Shape, Direction of fibers, Location, Number of origins, Origin & insertion, Muscle action"},{cat:"muscular",q:"What is muscle tonus?",a:"Partial contraction in all healthy muscles at rest"},{cat:"muscular",q:"Hypertrophy vs. Atrophy?",a:"Hypertrophy: growth from overuse\nAtrophy: wasting from disuse, poor innervation, or aging"},{cat:"muscular",q:"What is a contracture?",a:"Abnormal fibrous formation that freezes muscle in flexed position"},{cat:"muscular",q:"What does the zygomaticus do?",a:"The smiling muscle — corner of mouth to cheekbone"},{cat:"muscular",q:"Chewing muscles?",a:"Masseter & Temporalis — close the jaw"},{cat:"muscular",q:"What does the sternocleidomastoid do?",a:"Flexion and rotation of the head"},{cat:"muscular",q:"What is the diaphragm's role?",a:"Primarily responsible for breathing"},{cat:"muscular",q:"Abdominal wall muscles?",a:"Internal oblique, External oblique, Transversus abdominis, Rectus abdominis"},{cat:"muscular",q:"What does erector spinae do?",a:"Cranium to sacrum; maintains erect posture"},{cat:"muscular",q:"Latissimus dorsi nickname?",a:"'Swimmer's muscle' — brings arm behind body"},{cat:"muscular",q:"Why is the deltoid significant?",a:"Abducts arm; common site for intramuscular injection"},{cat:"muscular",q:"4 parts of quadriceps femoris?",a:"Rectus femoris, Vastus lateralis, Vastus medialis, Vastus intermedius — extend leg at knee"},{cat:"muscular",q:"3 hamstring muscles?",a:"Biceps femoris, Semitendinosus, Semimembranosus — leg flexion & thigh extension"},{cat:"muscular",q:"What is the Achilles tendon?",a:"Connects gastrocnemius & soleus (calf) to heel; plantar flexion"},{cat:"muscular",q:"What does sartorius do?",a:"Rotates legs for cross-legged sitting"},{cat:"muscular",q:"What does tibialis anterior do?",a:"Dorsiflexion and inversion of the foot"},{cat:"prepostop",q:"What is pre-operative care?",a:"Care given before surgery to prepare the patient physically and emotionally for the procedure"},{cat:"prepostop",q:"What is post-operative care?",a:"Care given after surgery to promote healing, prevent complications, and manage pain"},{cat:"prepostop",q:"What is included in pre-op skin prep?",a:"Shower or bath with antimicrobial soap the night before and morning of surgery to reduce skin bacteria"},{cat:"prepostop",q:"Why must nail polish be removed before surgery?",a:"Pulse oximeter reads oxygen saturation through the nail bed — polish interferes with accurate readings"},{cat:"prepostop",q:"What ID checks happen before surgery?",a:"Check patient ID band, allergy band, and blood bank band. Verify name, DOB, and procedure."},{cat:"prepostop",q:"What items must be removed before surgery?",a:"Jewelry, piercings, dentures, prosthetics, hearing aids, glasses, and contact lenses"},{cat:"prepostop",q:"What is surgical consent?",a:"A legal document signed by the patient (or guardian) confirming they understand the procedure, risks, and alternatives. Physician explains; nurse witnesses."},{cat:"prepostop",q:"What does NPO mean?",a:"Nothing by mouth (nil per os) — no food or drink, usually after midnight before surgery, to prevent aspiration"},{cat:"prepostop",q:"Why must the patient void before surgery?",a:"An empty bladder reduces risk of injury during abdominal or pelvic procedures and prevents post-op urinary retention"},{cat:"prepostop",q:"What does the patient wear to the OR?",a:"Hospital gown only — no underwear. Hair covered with a surgical cap. All personal items stored safely."},{cat:"prepostop",q:"What is psychological preparation for surgery?",a:"Assess anxiety, explain what to expect, answer questions, teach post-op exercises (deep breathing, coughing, leg exercises), and provide emotional support"},{cat:"prepostop",q:"What does the LPN do while the patient waits for surgery?",a:"Monitor vitals, ensure paperwork is complete, check that consent is signed, verify NPO status, start IV if ordered, and provide emotional support"},{cat:"prepostop",q:"What are the 3 goals of post-operative care?",a:"1. Prevent complications\n2. Promote healing\n3. Return patient to optimal function"},{cat:"prepostop",q:"What are the 7 P's of neurovascular assessment?",a:"Pain, Pulse, Pallor, Paresthesia (numbness/tingling), Paralysis, Pressure, Poikilothermia (cool to touch)"},{cat:"prepostop",q:"How often should a patient use the incentive spirometer after surgery?",a:"10 times every hour while awake — deep breathing expands lungs and prevents atelectasis and pneumonia"},{cat:"prepostop",q:"Why is early mobilization important after surgery?",a:"Prevents blood clots (DVT), pneumonia, constipation, pressure ulcers, and muscle weakness. Get moving ASAP."},{cat:"prepostop",q:"What elimination issues are monitored post-op?",a:"Urinary output (should void within 8 hours), bowel sounds (listen for return of peristalsis), and passing flatus"},{cat:"prepostop",q:"When is the IV discontinued after surgery?",a:"When the patient can tolerate oral fluids and medications without nausea or vomiting"},{cat:"prepostop",q:"What is PQRSTU for pain assessment?",a:"P = Provokes/Palliates\nQ = Quality\nR = Region/Radiates\nS = Severity (0-10)\nT = Timing\nU = Understanding (what patient believes is causing it)"},{cat:"prepostop",q:"What is a PCA pump?",a:"Patient-Controlled Analgesia — patient presses a button for pain medication. Has a lockout interval to prevent overdose."},{cat:"prepostop",q:"What are common opioid side effects?",a:"Respiratory depression, constipation, nausea/vomiting, sedation, itching, and urinary retention"},{cat:"prepostop",q:"What is Narcan (naloxone)?",a:"An opioid antagonist that reverses opioid effects, especially respiratory depression. Given IV for fastest action."},{cat:"prepostop",q:"What does narcotic naive mean?",a:"A patient who has not previously taken opioids — they are at higher risk for respiratory depression and side effects"},{cat:"prepostop",q:"What are wound care priorities post-op?",a:"Monitor for signs of infection (redness, swelling, warmth, drainage, fever). Keep dressings clean and dry. Note drain output."},{cat:"prepostop",q:"Name non-pharmacologic pain interventions.",a:"Repositioning, ice/heat, deep breathing, guided imagery, music therapy, massage, distraction, and elevation of the affected area"}];
 
 let filtered=[...allCards], idx=0;
 const $=id=>document.getElementById(id);
+// ===== FIREBASE CONFIG =====
+// To enable multiplayer Live Game, create a free Firebase project:
+// 1. Go to https://console.firebase.google.com
+// 2. Create a new project (any name)
+// 3. Go to Authentication > Sign-in method > Enable "Anonymous"
+// 4. Go to Realtime Database > Create Database > Start in test mode
+// 5. Copy your config from Project Settings > General > Your apps > Web app
+// 6. Replace the values below
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "PASTE_YOUR_APP_ID"
+};
+let firebaseReady = false, fbDb = null, fbAuth = null;
+try {
+  if(typeof firebase !== 'undefined' && firebaseConfig.apiKey !== 'PASTE_YOUR_API_KEY') {
+    firebase.initializeApp(firebaseConfig);
+    fbDb = firebase.database();
+    fbAuth = firebase.auth();
+    firebaseReady = true;
+  }
+} catch(e) { console.warn('Firebase init failed:', e); }
+
 
 // ===== SOUND ENGINE (Web Audio API) =====
 let audioCtx;
@@ -2563,6 +3034,10 @@ document.querySelectorAll('.nav-item').forEach(btn=>{
     const view = document.getElementById('view-'+this.dataset.view);
     view.classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
+    if (this.dataset.view !== 'games') {
+      clearInterval(liveTimerInterval);
+      cleanupLiveListeners();
+    }
     if (this.dataset.view === 'guide') animateCards(view, '.topic-card');
     else if (this.dataset.view === 'pods') animateCards(view, '.pod-card');
     else if (this.dataset.view === 'cards') {
@@ -2770,6 +3245,10 @@ function openGame(name) {
     startMatch();
   } else if(name==='tf') {
     startTF();
+  } else if(name==='imgid') {
+    startImgId();
+  } else if(name==='live') {
+    initLiveGame();
   }
 }
 document.querySelectorAll('.game-pick-card').forEach(c=>{
@@ -2891,26 +3370,108 @@ function catLabel(cat) {
   return cat==='skeletal'?'Skeletal':cat==='joints'?'Joints':cat==='prepostop'?'Pre/Post Op':'Muscular';
 }
 
+const tfBank = [
+  {cat:"skeletal",s:"The human body has 206 bones.",answer:true,explain:"Correct — 206 bones total."},
+  {cat:"skeletal",s:"The human body has 208 bones.",answer:false,explain:"The human body has 206 bones, not 208."},
+  {cat:"skeletal",s:"The periosteum is a membrane that covers bone.",answer:true,explain:"Correct — periosteum is a membrane covering hard, rigid bone."},
+  {cat:"skeletal",s:"The periosteum is found inside the bone marrow cavity.",answer:false,explain:"The periosteum covers the outside of bone, not inside the marrow cavity."},
+  {cat:"skeletal",s:"Red bone marrow produces red blood cells, white blood cells, and platelets.",answer:true,explain:"Correct — red marrow is responsible for blood cell production."},
+  {cat:"skeletal",s:"Yellow bone marrow produces red blood cells.",answer:false,explain:"Yellow marrow stores fat and produces some white blood cells. Red marrow makes red blood cells."},
+  {cat:"skeletal",s:"Compact bone is hard and dense, forming the shaft of long bones.",answer:true,explain:"Correct — compact bone makes up the diaphysis (shaft) of long bones."},
+  {cat:"skeletal",s:"Spongy bone is the hard outer layer of all bones.",answer:false,explain:"Spongy bone is light with spaces, found at ends of long bones. Compact bone is the hard outer layer."},
+  {cat:"skeletal",s:"The four types of bones are long, short, flat, and irregular.",answer:true,explain:"Correct — those are the 4 bone classifications."},
+  {cat:"skeletal",s:"The femur is the longest and strongest bone in the body.",answer:true,explain:"Correct — the femur (thigh bone) is the longest and strongest."},
+  {cat:"skeletal",s:"The humerus is the longest bone in the body.",answer:false,explain:"The femur is the longest bone. The humerus is the upper arm bone."},
+  {cat:"skeletal",s:"The cranium is made up of 8 bones.",answer:true,explain:"Correct — 8 cranial bones: frontal, parietal (2), temporal (2), occipital, sphenoid, ethmoid."},
+  {cat:"skeletal",s:"There are 12 facial bones.",answer:false,explain:"There are 14 facial bones, not 12."},
+  {cat:"skeletal",s:"The Atlas (C1) allows you to nod your head yes.",answer:true,explain:"Correct — Atlas articulates with the occipital bone for nodding."},
+  {cat:"skeletal",s:"The Atlas (C1) allows you to shake your head no.",answer:false,explain:"The Axis (C2) allows head rotation (no). Atlas (C1) allows nodding (yes)."},
+  {cat:"skeletal",s:"There are 7 cervical, 12 thoracic, and 5 lumbar vertebrae.",answer:true,explain:"Correct — 7 cervical, 12 thoracic, 5 lumbar."},
+  {cat:"skeletal",s:"The lumbar vertebrae are the most common site for a slipped disc.",answer:true,explain:"Correct — lumbar vertebrae are the largest and most common site for disc problems."},
+  {cat:"skeletal",s:"The xiphoid process is located above the sternum.",answer:false,explain:"The xiphoid process is below the sternum, not above it."},
+  {cat:"skeletal",s:"The radius is on the thumb side of the forearm.",answer:true,explain:"Correct — radius is lateral (thumb side), ulna is medial."},
+  {cat:"skeletal",s:"The ulna is on the thumb side of the forearm.",answer:false,explain:"The radius is on the thumb side. The ulna is on the pinky side (medial)."},
+  {cat:"skeletal",s:"Fontanels are soft spots on an infant's skull that allow cranial growth.",answer:true,explain:"Correct — fontanels haven't converted to bone yet."},
+  {cat:"skeletal",s:"The tibia is the weight-bearing bone of the lower leg.",answer:true,explain:"Correct — the tibia (shin bone) bears body weight. The fibula does not."},
+  {cat:"skeletal",s:"The fibula is the main weight-bearing bone in the lower leg.",answer:false,explain:"The tibia bears weight. The fibula is thin and non-weight-bearing."},
+  {cat:"skeletal",s:"Estrogen causes the growth plate to fuse earlier than testosterone.",answer:true,explain:"Correct — estrogen fuses the epiphyseal disc earlier."},
+  {cat:"skeletal",s:"The three ear ossicles are the malleus, incus, and stapes.",answer:true,explain:"Correct — the three tiny bones of the middle ear."},
+  {cat:"skeletal",s:"The acetabulum is a bone in the wrist.",answer:false,explain:"The acetabulum is the socket in the hip that receives the head of the femur."},
+  {cat:"skeletal",s:"The hand contains 8 carpals, 5 metacarpals, and 14 phalanges.",answer:true,explain:"Correct — 27 bones total in each hand."},
+  {cat:"skeletal",s:"Sinuses are air-filled cavities that lighten the skull.",answer:true,explain:"Correct — sinuses lighten the skull and modulate voice."},
+  {cat:"joints",s:"The two functions of joints are to hold bones together and allow movement.",answer:true,explain:"Correct — joints connect bones and enable movement."},
+  {cat:"joints",s:"Rheumatology is the study of joint diseases.",answer:true,explain:"Correct — rheumatology focuses on joint-related conditions."},
+  {cat:"joints",s:"Skull sutures are an example of freely movable joints.",answer:false,explain:"Skull sutures are immovable joints. Synovial joints are freely movable."},
+  {cat:"joints",s:"The meniscus is found only in the knee.",answer:true,explain:"Correct — the meniscus is a C-shaped cartilage unique to the knee joint."},
+  {cat:"joints",s:"The meniscus is found in every joint in the body.",answer:false,explain:"The meniscus is only in the knee — it's a C-shaped shock absorber."},
+  {cat:"joints",s:"Synovial fluid has the consistency of egg white.",answer:true,explain:"Correct — synovial fluid lubricates joints and has an egg-white consistency."},
+  {cat:"joints",s:"A bursa is a fluid-filled sac that reduces friction in joints.",answer:true,explain:"Correct — bursae protect tendons and reduce friction."},
+  {cat:"joints",s:"The shoulder is a hinge joint.",answer:false,explain:"The shoulder (glenohumeral) is a ball-and-socket joint, not a hinge joint."},
+  {cat:"joints",s:"The knee is a hinge joint.",answer:true,explain:"Correct — the tibiofemoral (knee) is a hinge joint."},
+  {cat:"joints",s:"The hip is a ball-and-socket joint formed by the femur and acetabulum.",answer:true,explain:"Correct — the coxal (hip) joint is ball-and-socket."},
+  {cat:"joints",s:"The shoulder joint is easily dislocated because of its great range of motion.",answer:true,explain:"Correct — ball-and-socket design gives great ROM but makes it prone to dislocation."},
+  {cat:"joints",s:"Tendons connect bone to bone.",answer:false,explain:"Tendons connect muscle to bone. Ligaments connect bone to bone."},
+  {cat:"joints",s:"Ligaments connect bone to bone for stability.",answer:true,explain:"Correct — ligaments stabilize joints by connecting bone to bone."},
+  {cat:"joints",s:"Tendons connect muscle to bone to create movement.",answer:true,explain:"Correct — tendons transmit force from muscle to bone."},
+  {cat:"joints",s:"Cartilage is made of collagen and elastin.",answer:true,explain:"Correct — cartilage is composed of collagen and elastin fibers."},
+  {cat:"joints",s:"The five types of freely movable joints include hinge, ball-and-socket, pivot, saddle, and gliding.",answer:true,explain:"Correct — those are the 5 synovial joint types."},
+  {cat:"joints",s:"The thumb has a ball-and-socket joint.",answer:false,explain:"The thumb has a saddle joint, which allows its unique range of motion."},
+  {cat:"muscular",s:"The body has more than 600 muscles.",answer:true,explain:"Correct — over 600 muscles in the human body."},
+  {cat:"muscular",s:"Muscles make up about 40-50% of body weight.",answer:true,explain:"Correct — nearly half of body weight is muscle."},
+  {cat:"muscular",s:"The gluteus maximus is the smallest muscle in the body.",answer:false,explain:"The gluteus maximus is the LARGEST muscle. The stapedius (inner ear) is the smallest."},
+  {cat:"muscular",s:"The gluteus maximus is the largest muscle in the body.",answer:true,explain:"Correct — the gluteus maximus is the largest muscle."},
+  {cat:"muscular",s:"The stapedius in the inner ear is the smallest muscle.",answer:true,explain:"Correct — the stapedius is the smallest muscle in the body."},
+  {cat:"muscular",s:"The hardest working muscle in the body is the heart.",answer:true,explain:"Correct — cardiac muscle works continuously without rest."},
+  {cat:"muscular",s:"Muscles produce about 85% of body heat.",answer:true,explain:"Correct — shivering is involuntary muscle contraction to raise body temperature."},
+  {cat:"muscular",s:"Skeletal muscle is involuntary.",answer:false,explain:"Skeletal muscle is voluntary. Smooth and cardiac muscle are involuntary."},
+  {cat:"muscular",s:"Cardiac muscle is striated and involuntary.",answer:true,explain:"Correct — cardiac muscle is striated but involuntary, found only in the heart."},
+  {cat:"muscular",s:"Smooth muscle is striated and voluntary.",answer:false,explain:"Smooth muscle is nonstriated and involuntary."},
+  {cat:"muscular",s:"A fascicle is a group of muscle fibers.",answer:true,explain:"Correct — several fascicles together form a muscle."},
+  {cat:"muscular",s:"The three fascia layers are epimysium, perimysium, and endomysium.",answer:true,explain:"Correct — outer, middle, and inner layers of connective tissue."},
+  {cat:"muscular",s:"Hypertrophy means muscle wasting from disuse.",answer:false,explain:"Hypertrophy means muscle growth from overuse. Atrophy is wasting from disuse."},
+  {cat:"muscular",s:"Atrophy is muscle wasting from disuse or poor innervation.",answer:true,explain:"Correct — atrophy can result from disuse, poor innervation, or aging."},
+  {cat:"muscular",s:"The zygomaticus is known as the smiling muscle.",answer:true,explain:"Correct — it pulls the corner of the mouth to the cheekbone."},
+  {cat:"muscular",s:"The masseter and temporalis are the chewing muscles.",answer:true,explain:"Correct — they close the jaw for chewing."},
+  {cat:"muscular",s:"The diaphragm is primarily responsible for breathing.",answer:true,explain:"Correct — the diaphragm contracts and relaxes to move air in and out."},
+  {cat:"muscular",s:"The latissimus dorsi is nicknamed the 'swimmer's muscle.'",answer:true,explain:"Correct — it brings the arm behind the body, important in swimming."},
+  {cat:"muscular",s:"The deltoid is a common site for intramuscular injection.",answer:true,explain:"Correct — the deltoid's location and size make it ideal for IM injections."},
+  {cat:"muscular",s:"The quadriceps has 3 parts.",answer:false,explain:"The quadriceps femoris has 4 parts: rectus femoris, vastus lateralis, vastus medialis, and vastus intermedius."},
+  {cat:"muscular",s:"The three hamstring muscles are biceps femoris, semitendinosus, and semimembranosus.",answer:true,explain:"Correct — the hamstrings flex the leg and extend the thigh."},
+  {cat:"muscular",s:"The Achilles tendon connects the calf muscles to the heel.",answer:true,explain:"Correct — it connects the gastrocnemius and soleus to the calcaneus."},
+  {cat:"muscular",s:"The sartorius muscle allows cross-legged sitting.",answer:true,explain:"Correct — it rotates the legs for the cross-legged position."},
+  {cat:"muscular",s:"A contracture is normal muscle relaxation.",answer:false,explain:"A contracture is abnormal fibrous formation that freezes muscle in a flexed position."},
+  {cat:"muscular",s:"The sternocleidomastoid is responsible for flexion and rotation of the head.",answer:true,explain:"Correct — it's the large muscle on each side of the neck."},
+  {cat:"prepostop",s:"NPO means nothing by mouth.",answer:true,explain:"Correct — nil per os, typically enforced after midnight before surgery."},
+  {cat:"prepostop",s:"NPO means the patient can have clear liquids.",answer:false,explain:"NPO means nothing by mouth — no food OR drink."},
+  {cat:"prepostop",s:"Nail polish must be removed before surgery so the pulse oximeter can read accurately.",answer:true,explain:"Correct — pulse ox reads through the nail bed; polish interferes with readings."},
+  {cat:"prepostop",s:"Patients can wear jewelry into the operating room.",answer:false,explain:"All jewelry, piercings, dentures, prosthetics, hearing aids, glasses, and contacts must be removed."},
+  {cat:"prepostop",s:"Surgical consent must be signed by the patient or their guardian.",answer:true,explain:"Correct — the physician explains; the nurse witnesses the signature."},
+  {cat:"prepostop",s:"The nurse is responsible for explaining the surgical procedure to the patient.",answer:false,explain:"The physician explains the procedure. The nurse witnesses the consent signature."},
+  {cat:"prepostop",s:"An incentive spirometer should be used 10 times every hour while awake after surgery.",answer:true,explain:"Correct — deep breathing prevents atelectasis and pneumonia."},
+  {cat:"prepostop",s:"Early mobilization after surgery helps prevent blood clots.",answer:true,explain:"Correct — early movement prevents DVT, pneumonia, constipation, pressure ulcers, and weakness."},
+  {cat:"prepostop",s:"Patients should stay in bed as long as possible after surgery.",answer:false,explain:"Early mobilization is crucial — it prevents blood clots, pneumonia, and many other complications."},
+  {cat:"prepostop",s:"The patient should void within 8 hours after surgery.",answer:true,explain:"Correct — urinary output is monitored, and voiding within 8 hours is expected."},
+  {cat:"prepostop",s:"A PCA pump lets the patient control their own pain medication.",answer:true,explain:"Correct — Patient-Controlled Analgesia has a lockout interval to prevent overdose."},
+  {cat:"prepostop",s:"Narcan (naloxone) is an opioid that treats pain.",answer:false,explain:"Narcan is an opioid ANTAGONIST — it reverses opioid effects, especially respiratory depression."},
+  {cat:"prepostop",s:"Narcan (naloxone) reverses opioid effects like respiratory depression.",answer:true,explain:"Correct — given IV for fastest action when opioid overdose is suspected."},
+  {cat:"prepostop",s:"Common opioid side effects include respiratory depression and constipation.",answer:true,explain:"Correct — also includes nausea/vomiting, sedation, itching, and urinary retention."},
+  {cat:"prepostop",s:"A narcotic-naive patient is at higher risk for respiratory depression.",answer:true,explain:"Correct — patients not used to opioids are more sensitive to their effects."},
+  {cat:"prepostop",s:"The 7 P's of neurovascular assessment include Pain, Pulse, Pallor, Paresthesia, Paralysis, Pressure, and Poikilothermia.",answer:true,explain:"Correct — all 7 P's used to assess circulation and nerve function."},
+  {cat:"prepostop",s:"PQRSTU is used to assess wound infection.",answer:false,explain:"PQRSTU is used for pain assessment: Provokes, Quality, Region, Severity, Timing, Understanding."},
+  {cat:"prepostop",s:"The IV is discontinued when the patient can tolerate oral fluids without nausea.",answer:true,explain:"Correct — oral intake must be established before stopping IV fluids."},
+  {cat:"prepostop",s:"Non-pharmacologic pain interventions include repositioning, ice/heat, and guided imagery.",answer:true,explain:"Correct — also includes massage, music therapy, distraction, and deep breathing."},
+  {cat:"prepostop",s:"Signs of wound infection include redness, swelling, warmth, and drainage.",answer:true,explain:"Correct — fever is also a key sign to monitor."},
+];
+
 function generateTFStatements() {
-  const pool = tfCat==='all' ? [...allCards] : allCards.filter(c=>c.cat===tfCat);
+  const pool = tfCat==='all' ? [...tfBank] : tfBank.filter(c=>c.cat===tfCat);
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-  const picked = pool.slice(0, Math.min(10, pool.length));
-  tfQuestions = picked.map(card => {
-    const isTrue = Math.random() > 0.5;
-    if(isTrue) {
-      const shortA = card.a.split('\n')[0];
-      return { cat: card.cat, statement: card.q + ' — ' + shortA, answer: true, explanation: card.a };
-    } else {
-      const others = allCards.filter(c => c.a !== card.a && c.cat === card.cat);
-      if(others.length === 0) {
-        const shortA = card.a.split('\n')[0];
-        return { cat: card.cat, statement: card.q + ' — ' + shortA, answer: true, explanation: card.a };
-      }
-      const wrong = others[Math.floor(Math.random()*others.length)];
-      const shortWrong = wrong.a.split('\n')[0];
-      return { cat: card.cat, statement: card.q + ' — ' + shortWrong, answer: false, explanation: 'The correct answer is: ' + card.a };
-    }
-  });
+  tfQuestions = pool.slice(0, Math.min(10, pool.length)).map(item => ({
+    cat: item.cat,
+    statement: item.s,
+    answer: item.answer,
+    explanation: item.explain
+  }));
 }
 
 function startTF() {
@@ -3017,6 +3578,617 @@ document.querySelectorAll('.pills-row[data-scope="tf"] .pill').forEach(p=>{
     tfCat = this.dataset.cat;
     startTF();
   });
+});
+
+// ===== IMAGE ID GAME =====
+const imgIdData = [
+  {src:"images/cab6e8fa2aec9cc3f228ec79459c2e9b.png", correct:"Long bone anatomy (femur cross-section)", wrong:["Skull diagram","Vertebral column","Synovial joint structure"]},
+  {src:"images/a58cab1c24fe2819e3fd97f4deb7c76a.png", correct:"Full human skeleton (axial & appendicular)", wrong:["Muscular system anterior view","Vertebral column","Thoracic cage"]},
+  {src:"images/617a4f8893d64ebff24f4155031e4c68.png", correct:"Bone cross-section (marrow & cartilage)", wrong:["Synovial joint","Muscle fiber structure","Long bone anatomy"]},
+  {src:"images/bd8b7d43272a3d9082636c0eeafb621b.png", correct:"Skull — cranial and facial bones", wrong:["Vertebral column","Thoracic cage","Full skeleton"]},
+  {src:"images/ebba772e6e34ec88cff0b1e49f860480.png", correct:"Vertebral column (cervical, thoracic, lumbar)", wrong:["Thoracic cage","Long bone anatomy","Appendicular skeleton"]},
+  {src:"images/7873597f4573e019a6c43fe8cc1229d0.png", correct:"Thoracic cage (ribs, sternum, xiphoid)", wrong:["Vertebral column","Skull diagram","Full skeleton"]},
+  {src:"images/a7079851d73d5c15c2bbb984f1a0838a.png", correct:"Upper limb bones (humerus, radius, ulna)", wrong:["Lower limb bones","Full skeleton","Thoracic cage"]},
+  {src:"images/d2d99dbf3af71b31b3131707f9b47c06.png", correct:"Lower limb bones (femur, tibia, fibula)", wrong:["Upper limb bones","Vertebral column","Thoracic cage"]},
+  {src:"images/ba0bc8267d911617b42bcc25b29da8b2.png", correct:"Skull sutures (immovable joints)", wrong:["Synovial joint","Slightly movable joints","Knee ligaments"]},
+  {src:"images/bc3c57e06d84f94d4b3c5daee6b676ea.jpg", correct:"Slightly movable joints (vertebral)", wrong:["Skull sutures (immovable)","Synovial joint","Knee joint"]},
+  {src:"images/fa0726ee31845ae6a8479e6005408601.png", correct:"Synovial joint structure", wrong:["Skull sutures","Knee ligaments","Bone cross-section"]},
+  {src:"images/14194c20afd6f919819bde6def23a635.png", correct:"Tendons and ligaments diagram", wrong:["Muscle fiber structure","Synovial joint","Knee ligaments"]},
+  {src:"images/0f3024299ab5f28b4591c3d566679702.png", correct:"Knee joint (ACL, PCL, MCL, LCL)", wrong:["Synovial joint structure","Hip joint","Shoulder joint"]},
+  {src:"images/d211fe128af4377fd3b4b44b4c81ac1c.jpg", correct:"Three types of muscle tissue", wrong:["Muscle fiber structure","Anterior muscular system","Fascia layers"]},
+  {src:"images/0f256add8524f0789ea1b1f6b186f5f9.png", correct:"Skeletal muscle structure (fascicle layers)", wrong:["Three muscle types","Tendons & ligaments","Bone cross-section"]},
+  {src:"images/961d63dc65edf1d86eb2cd637241d0d1.jpg", correct:"Anterior (front) muscular system", wrong:["Posterior (back) muscular system","Full skeleton","Vertebral column"]},
+  {src:"images/917a8f9cc5dfda9aba7b2a952e02627a.jpg", correct:"Abdominal wall muscles (obliques, rectus)", wrong:["Back muscles","Leg muscles","Anterior full body muscles"]},
+  {src:"images/fcffabc5eb880ff2a006ea7ca2edec01.jpg", correct:"Back muscles (erector spinae, lats, traps)", wrong:["Abdominal wall muscles","Anterior muscular system","Leg muscles"]},
+  {src:"images/8e3b977d009af42efc35c4eb2aeb9c33.jpg", correct:"Posterior (back) muscular system", wrong:["Anterior (front) muscular system","Leg muscles detail","Back muscles"]},
+  {src:"images/0115258d8e23ad4133ca31deea9ad710.jpg", correct:"Leg muscles (quads, hamstrings, calves)", wrong:["Abdominal muscles","Back muscles","Upper limb bones"]},
+  {src:"images/ef79f996bfbf382d54ba7ffc4bf0e011.jpg", correct:"Patient using incentive spirometer", wrong:["PCA pump","IV line","Pain scale"]},
+  {src:"images/9dc6f9777e332aa4005617fd885ebc4a.jpg", correct:"PCA (Patient-Controlled Analgesia) pump", wrong:["Incentive spirometer","IV line","Pulse oximeter"]},
+  {src:"images/a11e515ddd391a086d4d3f7c3ff8cf59.jpg", correct:"Pain assessment scale", wrong:["PCA pump","Surgical consent form","Incentive spirometer"]},
+];
+
+let imgIdQuestions=[], imgIdIdx=0, imgIdScore=0;
+
+function startImgId() {
+  imgIdIdx=0; imgIdScore=0;
+  const pool = [...imgIdData];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  imgIdQuestions = pool.slice(0, Math.min(8, pool.length));
+  $('imgid-result').classList.remove('active');
+  $('imgid-next').classList.remove('visible');
+  $('imgid-card').style.display='';
+  $('imgid-options').style.display='';
+  $('imgid-progress-label').style.display='';
+  $('imgid-score-label').style.display='';
+  document.querySelector('#game-imgid .quiz-progress-bar-bg').style.display='';
+  renderImgId();
+}
+
+function renderImgId() {
+  if(imgIdIdx >= imgIdQuestions.length) return;
+  const q = imgIdQuestions[imgIdIdx];
+  $('imgid-progress-label').textContent = `Question ${imgIdIdx+1} / ${imgIdQuestions.length}`;
+  $('imgid-score-label').textContent = `Score: ${imgIdScore}`;
+  $('imgid-bar').style.width = ((imgIdIdx)/imgIdQuestions.length*100)+'%';
+  $('imgid-img').src = q.src;
+  const options = [q.correct, ...q.wrong];
+  for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]]}
+  const letters = ['A','B','C','D'];
+  const container = $('imgid-options');
+  container.innerHTML = '';
+  options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.addEventListener('click', () => handleImgIdAnswer(btn, opt, q.correct, container));
+    container.appendChild(btn);
+  });
+  $('imgid-next').classList.remove('visible');
+  $('imgid-card').style.animation='none';
+  void $('imgid-card').offsetHeight;
+  $('imgid-card').style.animation='';
+}
+
+function handleImgIdAnswer(btn, selected, correct, container) {
+  const allBtns = container.querySelectorAll('.quiz-option');
+  if(btn.classList.contains('disabled')) return;
+  allBtns.forEach(b => b.classList.add('disabled'));
+  const isCorrect = selected === correct;
+  if(isCorrect) {
+    btn.classList.add('correct');
+    imgIdScore++;
+    sfxCorrect(); haptic(30);
+    const rect = btn.getBoundingClientRect();
+    spawnConfetti(rect.left+rect.width/2, rect.top);
+  } else {
+    btn.classList.add('wrong');
+    sfxWrong(); haptic(20);
+    allBtns.forEach(b => {
+      if(b.querySelector('span:last-child').textContent === correct) b.classList.add('correct');
+    });
+  }
+  $('imgid-score-label').textContent = `Score: ${imgIdScore}`;
+  if(imgIdIdx < imgIdQuestions.length - 1) {
+    $('imgid-next').classList.add('visible');
+  } else {
+    setTimeout(showImgIdResult, 800);
+  }
+}
+
+function showImgIdResult() {
+  $('imgid-card').style.display='none';
+  $('imgid-options').style.display='none';
+  $('imgid-next').classList.remove('visible');
+  $('imgid-progress-label').style.display='none';
+  $('imgid-score-label').style.display='none';
+  document.querySelector('#game-imgid .quiz-progress-bar-bg').style.display='none';
+  $('imgid-result').classList.add('active');
+  const pct = Math.round(imgIdScore/imgIdQuestions.length*100);
+  let emoji, title;
+  if(pct >= 90) { emoji='&#x1F441;'; title='Eagle Eye!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  $('imgid-result-emoji').innerHTML = emoji;
+  $('imgid-result-title').textContent = title;
+  $('imgid-result-score').textContent = `You got ${imgIdScore} out of ${imgIdQuestions.length} (${pct}%)`;
+  $('imgid-bar').style.width = '100%';
+  if(pct >= 90) {
+    sfxLevelUp(); haptic(150);
+    for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
+  } else if(pct >= 50) {
+    sfxCorrect(); haptic(50);
+  }
+}
+
+$('imgid-next').addEventListener('click', ()=>{ imgIdIdx++; renderImgId(); sfxSwipe(); haptic(); });
+$('imgid-again').addEventListener('click', ()=>{ $('imgid-result').classList.remove('active'); startImgId(); });
+$('imgid-back').addEventListener('click', showGamePicker);
+
+// ===== LIVE MULTIPLAYER GAME =====
+const khShapes = [
+  '<svg viewBox="0 0 24 24" width="18" height="18"><polygon points="12,3 22,21 2,21" fill="white" opacity="0.5"/></svg>',
+  '<svg viewBox="0 0 24 24" width="18" height="18"><rect x="4" y="4" width="16" height="16" transform="rotate(45 12 12)" fill="white" opacity="0.5"/></svg>',
+  '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9" fill="white" opacity="0.5"/></svg>',
+  '<svg viewBox="0 0 24 24" width="18" height="18"><rect x="4" y="4" width="16" height="16" rx="2" fill="white" opacity="0.5"/></svg>'
+];
+function escH(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+let fbGameRef = null, fbPlayersRef = null;
+let liveRole='', liveName='', liveMyId=null;
+let liveCat='all', liveQuestions=[], liveGameUnsub=null, livePlayersUnsub=null;
+let liveTimerInterval=null, liveAnswered=false, liveMyScore=0;
+let livePeersList=[];
+let liveGameCode = '';
+const LIVE_TIME = 15;
+
+function showLiveScreen(id) {
+  document.querySelectorAll('#game-live .live-screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+
+function generateGameCode() {
+  return String(Math.floor(1000 + Math.random() * 9000));
+}
+
+async function initLiveGame() {
+  showLiveScreen('live-init');
+  const diagEl = document.getElementById('live-diag');
+  try {
+    if(!firebaseReady) {
+      if(diagEl) diagEl.textContent = 'Firebase is not configured yet. See setup instructions to enable multiplayer.';
+      showLiveScreen('live-noroom'); return;
+    }
+    await fbAuth.signInAnonymously();
+    liveMyId = fbAuth.currentUser.uid;
+    showLiveScreen('live-role');
+  } catch(e) {
+    if(diagEl) diagEl.textContent = 'Error connecting: ' + (e.message || e);
+    showLiveScreen('live-noroom');
+  }
+}
+
+function subscribeGameState() {
+  cleanupLiveListeners();
+  liveGameUnsub = fbGameRef.child('state').on('value', snap => {
+    if(!snap.exists()) return;
+    handleGamePhase(snap.val());
+  });
+  livePlayersUnsub = fbPlayersRef.on('value', snap => {
+    const players = [];
+    if(snap.exists()) snap.forEach(child => {
+      players.push({ id: child.key, presence: child.val() });
+    });
+    livePeersList = players;
+    renderLivePlayers(players);
+  });
+}
+
+function cleanupLiveListeners() {
+  if(fbGameRef && liveGameUnsub) {
+    fbGameRef.child('state').off('value', liveGameUnsub);
+    liveGameUnsub = null;
+  }
+  if(fbPlayersRef && livePlayersUnsub) {
+    fbPlayersRef.off('value', livePlayersUnsub);
+    livePlayersUnsub = null;
+  }
+}
+
+function handleGamePhase(d) {
+  const p = d.phase;
+  if(p === 'lobby') {
+    if(liveRole === 'host') {
+      showLiveScreen('live-setup');
+      const btn = $('live-start-btn');
+      btn.disabled = false;
+    } else {
+      showLiveScreen('live-wait');
+    }
+  } else if(p === 'question') {
+    showLiveScreen('live-q');
+    renderLiveQuestion(d);
+  } else if(p === 'reveal') {
+    clearInterval(liveTimerInterval);
+    showLiveScreen('live-reveal');
+    renderLiveReveal(d);
+  } else if(p === 'results') {
+    clearInterval(liveTimerInterval);
+    showLiveScreen('live-final');
+    renderLiveFinal(d);
+  }
+}
+
+function renderLivePlayers(players) {
+  const lists = ['live-lobby-players','live-wait-players'];
+  const playerPeers = players.filter(p => p.presence && p.presence.name);
+  lists.forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = playerPeers.map(p => {
+      const isHost = p.presence.role === 'host';
+      const cls = isHost ? 'host-tag' : 'player-tag';
+      const icon = isHost ? '&#x1F451;' : '&#x1F3C3;';
+      return `<span class="live-ptag ${cls}">${icon} ${escH(p.presence.name)}</span>`;
+    }).join('');
+  });
+  const countEl = $('live-lobby-count');
+  if(countEl) {
+    const pc = playerPeers.filter(p => p.presence.role === 'player').length;
+    countEl.textContent = pc === 0 ? 'Waiting for players\u2026' : `${pc} player${pc>1?'s':''} joined`;
+    const btn = $('live-start-btn');
+    if(btn) btn.disabled = pc < 1;
+  }
+  const acEl = document.getElementById('live-ans-count');
+  if(acEl && acEl.closest('.live-screen.active')) {
+    const answered = playerPeers.filter(p => p.presence.answer != null && p.presence.answer !== -1).length;
+    const total = playerPeers.filter(p => p.presence.role === 'player').length;
+    acEl.textContent = liveRole === 'host' ? `${answered} / ${total} answered` : '';
+  }
+}
+
+$('live-pick-host').addEventListener('click', () => {
+  liveRole = 'host';
+  sfxClick();
+  $('live-code-wrap').style.display = 'none';
+  $('live-join-title').textContent = 'Enter Your Name';
+  $('live-join-subtitle').textContent = "You'll be the game host";
+  showLiveScreen('live-join');
+  $('live-name-input').value = '';
+  $('live-name-input').focus();
+});
+
+$('live-pick-player').addEventListener('click', () => {
+  liveRole = 'player';
+  sfxClick();
+  $('live-code-wrap').style.display = '';
+  $('live-join-title').textContent = 'Join a Game';
+  $('live-join-subtitle').textContent = 'Enter the code from your host';
+  showLiveScreen('live-join');
+  $('live-code-input').value = '';
+  $('live-name-input').value = '';
+  $('live-code-input').focus();
+});
+
+$('live-join-btn').addEventListener('click', async () => {
+  const name = $('live-name-input').value.trim();
+  if(!name) { $('live-name-input').style.borderColor='var(--red)'; return; }
+  $('live-name-input').style.borderColor='';
+  liveName = name;
+  liveMyScore = 0;
+
+  if(liveRole === 'host') {
+    liveGameCode = generateGameCode();
+    fbGameRef = fbDb.ref('games/' + liveGameCode);
+    fbPlayersRef = fbGameRef.child('players');
+    fbGameRef.child('players/' + liveMyId).onDisconnect().remove();
+    await fbGameRef.child('state').set({
+      phase:'lobby', hostId: liveMyId, hostName: liveName,
+      category: liveCat, totalQuestions: 10,
+      questionIdx: -1, questionText:'', options:[], correctIdx: -1,
+      startedAt: 0, scores: {}
+    });
+    await fbGameRef.child('players/' + liveMyId).set({
+      name: liveName, role: 'host', answer: -1, qIdx: -1
+    });
+    $('live-game-code-display').textContent = liveGameCode;
+    subscribeGameState();
+    showLiveScreen('live-setup');
+    sfxClick();
+  } else {
+    const code = $('live-code-input').value.trim();
+    if(!code || code.length < 4) {
+      $('live-code-input').style.borderColor='var(--red)'; return;
+    }
+    $('live-code-input').style.borderColor='';
+    liveGameCode = code;
+    fbGameRef = fbDb.ref('games/' + liveGameCode);
+    fbPlayersRef = fbGameRef.child('players');
+    try {
+      const snap = await fbGameRef.child('state').get();
+      if(!snap.exists()) {
+        const diagEl = document.getElementById('live-diag');
+        if(diagEl) diagEl.textContent = 'Game "' + code + '" not found. Check the code and try again.';
+        showLiveScreen('live-noroom'); return;
+      }
+    } catch(e) {
+      const diagEl = document.getElementById('live-diag');
+      if(diagEl) diagEl.textContent = 'Error: ' + (e.message||e);
+      showLiveScreen('live-noroom'); return;
+    }
+    fbGameRef.child('players/' + liveMyId).onDisconnect().remove();
+    await fbGameRef.child('players/' + liveMyId).set({
+      name: liveName, role: 'player', answer: -1, qIdx: -1
+    });
+    subscribeGameState();
+    sfxClick();
+  }
+});
+
+$('live-name-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') $('live-join-btn').click();
+});
+
+$('live-code-input') && $('live-code-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') $('live-name-input').focus();
+});
+
+document.querySelectorAll('[data-scope="live"] .pill').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.pills-row').querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    this.classList.add('active');
+    liveCat = this.dataset.cat;
+    sfxClick();
+  });
+});
+
+$('live-start-btn').addEventListener('click', () => {
+  const pool = liveCat === 'all' ? allCards : allCards.filter(c=>c.cat===liveCat);
+  const shuffled = [...pool].sort(()=>Math.random()-0.5);
+  liveQuestions = shuffled.slice(0, Math.min(10, shuffled.length)).map(card => {
+    const wrong = allCards.filter(c=>c.a!==card.a).sort(()=>Math.random()-0.5).slice(0,3).map(c=>c.a);
+    const opts = [card.a, ...wrong].sort(()=>Math.random()-0.5);
+    return { q: card.q, cat: card.cat, options: opts, correctIdx: opts.indexOf(card.a) };
+  });
+  hostSendQuestion(0);
+  sfxClick();
+});
+
+function hostSendQuestion(idx) {
+  if(idx >= liveQuestions.length) { hostShowResults(); return; }
+  const q = liveQuestions[idx];
+  liveAnswered = false;
+  fbGameRef.child('players/' + liveMyId).update({answer: -1, qIdx: idx});
+  fbGameRef.child('state').update({
+    phase: 'question', questionIdx: idx,
+    questionText: q.q, options: q.options,
+    correctIdx: -1, startedAt: Date.now(), category: q.cat
+  });
+}
+
+function renderLiveQuestion(d) {
+  $('live-qnum').textContent = `${d.questionIdx+1} / ${liveQuestions.length || d.totalQuestions || 10}`;
+  $('live-q-text').textContent = d.questionText;
+  $('live-feedback').innerHTML = '';
+  liveAnswered = false;
+  $('live-reveal-early-wrap').style.display = liveRole === 'host' ? '' : 'none';
+  if(liveRole === 'player') {
+    $('live-pts-total').textContent = liveMyScore + ' pts';
+  } else {
+    $('live-pts-total').textContent = 'HOST';
+  }
+  const grid = $('live-grid');
+  grid.innerHTML = '';
+  d.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'kh-btn';
+    btn.innerHTML = `<span class="kh-shape">${khShapes[i]||''}</span>${escH(truncAnswer(opt))}`;
+    if(liveRole === 'player') {
+      btn.addEventListener('click', () => handleLiveAnswer(i, d));
+    } else {
+      btn.style.cursor = 'default';
+    }
+    grid.appendChild(btn);
+  });
+  clearInterval(liveTimerInterval);
+  const elapsed = Date.now() - d.startedAt;
+  let timeLeft = Math.max(0, LIVE_TIME - elapsed / 1000);
+  $('live-time-left').textContent = Math.ceil(timeLeft);
+  $('live-timer-fill').style.width = (timeLeft / LIVE_TIME * 100) + '%';
+  $('live-timer-fill').classList.remove('urgent','done');
+  $('live-time-left').classList.remove('urgent');
+  const ptsEl = $('live-pts-avail');
+  ptsEl.classList.remove('low');
+  ptsEl.style.display = liveRole === 'player' ? '' : 'none';
+  liveTimerInterval = setInterval(() => {
+    const now = Date.now();
+    timeLeft = Math.max(0, LIVE_TIME - (now - d.startedAt) / 1000);
+    $('live-time-left').textContent = Math.ceil(timeLeft);
+    $('live-timer-fill').style.width = (timeLeft / LIVE_TIME * 100) + '%';
+    if(!liveAnswered) {
+      const avail = Math.round(1000 * (timeLeft / LIVE_TIME));
+      ptsEl.textContent = avail + ' pts available';
+      if(avail <= 300) ptsEl.classList.add('low');
+    }
+    if(timeLeft <= 5) {
+      $('live-timer-fill').classList.add('urgent');
+      $('live-time-left').classList.add('urgent');
+    }
+    if(timeLeft <= 0) {
+      clearInterval(liveTimerInterval);
+      $('live-timer-fill').classList.add('done');
+      if(liveRole === 'host') {
+        setTimeout(() => hostRevealAnswer(d), 500);
+      }
+      if(!liveAnswered && liveRole === 'player') {
+        liveAnswered = true;
+        $('live-feedback').innerHTML = '<span class="kh-fb-timeout">Time\'s up!</span>';
+        grid.querySelectorAll('.kh-btn').forEach(b=>b.classList.add('disabled'));
+      }
+    }
+  }, 100);
+}
+
+function handleLiveAnswer(idx, d) {
+  if(liveAnswered) return;
+  liveAnswered = true;
+  sfxClick();
+  const answeredAt = Date.now();
+  fbGameRef.child('players/' + liveMyId).update({answer: idx, answeredAt, qIdx: d.questionIdx});
+  const grid = $('live-grid');
+  grid.querySelectorAll('.kh-btn').forEach(b=>b.classList.add('disabled'));
+  grid.children[idx].style.boxShadow = '0 0 20px rgba(255,255,255,0.3)';
+  grid.children[idx].style.transform = 'scale(1.03)';
+  const elapsed = (answeredAt - d.startedAt) / 1000;
+  const speedPct = Math.round(Math.max(0, LIVE_TIME - elapsed) / LIVE_TIME * 100);
+  const estPts = Math.round(1000 * Math.max(0, LIVE_TIME - elapsed) / LIVE_TIME);
+  const speedLabel = speedPct >= 80 ? 'Lightning fast!' : speedPct >= 50 ? 'Quick!' : speedPct >= 20 ? 'Just in time' : 'Close call';
+  $('live-pts-avail').style.display = 'none';
+  $('live-feedback').innerHTML = `<div class="live-speed-lock">
+    <div style="font-weight:700;font-size:15px">Answer locked in!</div>
+    <div class="live-speed-bar-bg"><div class="live-speed-bar-fill" style="width:${speedPct}%"></div></div>
+    <div style="font-size:13px;color:var(--fg-secondary)">${speedLabel} &mdash; up to <strong>${estPts} pts</strong> if correct</div>
+  </div>`;
+}
+
+async function hostRevealAnswer(d) {
+  const q = liveQuestions[d.questionIdx];
+  if(!q) return;
+  const scores = {};
+  livePeersList.forEach(p => {
+    if(!p.presence || p.presence.role !== 'player') return;
+    const pid = p.id;
+    const pname = p.presence.name || 'Player';
+    if(p.presence.qIdx === d.questionIdx && p.presence.answer === q.correctIdx && p.presence.answeredAt) {
+      const speed = Math.max(0, LIVE_TIME - (p.presence.answeredAt - d.startedAt) / 1000);
+      const pts = Math.round(1000 * (speed / LIVE_TIME));
+      scores[pid] = { name: pname, add: pts };
+    } else {
+      scores[pid] = { name: pname, add: 0 };
+    }
+  });
+  const curSnap = await fbGameRef.child('state').get();
+  const cur = curSnap.exists() ? curSnap.val() : {};
+  const existing = cur.scores ? {...cur.scores} : {};
+  const roundPts = {};
+  Object.keys(scores).forEach(pid => {
+    if(!existing[pid]) existing[pid] = { name: scores[pid].name, total: 0 };
+    existing[pid].total += scores[pid].add;
+    existing[pid].name = scores[pid].name;
+    roundPts[pid] = scores[pid].add;
+  });
+  await fbGameRef.child('state').update({
+    phase: 'reveal', correctIdx: q.correctIdx,
+    scores: existing, roundPts: roundPts
+  });
+}
+
+function renderLiveReveal(d) {
+  $('live-reveal-title').textContent = `Q${d.questionIdx+1} Results`;
+  const correctText = (d.options && d.correctIdx >= 0) ? d.options[d.correctIdx] : '';
+  const caEl = $('live-correct-answer');
+  if(correctText) {
+    caEl.innerHTML = `<strong>Correct Answer:</strong> ${escH(truncAnswer(correctText))}`;
+    caEl.style.display = '';
+  } else { caEl.style.display = 'none'; }
+  const yrEl = $('live-your-result');
+  const rp = d.roundPts || {};
+  if(liveRole === 'player') {
+    const myPts = rp[liveMyId] || 0;
+    const myPeer = livePeersList.find(p => p.id === liveMyId);
+    const myAnswer = myPeer && myPeer.presence ? myPeer.presence.answer : -1;
+    const myQIdx = myPeer && myPeer.presence ? myPeer.presence.qIdx : -1;
+    if(myQIdx === d.questionIdx && myAnswer >= 0) {
+      if(myAnswer === d.correctIdx) {
+        const speedWord = myPts >= 800 ? 'Blazing fast!' : myPts >= 500 ? 'Nice speed!' : myPts > 0 ? 'Correct!' : 'Correct!';
+        yrEl.innerHTML = `${speedWord} <strong>+${myPts} pts</strong>`;
+        yrEl.className = 'live-your-result got-it';
+      } else {
+        yrEl.innerHTML = 'Wrong answer &mdash; <strong>+0 pts</strong>';
+        yrEl.className = 'live-your-result missed';
+      }
+    } else {
+      yrEl.innerHTML = 'Didn\'t answer in time &mdash; <strong>+0 pts</strong>';
+      yrEl.className = 'live-your-result no-answer';
+    }
+    yrEl.style.display = '';
+  } else { yrEl.style.display = 'none'; }
+  const board = $('live-reveal-board');
+  const scores = d.scores || {};
+  const sorted = Object.entries(scores).sort((a,b)=>b[1].total - a[1].total);
+  board.innerHTML = sorted.map(([pid,s],i) => {
+    const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const isMe = pid === liveMyId;
+    const earned = rp[pid] || 0;
+    const earnedHtml = earned > 0
+      ? `<span class="live-round-pts">+${earned}</span>`
+      : `<span class="live-round-pts zero">+0</span>`;
+    return `<div class="live-brow" ${isMe?'style="background:var(--accent-glow)"':''}>
+      <div class="live-brank ${rankCls}">${i+1}</div>
+      <div class="live-bname">${escH(s.name)}${isMe?' (you)':''}</div>
+      <div class="live-bscore">${earnedHtml} ${s.total}</div>
+    </div>`;
+  }).join('');
+  if(liveRole === 'player') {
+    const myEntry = scores[liveMyId];
+    if(myEntry) liveMyScore = myEntry.total;
+  }
+  const nextWrap = $('live-next-wrap');
+  nextWrap.style.display = liveRole === 'host' ? '' : 'none';
+}
+
+$('live-next-btn').addEventListener('click', () => {
+  fbGameRef.child('state').get().then(snap => {
+    const d = snap.exists() ? snap.val() : {};
+    const nextIdx = (d.questionIdx || 0) + 1;
+    hostSendQuestion(nextIdx);
+  });
+  sfxClick();
+});
+
+$('live-reveal-early').addEventListener('click', () => {
+  clearInterval(liveTimerInterval);
+  fbGameRef.child('state').get().then(snap => {
+    const d = snap.exists() ? snap.val() : {};
+    if(d.phase === 'question') hostRevealAnswer(d);
+  });
+  sfxClick();
+});
+
+function hostShowResults() {
+  fbGameRef.child('state').update({ phase: 'results' });
+}
+
+function renderLiveFinal(d) {
+  const scores = d.scores || {};
+  const sorted = Object.entries(scores).sort((a,b)=>b[1].total - a[1].total);
+  if(sorted.length > 0) {
+    $('live-winner-name').textContent = sorted[0][1].name;
+    $('live-winner-score').textContent = sorted[0][1].total + ' points';
+  } else {
+    $('live-winner-name').textContent = 'No players';
+    $('live-winner-score').textContent = '';
+  }
+  const board = $('live-final-board');
+  board.innerHTML = sorted.map(([pid,s],i) => {
+    const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const isMe = pid === liveMyId;
+    return `<div class="live-brow" ${isMe?'style="background:var(--accent-glow)"':''}>
+      <div class="live-brank ${rankCls}">${i+1}</div>
+      <div class="live-bname">${escH(s.name)}${isMe?' (you)':''}</div>
+      <div class="live-bscore">${s.total}</div>
+    </div>`;
+  }).join('');
+  if(sorted.length > 0) {
+    sfxLevelUp(); haptic(150);
+    for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
+  }
+  $('live-play-again').style.display = liveRole === 'host' ? '' : 'none';
+}
+
+$('live-play-again').addEventListener('click', () => {
+  fbGameRef.child('state').set({
+    phase:'lobby', hostId: liveMyId, hostName: liveName,
+    category: liveCat, totalQuestions: 10,
+    questionIdx: -1, questionText:'', options:[], correctIdx: -1,
+    startedAt: 0, scores: {}
+  });
+  fbGameRef.child('players/' + liveMyId).update({answer: -1, qIdx: -1});
+  sfxClick();
+});
+
+$('live-back').addEventListener('click', () => {
+  clearInterval(liveTimerInterval);
+  cleanupLiveListeners();
+  if(fbGameRef && liveMyId) {
+    fbGameRef.child('players/' + liveMyId).remove().catch(()=>{});
+  }
+  if(liveRole === 'host' && fbGameRef) {
+    fbGameRef.child('state').set({ phase:'idle' }).catch(()=>{});
+  }
+  fbGameRef = null; fbPlayersRef = null;
+  showGamePicker();
 });
 
 // Init with load animation
