@@ -1479,22 +1479,25 @@ body::before {
 <div class="app-header">
   <div class="header-top">
     <div>
-      <div class="app-title">Anatomy Study Hub</div>
-      <div class="app-sub">Skeletal &bull; Joints &bull; Muscular &bull; Pre/Post Op</div>
+      <div class="app-title" data-i18n="app_title">Anatomy Study Hub</div>
+      <div class="app-sub" data-i18n="app_sub">Skeletal &bull; Joints &bull; Muscular &bull; Pre/Post Op</div>
     </div>
-    <div class="progress-pill" id="progress-pill">&#x1F4DA; <span id="cards-done">0</span> cards studied</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="lang-toggle" aria-label="Switch language" style="display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);background:var(--pill-bg);color:var(--fg);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s"><span id="lang-flag">EN</span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:.5"><path d="M12 15l-5-5h10z"/></svg></button>
+      <div class="progress-pill" id="progress-pill">&#x1F4DA; <span id="cards-done">0</span> <span data-i18n="cards_studied">cards studied</span></div>
+    </div>
   </div>
 </div>
 
 <!-- ==================== STUDY GUIDE ==================== -->
 <div id="view-guide" class="tab-view active">
   <div class="pills-row" data-scope="guide">
-    <button class="pill active" data-cat="all">All Topics</button>
-    <button class="pill" data-cat="skeletal">Skeletal</button>
-    <button class="pill" data-cat="joints">Joints</button>
-    <button class="pill" data-cat="muscular">Muscular</button>
-    <button class="pill" data-cat="prepostop">Pre/Post Op</button>
-    <button class="pill" data-cat="francais">Fran&ccedil;ais</button>
+    <button class="pill active" data-cat="all" data-i18n="all_topics">All Topics</button>
+    <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+    <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+    <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+    <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
+    <button class="pill" data-cat="francais" data-i18n="cat_francais">Fran&ccedil;ais</button>
   </div>
   <div id="guide-list">
     <div class="section-divider" data-cat="skeletal"><span class="sd-dot skeletal"></span><span class="sd-label">Skeletal System</span><span class="sd-line"></span><span class="sd-count">10 topics</span></div>
@@ -2450,36 +2453,36 @@ body::before {
 <!-- ==================== FLASH CARDS ==================== -->
 <div id="view-cards" class="tab-view">
   <div class="pills-row" data-scope="cards">
-    <button class="pill active" data-cat="all">All Cards</button>
-    <button class="pill" data-cat="skeletal">Skeletal</button>
-    <button class="pill" data-cat="joints">Joints</button>
-    <button class="pill" data-cat="muscular">Muscular</button>
-    <button class="pill" data-cat="prepostop">Pre/Post Op</button>
-    <button class="pill" data-cat="francais">Fran&ccedil;ais</button>
+    <button class="pill active" data-cat="all" data-i18n="all_cards">All Cards</button>
+    <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+    <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+    <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+    <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
+    <button class="pill" data-cat="francais" data-i18n="cat_francais">Fran&ccedil;ais</button>
   </div>
   <div class="fc-top-bar">
     <span class="fc-counter" id="fc-total"></span>
-    <button class="fc-shuffle-btn" id="fc-shuffle-btn">&#x1f500; Shuffle</button>
+    <button class="fc-shuffle-btn" id="fc-shuffle-btn">&#x1f500; <span data-i18n="shuffle">Shuffle</span></button>
   </div>
   <div class="fc-progress"><div class="fc-progress-bar" id="fc-progress-bar"></div></div>
   <div class="fc-card-area">
     <div class="fc-card" id="flashcard">
       <div class="fc-face fc-front">
         <span class="fc-cat-tag" id="fc-badge"></span>
-        <span class="fc-q-label">Question</span>
+        <span class="fc-q-label" data-i18n="question">Question</span>
         <div class="fc-q-text" id="fc-question"></div>
-        <span class="fc-tap-hint">Tap to flip</span>
+        <span class="fc-tap-hint" data-i18n="tap_flip">Tap to flip</span>
       </div>
       <div class="fc-face fc-back">
-        <span class="fc-a-label">Answer</span>
+        <span class="fc-a-label" data-i18n="answer">Answer</span>
         <div class="fc-a-text" id="fc-answer"></div>
-        <span class="fc-tap-hint">Tap to return</span>
+        <span class="fc-tap-hint" data-i18n="tap_return">Tap to return</span>
       </div>
     </div>
   </div>
   <div class="fc-action-row">
-    <button class="fc-action-btn review" id="fc-review">Got it wrong</button>
-    <button class="fc-action-btn got-it" id="fc-gotit">Got it right</button>
+    <button class="fc-action-btn review" id="fc-review" data-i18n="got_wrong">Got it wrong</button>
+    <button class="fc-action-btn got-it" id="fc-gotit" data-i18n="got_right">Got it right</button>
   </div>
   <div class="fc-nav-row">
     <button class="fc-nav-btn" id="fc-prev" aria-label="Previous">&#8592;</button>
@@ -2491,13 +2494,13 @@ body::before {
 <!-- ==================== LISTEN ==================== -->
 <div id="view-pods" class="tab-view">
   <div class="pills-row" data-scope="listen">
-    <button class="pill active" data-listencat="all">All</button>
+    <button class="pill active" data-listencat="all" data-i18n="all">All</button>
     <button class="pill" data-listencat="yt">YouTube</button>
     <button class="pill" data-listencat="sp">Spotify</button>
   </div>
 
   <!-- YOUTUBE -->
-  <div class="listen-section-title" data-listentype="yt"><div class="section-icon yt">&#9654;</div>YouTube Videos</div>
+  <div class="listen-section-title" data-listentype="yt"><div class="section-icon yt">&#9654;</div><span data-i18n="yt_videos">YouTube Videos</span></div>
 
   <a href="https://www.youtube.com/watch?v=rDGqkMHPDqE" target="_blank" rel="noopener" class="pod-card" data-listentype="yt">
     <div class="pod-icon yt">&#9654;</div>
@@ -2577,7 +2580,7 @@ body::before {
   </a>
 
   <!-- SPOTIFY -->
-  <div class="listen-section-title" data-listentype="sp"><div class="section-icon sp">&#9835;</div>Spotify Podcasts</div>
+  <div class="listen-section-title" data-listentype="sp"><div class="section-icon sp">&#9835;</div><span data-i18n="sp_podcasts">Spotify Podcasts</span></div>
 
   <a href="https://open.spotify.com/show/3OBia9eOBNqA3uZZUvWMoY" target="_blank" rel="noopener" class="pod-card" data-listentype="sp">
     <div class="pod-icon sp">&#9835;</div>
@@ -2630,47 +2633,47 @@ body::before {
   <!-- GAME PICKER -->
   <div id="game-picker" class="game-view active">
     <div class="games-header">
-      <div class="games-title">Study Games</div>
-      <div class="games-sub">Pick a game and test what you know</div>
+      <div class="games-title" data-i18n="study_games">Study Games</div>
+      <div class="games-sub" data-i18n="pick_game">Pick a game and test what you know</div>
     </div>
     <div class="game-picker">
       <button class="game-pick-card" data-game="live">
         <div class="game-pick-icon">&#x1F3AE;</div>
         <div class="game-pick-info">
-          <div class="game-pick-name">Live Game</div>
-          <div class="game-pick-desc">Multiplayer! Host a live quiz and compete head-to-head</div>
+          <div class="game-pick-name" data-i18n="live_game">Live Game</div>
+          <div class="game-pick-desc" data-i18n="live_desc">Multiplayer! Host a live quiz and compete head-to-head</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
       <button class="game-pick-card" data-game="quiz">
         <div class="game-pick-icon">&#x1F9E0;</div>
         <div class="game-pick-info">
-          <div class="game-pick-name">Quiz</div>
-          <div class="game-pick-desc">10 multiple choice questions — pick the right answer</div>
+          <div class="game-pick-name" data-i18n="quiz">Quiz</div>
+          <div class="game-pick-desc" data-i18n="quiz_desc">10 multiple choice questions — pick the right answer</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
       <button class="game-pick-card" data-game="match">
         <div class="game-pick-icon">&#x1F3AF;</div>
         <div class="game-pick-info">
-          <div class="game-pick-name">Matching</div>
-          <div class="game-pick-desc">Match terms to their definitions as fast as you can</div>
+          <div class="game-pick-name" data-i18n="matching">Matching</div>
+          <div class="game-pick-desc" data-i18n="matching_desc">Match terms to their definitions as fast as you can</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
       <button class="game-pick-card" data-game="tf">
         <div class="game-pick-icon">&#x2705;</div>
         <div class="game-pick-info">
-          <div class="game-pick-name">True or False</div>
-          <div class="game-pick-desc">Read a statement and decide — is it true or false?</div>
+          <div class="game-pick-name" data-i18n="true_false">True or False</div>
+          <div class="game-pick-desc" data-i18n="tf_desc">Read a statement and decide — is it true or false?</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
       <button class="game-pick-card" data-game="imgid">
         <div class="game-pick-icon">&#x1F4F7;</div>
         <div class="game-pick-info">
-          <div class="game-pick-name">Image ID</div>
-          <div class="game-pick-desc">See an anatomy image and identify what it shows</div>
+          <div class="game-pick-name" data-i18n="image_id">Image ID</div>
+          <div class="game-pick-desc" data-i18n="imgid_desc">See an anatomy image and identify what it shows</div>
         </div>
         <svg class="game-pick-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
@@ -2679,19 +2682,20 @@ body::before {
 
   <!-- QUIZ -->
   <div id="game-quiz" class="game-view">
-    <button class="game-back-btn" id="quiz-back">&#x2190; All Games</button>
+    <button class="game-back-btn" id="quiz-back">&#x2190; <span data-i18n="all_games">All Games</span></button>
     <div class="pills-row" data-scope="quiz">
-      <button class="pill active" data-cat="all">All Topics</button>
-      <button class="pill" data-cat="skeletal">Skeletal</button>
-      <button class="pill" data-cat="joints">Joints</button>
-      <button class="pill" data-cat="muscular">Muscular</button>
-      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+      <button class="pill active" data-cat="all" data-i18n="all_topics">All Topics</button>
+      <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+      <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
+      <button class="pill" data-cat="francais" data-i18n="cat_francais">Fran&ccedil;ais</button>
     </div>
     <div class="quiz-intro" id="quiz-intro">
       <div class="quiz-intro-emoji">&#x1F9E0;</div>
-      <div class="quiz-intro-title">Quiz Time</div>
-      <div class="quiz-intro-sub">10 random multiple choice questions.<br>Pick the right answer!</div>
-      <button class="quiz-start-btn" id="quiz-start">Start Quiz</button>
+      <div class="quiz-intro-title" data-i18n="quiz_time">Quiz Time</div>
+      <div class="quiz-intro-sub" data-i18n-html="quiz_intro_sub">10 random multiple choice questions.<br>Pick the right answer!</div>
+      <button class="quiz-start-btn" id="quiz-start" data-i18n="start_quiz">Start Quiz</button>
     </div>
     <div class="quiz-area" id="quiz-area">
       <div class="quiz-progress-row">
@@ -2704,28 +2708,29 @@ body::before {
         <div class="quiz-q-text" id="quiz-q-text"></div>
       </div>
       <div class="quiz-options" id="quiz-options"></div>
-      <button class="quiz-next-btn" id="quiz-next">Next Question</button>
+      <button class="quiz-next-btn" id="quiz-next" data-i18n="next_question">Next Question</button>
     </div>
     <div class="quiz-result" id="quiz-result">
       <div class="quiz-result-emoji" id="quiz-result-emoji"></div>
       <div class="quiz-result-title" id="quiz-result-title"></div>
       <div class="quiz-result-score" id="quiz-result-score"></div>
-      <button class="quiz-result-btn" id="quiz-again">Play Again</button>
+      <button class="quiz-result-btn" id="quiz-again" data-i18n="play_again">Play Again</button>
     </div>
   </div>
 
   <!-- MATCHING -->
   <div id="game-match" class="game-view">
-    <button class="game-back-btn" id="match-back">&#x2190; All Games</button>
+    <button class="game-back-btn" id="match-back">&#x2190; <span data-i18n="all_games">All Games</span></button>
     <div class="pills-row" data-scope="match">
-      <button class="pill active" data-cat="all">All Topics</button>
-      <button class="pill" data-cat="skeletal">Skeletal</button>
-      <button class="pill" data-cat="joints">Joints</button>
-      <button class="pill" data-cat="muscular">Muscular</button>
-      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+      <button class="pill active" data-cat="all" data-i18n="all_topics">All Topics</button>
+      <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+      <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
+      <button class="pill" data-cat="francais" data-i18n="cat_francais">Fran&ccedil;ais</button>
     </div>
     <div class="match-stats">
-      <div class="match-stat">Matched: <span id="match-count">0</span> / <span id="match-total">6</span></div>
+      <div class="match-stat"><span data-i18n="matched">Matched</span>: <span id="match-count">0</span> / <span id="match-total">6</span></div>
       <div class="match-timer" id="match-timer">0:00</div>
     </div>
     <div class="match-grid" id="match-grid"></div>
@@ -2733,41 +2738,41 @@ body::before {
       <div class="quiz-result-emoji" id="match-result-emoji"></div>
       <div class="quiz-result-title" id="match-result-title"></div>
       <div class="quiz-result-score" id="match-result-score"></div>
-      <button class="quiz-result-btn" id="match-again">Play Again</button>
+      <button class="quiz-result-btn" id="match-again" data-i18n="play_again">Play Again</button>
     </div>
   </div>
 
   <!-- IMAGE ID -->
   <div id="game-imgid" class="game-view">
-    <button class="game-back-btn" id="imgid-back">&#x2190; All Games</button>
+    <button class="game-back-btn" id="imgid-back">&#x2190; <span data-i18n="all_games">All Games</span></button>
     <div class="quiz-progress-row">
       <span class="quiz-progress-label" id="imgid-progress-label">Question 1 / 8</span>
       <span class="quiz-score-label" id="imgid-score-label">Score: 0</span>
     </div>
     <div class="quiz-progress-bar-bg"><div class="quiz-progress-bar-fill" id="imgid-bar"></div></div>
     <div class="imgid-card" id="imgid-card">
-      <div class="imgid-prompt">What does this image show?</div>
+      <div class="imgid-prompt" data-i18n="what_image">What does this image show?</div>
       <div class="imgid-img-wrap"><img class="imgid-img" id="imgid-img" src="" alt="Identify this anatomy image"></div>
     </div>
     <div class="quiz-options" id="imgid-options"></div>
-    <button class="quiz-next-btn" id="imgid-next">Next Question</button>
+    <button class="quiz-next-btn" id="imgid-next" data-i18n="next_question">Next Question</button>
     <div class="quiz-result" id="imgid-result">
       <div class="quiz-result-emoji" id="imgid-result-emoji"></div>
       <div class="quiz-result-title" id="imgid-result-title"></div>
       <div class="quiz-result-score" id="imgid-result-score"></div>
-      <button class="quiz-result-btn" id="imgid-again">Play Again</button>
+      <button class="quiz-result-btn" id="imgid-again" data-i18n="play_again">Play Again</button>
     </div>
   </div>
 
   <!-- TRUE / FALSE -->
   <div id="game-tf" class="game-view">
-    <button class="game-back-btn" id="tf-back">&#x2190; All Games</button>
+    <button class="game-back-btn" id="tf-back">&#x2190; <span data-i18n="all_games">All Games</span></button>
     <div class="pills-row" data-scope="tf">
-      <button class="pill active" data-cat="all">All Topics</button>
-      <button class="pill" data-cat="skeletal">Skeletal</button>
-      <button class="pill" data-cat="joints">Joints</button>
-      <button class="pill" data-cat="muscular">Muscular</button>
-      <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+      <button class="pill active" data-cat="all" data-i18n="all_topics">All Topics</button>
+      <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+      <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+      <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+      <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
     </div>
     <div class="quiz-progress-row">
       <span class="quiz-progress-label" id="tf-progress-label">Question 1 / 10</span>
@@ -2778,28 +2783,28 @@ body::before {
       <div class="tf-cat" id="tf-cat"></div>
       <div class="tf-statement" id="tf-statement"></div>
       <div class="tf-btns">
-        <button class="tf-btn true-btn" id="tf-true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> TRUE</button>
-        <button class="tf-btn false-btn" id="tf-false"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> FALSE</button>
+        <button class="tf-btn true-btn" id="tf-true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> <span data-i18n="true_btn">TRUE</span></button>
+        <button class="tf-btn false-btn" id="tf-false"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> <span data-i18n="false_btn">FALSE</span></button>
       </div>
       <div class="tf-feedback" id="tf-feedback"></div>
     </div>
-    <button class="quiz-next-btn" id="tf-next">Next Question</button>
+    <button class="quiz-next-btn" id="tf-next" data-i18n="next_question">Next Question</button>
     <div class="quiz-result" id="tf-result">
       <div class="quiz-result-emoji" id="tf-result-emoji"></div>
       <div class="quiz-result-title" id="tf-result-title"></div>
       <div class="quiz-result-score" id="tf-result-score"></div>
-      <button class="quiz-result-btn" id="tf-again">Play Again</button>
+      <button class="quiz-result-btn" id="tf-again" data-i18n="play_again">Play Again</button>
     </div>
   </div>
 
   <!-- LIVE MULTIPLAYER -->
   <div id="game-live" class="game-view">
-    <button class="game-back-btn" id="live-back">&#x2190; All Games</button>
+    <button class="game-back-btn" id="live-back">&#x2190; <span data-i18n="all_games">All Games</span></button>
 
     <div class="live-screen active" id="live-init">
       <div class="live-center">
         <div class="live-spinner"></div>
-        <div class="live-sub">Connecting to live room&hellip;</div>
+        <div class="live-sub" data-i18n="connecting">Connecting to live room&hellip;</div>
       </div>
     </div>
 
@@ -2820,18 +2825,18 @@ body::before {
     <div class="live-screen" id="live-role">
       <div class="live-center">
         <div style="font-size:42px;margin-bottom:8px">&#x1F3AE;</div>
-        <div class="live-title">Live Game</div>
-        <div class="live-sub">Choose your role</div>
+        <div class="live-title" data-i18n="live_game">Live Game</div>
+        <div class="live-sub" data-i18n="choose_role">Choose your role</div>
         <div class="live-role-row">
           <button class="live-role-btn" id="live-pick-host">
             <div class="live-role-icon">&#x1F451;</div>
-            <div class="live-role-label">Host</div>
-            <div class="live-role-desc">Control the game, pick questions</div>
+            <div class="live-role-label" data-i18n="host">Host</div>
+            <div class="live-role-desc" data-i18n="host_desc">Control the game, pick questions</div>
           </button>
           <button class="live-role-btn" id="live-pick-player">
             <div class="live-role-icon">&#x1F3C3;</div>
-            <div class="live-role-label">Player</div>
-            <div class="live-role-desc">Join and compete</div>
+            <div class="live-role-label" data-i18n="player">Player</div>
+            <div class="live-role-desc" data-i18n="player_desc">Join and compete</div>
           </button>
         </div>
       </div>
@@ -2840,44 +2845,45 @@ body::before {
     <div class="live-screen" id="live-setup">
       <div class="live-center">
         <div style="background:var(--accent);color:#000;padding:12px 24px;border-radius:12px;margin-bottom:16px;text-align:center">
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:0.7">Game Code</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:0.7" data-i18n="game_code">Game Code</div>
           <div id="live-game-code-display" style="font-size:42px;font-weight:800;letter-spacing:8px;font-family:monospace">----</div>
-          <div style="font-size:12px;opacity:0.7">Share this code with your class</div>
+          <div style="font-size:12px;opacity:0.7" data-i18n="share_code">Share this code with your class</div>
         </div>
-        <div class="live-title">&#x1F451; Set Up Game</div>
-        <div class="live-sub">Pick a category and start when players join</div>
+        <div class="live-title">&#x1F451; <span data-i18n="setup_game">Set Up Game</span></div>
+        <div class="live-sub" data-i18n="pick_cat">Pick a category and start when players join</div>
         <div class="pills-row" data-scope="live" style="margin-bottom:16px">
-          <button class="pill active" data-cat="all">All Topics</button>
-          <button class="pill" data-cat="skeletal">Skeletal</button>
-          <button class="pill" data-cat="joints">Joints</button>
-          <button class="pill" data-cat="muscular">Muscular</button>
-          <button class="pill" data-cat="prepostop">Pre/Post Op</button>
+          <button class="pill active" data-cat="all" data-i18n="all_topics">All Topics</button>
+          <button class="pill" data-cat="skeletal" data-i18n="cat_skeletal">Skeletal</button>
+          <button class="pill" data-cat="joints" data-i18n="cat_joints">Joints</button>
+          <button class="pill" data-cat="muscular" data-i18n="cat_muscular">Muscular</button>
+          <button class="pill" data-cat="prepostop" data-i18n="cat_prepostop">Pre/Post Op</button>
+          <button class="pill" data-cat="francais" data-i18n="cat_francais">Fran&ccedil;ais</button>
         </div>
-        <div class="live-count" id="live-lobby-count">Waiting for players&hellip;</div>
+        <div class="live-count" id="live-lobby-count" data-i18n="waiting_players">Waiting for players&hellip;</div>
         <div class="live-plist" id="live-lobby-players"></div>
-        <button class="live-action-btn host" id="live-start-btn" disabled>Start Game</button>
+        <button class="live-action-btn host" id="live-start-btn" disabled data-i18n="start_game">Start Game</button>
       </div>
     </div>
 
     <div class="live-screen" id="live-join">
       <div class="live-center">
         <div style="font-size:42px;margin-bottom:8px">&#x270D;&#xFE0F;</div>
-        <div class="live-title" id="live-join-title">Join a Game</div>
-        <div class="live-sub" id="live-join-subtitle">Enter the code from your host</div>
+        <div class="live-title" id="live-join-title" data-i18n="join_game">Join a Game</div>
+        <div class="live-sub" id="live-join-subtitle" data-i18n="enter_code">Enter the code from your host</div>
         <div id="live-code-wrap">
-          <input class="live-input" id="live-code-input" type="text" placeholder="Game code" maxlength="4" autocomplete="off" inputmode="numeric" style="margin-bottom:10px;text-align:center;letter-spacing:8px;font-size:24px;font-weight:700">
+          <input class="live-input" id="live-code-input" type="text" data-ph-en="Game code" data-ph-fr="Code du jeu" placeholder="Game code" maxlength="4" autocomplete="off" inputmode="numeric" style="margin-bottom:10px;text-align:center;letter-spacing:8px;font-size:24px;font-weight:700">
         </div>
-        <input class="live-input" id="live-name-input" type="text" placeholder="Your name" maxlength="20" autocomplete="off">
+        <input class="live-input" id="live-name-input" type="text" data-ph-en="Your name" data-ph-fr="Votre nom" placeholder="Your name" maxlength="20" autocomplete="off">
         <br>
-        <button class="live-action-btn join" id="live-join-btn">Join Game</button>
+        <button class="live-action-btn join" id="live-join-btn" data-i18n="join_game_btn">Join Game</button>
       </div>
     </div>
 
     <div class="live-screen" id="live-wait">
       <div class="live-center">
         <div class="live-spinner"></div>
-        <div class="live-title">You're In!</div>
-        <div class="live-sub">Waiting for host to start<span class="live-waiting-dots"></span></div>
+        <div class="live-title" data-i18n="youre_in">You're In!</div>
+        <div class="live-sub"><span data-i18n="waiting_host">Waiting for host to start</span><span class="live-waiting-dots"></span></div>
         <div class="live-plist" id="live-wait-players"></div>
       </div>
     </div>
@@ -2898,19 +2904,19 @@ body::before {
         <div class="kh-feedback" id="live-feedback"></div>
         <div class="live-ans-count" id="live-ans-count"></div>
         <div id="live-reveal-early-wrap" style="display:none;margin-top:12px">
-          <button class="live-action-btn host" id="live-reveal-early" style="font-size:14px;padding:10px 24px">Reveal Answer</button>
+          <button class="live-action-btn host" id="live-reveal-early" style="font-size:14px;padding:10px 24px" data-i18n="reveal_answer">Reveal Answer</button>
         </div>
       </div>
     </div>
 
     <div class="live-screen" id="live-reveal">
       <div class="live-center">
-        <div class="live-title" id="live-reveal-title">Leaderboard</div>
+        <div class="live-title" id="live-reveal-title" data-i18n="leaderboard">Leaderboard</div>
         <div class="live-correct-answer" id="live-correct-answer"></div>
         <div class="live-your-result" id="live-your-result"></div>
         <div class="live-board" id="live-reveal-board"></div>
         <div style="margin-top:16px" id="live-next-wrap">
-          <button class="live-action-btn host" id="live-next-btn">Next Question</button>
+          <button class="live-action-btn host" id="live-next-btn" data-i18n="next_question">Next Question</button>
         </div>
       </div>
     </div>
@@ -2922,7 +2928,7 @@ body::before {
         <div class="live-winner-score" id="live-winner-score"></div>
         <div class="live-board" id="live-final-board"></div>
         <div style="margin-top:20px">
-          <button class="live-action-btn host" id="live-play-again">Play Again</button>
+          <button class="live-action-btn host" id="live-play-again" data-i18n="play_again">Play Again</button>
         </div>
       </div>
     </div>
@@ -2934,19 +2940,19 @@ body::before {
 <nav class="bottom-nav">
   <button class="nav-item active" data-view="guide">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-    Study
+    <span data-i18n="nav_study">Study</span>
   </button>
   <button class="nav-item" data-view="cards">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 10h2v2H6zm0 4h2v2H6zm4-4h8v2h-8zm0 4h8v2h-8z"/></svg>
-    Cards
+    <span data-i18n="nav_cards">Cards</span>
   </button>
   <button class="nav-item" data-view="games">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 16.09l-1.09-7.66A3.996 3.996 0 0016.53 5H7.47a3.996 3.996 0 00-3.96 3.43L2.42 16.09a3.003 3.003 0 002.97 3.41 2.99 2.99 0 002.54-1.4l1.44-2.32A1 1 0 0110.22 15h3.56a1 1 0 01.85.48l1.44 2.32a2.99 2.99 0 002.54 1.4c1.96 0 3.42-1.82 2.97-3.41zM8.5 11.5H7v1.5H5.5v-1.5H4V10h1.5V8.5H7V10h1.5v1.5zm6 1a1 1 0 110-2 1 1 0 010 2zm2.5-2.5a1 1 0 110-2 1 1 0 010 2z"/></svg>
-    Games
+    <span data-i18n="nav_games">Games</span>
   </button>
   <button class="nav-item" data-view="pods">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-    Listen
+    <span data-i18n="nav_listen">Listen</span>
   </button>
 </nav>
 
@@ -2959,6 +2965,133 @@ const allCards=[{cat:"skeletal",q:"How many bones are in the human body?",a:"206
 
 let filtered=[...allCards], idx=0;
 const $=id=>document.getElementById(id);
+
+// ===== LANGUAGE TOGGLE =====
+let currentLang = localStorage.getItem('lang') || 'en';
+const i18n = {
+  fr: {
+    app_title: "Centre d'Étude Anatomie",
+    app_sub: "Squelettique &bull; Articulations &bull; Musculaire &bull; Pré/Post Op",
+    cards_studied: "cartes étudiées",
+    all_topics: "Tous les Sujets",
+    all_cards: "Toutes les Cartes",
+    all: "Tout",
+    cat_skeletal: "Squelettique",
+    cat_joints: "Articulations",
+    cat_muscular: "Musculaire",
+    cat_prepostop: "Pré/Post Op",
+    cat_francais: "Français",
+    shuffle: "Mélanger",
+    question: "Question",
+    answer: "Réponse",
+    tap_flip: "Touchez pour retourner",
+    tap_return: "Touchez pour revenir",
+    got_wrong: "Pas compris",
+    got_right: "Compris !",
+    yt_videos: "Vidéos YouTube",
+    sp_podcasts: "Podcasts Spotify",
+    study_games: "Jeux d'Étude",
+    pick_game: "Choisissez un jeu et testez vos connaissances",
+    live_game: "Jeu en Direct",
+    live_desc: "Multijoueur ! Créez un quiz en direct et affrontez-vous",
+    quiz: "Quiz",
+    quiz_desc: "10 questions à choix multiples — trouvez la bonne réponse",
+    matching: "Association",
+    matching_desc: "Associez les termes à leurs définitions le plus vite possible",
+    true_false: "Vrai ou Faux",
+    tf_desc: "Lisez une affirmation et décidez — vrai ou faux ?",
+    image_id: "Identification d'Image",
+    imgid_desc: "Voyez une image d'anatomie et identifiez ce qu'elle montre",
+    all_games: "Tous les Jeux",
+    quiz_time: "L'Heure du Quiz",
+    quiz_intro_sub: "10 questions à choix multiples aléatoires.<br>Trouvez la bonne réponse !",
+    start_quiz: "Commencer le Quiz",
+    next_question: "Question Suivante",
+    play_again: "Rejouer",
+    matched: "Associé",
+    what_image: "Que montre cette image ?",
+    true_btn: "VRAI",
+    false_btn: "FAUX",
+    nav_study: "Étude",
+    nav_cards: "Cartes",
+    nav_games: "Jeux",
+    nav_listen: "Écouter",
+    connecting: "Connexion en cours…",
+    choose_role: "Choisissez votre rôle",
+    host: "Hôte",
+    host_desc: "Contrôlez le jeu, choisissez les questions",
+    player: "Joueur",
+    player_desc: "Rejoignez et affrontez",
+    share_code: "Partagez ce code avec votre classe",
+    setup_game: "Configurer le Jeu",
+    pick_cat: "Choisissez une catégorie et lancez quand les joueurs sont prêts",
+    waiting_players: "En attente de joueurs…",
+    start_game: "Lancer le Jeu",
+    join_game: "Rejoindre un Jeu",
+    enter_code: "Entrez le code de votre hôte",
+    join_game_btn: "Rejoindre",
+    youre_in: "Vous êtes dedans !",
+    waiting_host: "En attente du lancement par l'hôte",
+    reveal_answer: "Révéler la Réponse",
+    leaderboard: "Classement",
+    score_label: "Score",
+    question_label: "Question",
+    correct_text: "Correct !",
+    amazing: "Incroyable !",
+    great_job: "Excellent !",
+    not_bad: "Pas Mal !",
+    keep_studying: "Continuez à Étudier !",
+    you_got: "Vous avez",
+    out_of: "sur",
+    cards_text: "cartes",
+    pts_available: "pts disponibles",
+    lightning_fast: "Éclair !",
+    great_speed: "Super Rapide !",
+    nice_job: "Bien Joué !",
+    you_did_it: "Bravo !",
+    all_pairs: "Toutes les",
+    pairs_matched: "paires associées en",
+    game_code: "Code du Jeu"
+  }
+};
+
+function t(key) {
+  if (currentLang === 'en') return null;
+  return i18n[currentLang] && i18n[currentLang][key] || null;
+}
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = t(key);
+    if (val) el.innerHTML = val;
+    else if (el._origText) el.innerHTML = el._origText;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    const val = t(key);
+    if (val) el.innerHTML = val;
+    else if (el._origText) el.innerHTML = el._origText;
+  });
+  $('lang-flag').textContent = currentLang === 'fr' ? 'FR' : 'EN';
+  document.querySelectorAll('[data-ph-en]').forEach(el => {
+    el.placeholder = currentLang === 'fr' ? el.dataset.phFr : el.dataset.phEn;
+  });
+}
+
+// Store original text on first load
+document.querySelectorAll('[data-i18n]').forEach(el => { el._origText = el.innerHTML; });
+document.querySelectorAll('[data-i18n-html]').forEach(el => { el._origText = el.innerHTML; });
+
+$('lang-toggle').addEventListener('click', function() {
+  currentLang = currentLang === 'en' ? 'fr' : 'en';
+  try { localStorage.setItem('lang', currentLang); } catch(e) {}
+  applyLang();
+  if (typeof render === 'function' && filtered.length) render(0);
+});
+
+if (currentLang === 'fr') applyLang();
+
 // ===== FIREBASE CONFIG =====
 // To enable multiplayer Live Game, create a free Firebase project:
 // 1. Go to https://console.firebase.google.com
@@ -3032,9 +3165,9 @@ function showComplete() {
   ov.className = 'complete-overlay';
   ov.innerHTML = `<div class="complete-card">
     <div class="complete-emoji">&#x1F389;</div>
-    <div class="complete-title">Deck Complete!</div>
-    <div class="complete-sub">You went through all ${filtered.length} cards!</div>
-    <button class="complete-btn" onclick="this.closest('.complete-overlay').remove()">Keep studying</button>
+    <div class="complete-title">${currentLang==='fr'?'Paquet Terminé !':'Deck Complete!'}</div>
+    <div class="complete-sub">${currentLang==='fr'?'Vous avez parcouru les '+filtered.length+' cartes !':'You went through all '+filtered.length+' cards!'}</div>
+    <button class="complete-btn" onclick="this.closest('.complete-overlay').remove()">${currentLang==='fr'?'Continuer à étudier':'Keep studying'}</button>
   </div>`;
   document.body.appendChild(ov);
   for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.6), i*200);
@@ -3086,12 +3219,12 @@ function render(dir){
   $('fc-answer').textContent=c.a;
   $('fc-pos').textContent=`${idx+1} / ${filtered.length}`;
   const total = $('fc-total');
-  total.textContent=`${filtered.length} cards`;
+  total.textContent=`${filtered.length} ${t('cards_text')||'cards'}`;
   total.classList.remove('fc-counter-pop');
   void total.offsetHeight;
   total.classList.add('fc-counter-pop');
   const b=$('fc-badge'); b.className='fc-cat-tag '+c.cat;
-  b.textContent=c.cat==='skeletal'?'Skeletal':c.cat==='joints'?'Joints':c.cat==='prepostop'?'Pre/Post Op':'Muscular';
+  b.textContent=catLabel(c.cat);
   card.classList.remove('flipped','flash-green','flash-orange');
   $('fc-prev').disabled=idx===0;
   $('fc-next').disabled=idx>=filtered.length-1;
@@ -3292,12 +3425,12 @@ function startQuiz() {
 
 function renderQuizQ() {
   const q = quizQuestions[quizIdx];
-  $('quiz-progress-label').textContent = `Question ${quizIdx+1} / ${quizQuestions.length}`;
-  $('quiz-score-label').textContent = `Score: ${quizScore}`;
+  $('quiz-progress-label').textContent = `${t('question_label')||'Question'} ${quizIdx+1} / ${quizQuestions.length}`;
+  $('quiz-score-label').textContent = `${t('score_label')||'Score'}: ${quizScore}`;
   $('quiz-bar').style.width = ((quizIdx)/quizQuestions.length*100)+'%';
   const badge = $('quiz-q-cat');
   badge.className = 'quiz-q-cat ' + q.cat;
-  badge.textContent = q.cat==='skeletal'?'Skeletal':q.cat==='joints'?'Joints':q.cat==='prepostop'?'Pre/Post Op':'Muscular';
+  badge.textContent = catLabel(q.cat);
   $('quiz-q-text').textContent = q.q;
   const opts = generateOptions(q);
   const letters = ['A','B','C','D'];
@@ -3335,7 +3468,7 @@ function handleQuizAnswer(btn, selected, correct, container) {
   allBtns.forEach(b => {
     if(b._fullAnswer === correct) b.classList.add('correct');
   });
-  $('quiz-score-label').textContent = `Score: ${quizScore}`;
+  $('quiz-score-label').textContent = `${t('score_label')||'Score'}: ${quizScore}`;
   if(quizIdx < quizQuestions.length - 1) {
     $('quiz-next').classList.add('visible');
   } else {
@@ -3348,13 +3481,13 @@ function showQuizResult() {
   $('quiz-result').classList.add('active');
   const pct = Math.round(quizScore/quizQuestions.length*100);
   let emoji, title;
-  if(pct >= 90) { emoji='&#x1F3C6;'; title='Amazing!'; }
-  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
-  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
-  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  if(pct >= 90) { emoji='&#x1F3C6;'; title=t('amazing')||'Amazing!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title=t('great_job')||'Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title=t('not_bad')||'Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title=t('keep_studying')||'Keep Studying!'; }
   $('quiz-result-emoji').innerHTML = emoji;
   $('quiz-result-title').textContent = title;
-  $('quiz-result-score').textContent = `You got ${quizScore} out of ${quizQuestions.length} (${pct}%)`;
+  $('quiz-result-score').textContent = currentLang==='fr' ? `${quizScore} ${t('out_of')} ${quizQuestions.length} (${pct}%)` : `You got ${quizScore} out of ${quizQuestions.length} (${pct}%)`;
   if(pct >= 90) {
     sfxLevelUp(); haptic(150);
     for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
@@ -3494,13 +3627,13 @@ function showMatchResult() {
   const m=Math.floor(matchSeconds/60), s=matchSeconds%60;
   const timeStr = m+':'+(s<10?'0':'')+s;
   let emoji, title;
-  if(matchSeconds <= 30) { emoji='&#x26A1;'; title='Lightning Fast!'; }
-  else if(matchSeconds <= 60) { emoji='&#x1F525;'; title='Great Speed!'; }
-  else if(matchSeconds <= 120) { emoji='&#x1F31F;'; title='Nice Job!'; }
-  else { emoji='&#x1F4AA;'; title='You Did It!'; }
+  if(matchSeconds <= 30) { emoji='&#x26A1;'; title=t('lightning_fast')||'Lightning Fast!'; }
+  else if(matchSeconds <= 60) { emoji='&#x1F525;'; title=t('great_speed')||'Great Speed!'; }
+  else if(matchSeconds <= 120) { emoji='&#x1F31F;'; title=t('nice_job')||'Nice Job!'; }
+  else { emoji='&#x1F4AA;'; title=t('you_did_it')||'You Did It!'; }
   $('match-result-emoji').innerHTML = emoji;
   $('match-result-title').textContent = title;
-  $('match-result-score').textContent = `All ${matchTotal} pairs matched in ${timeStr}`;
+  $('match-result-score').textContent = currentLang==='fr' ? `${t('all_pairs')} ${matchTotal} ${t('pairs_matched')} ${timeStr}` : `All ${matchTotal} pairs matched in ${timeStr}`;
   sfxLevelUp(); haptic(150);
   for(let i=0;i<3;i++) setTimeout(()=>spawnConfetti(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.5), i*200);
 }
@@ -3521,7 +3654,8 @@ document.querySelectorAll('.pills-row[data-scope="match"] .pill').forEach(p=>{
 let tfQuestions=[], tfIdx=0, tfScore=0, tfCat='all', tfAnswered=false;
 
 function catLabel(cat) {
-  return cat==='skeletal'?'Skeletal':cat==='joints'?'Joints':cat==='prepostop'?'Pre/Post Op':'Muscular';
+  if (currentLang==='fr') return cat==='skeletal'?'Squelettique':cat==='joints'?'Articulations':cat==='prepostop'?'Pré/Post Op':cat==='francais'?'Français':'Musculaire';
+  return cat==='skeletal'?'Skeletal':cat==='joints'?'Joints':cat==='prepostop'?'Pre/Post Op':cat==='francais'?'Français':'Muscular';
 }
 
 const tfBank = [
@@ -3644,8 +3778,8 @@ function renderTF() {
   if(tfIdx >= tfQuestions.length) return;
   tfAnswered = false;
   const q = tfQuestions[tfIdx];
-  $('tf-progress-label').textContent = `Question ${tfIdx+1} / ${tfQuestions.length}`;
-  $('tf-score-label').textContent = `Score: ${tfScore}`;
+  $('tf-progress-label').textContent = `${t('question_label')||'Question'} ${tfIdx+1} / ${tfQuestions.length}`;
+  $('tf-score-label').textContent = `${t('score_label')||'Score'}: ${tfScore}`;
   $('tf-bar').style.width = ((tfIdx)/tfQuestions.length*100)+'%';
   const badge = $('tf-cat');
   badge.className = 'tf-cat ' + q.cat;
@@ -3676,7 +3810,7 @@ function handleTF(userSaidTrue) {
     if(userSaidTrue) $('tf-true').classList.add('flash');
     else $('tf-false').classList.add('flash');
     $('tf-feedback').className = 'tf-feedback show correct';
-    $('tf-feedback').textContent = 'Correct!';
+    $('tf-feedback').textContent = t('correct_text')||'Correct!';
     const rect = $('tf-card').getBoundingClientRect();
     spawnConfetti(rect.left+rect.width/2, rect.top+rect.height/2);
   } else {
@@ -3686,7 +3820,7 @@ function handleTF(userSaidTrue) {
     $('tf-feedback').className = 'tf-feedback show wrong';
     $('tf-feedback').textContent = q.explanation;
   }
-  $('tf-score-label').textContent = `Score: ${tfScore}`;
+  $('tf-score-label').textContent = `${t('score_label')||'Score'}: ${tfScore}`;
   if(tfIdx < tfQuestions.length - 1) {
     $('tf-next').classList.add('visible');
   } else {
@@ -3703,13 +3837,13 @@ function showTFResult() {
   $('tf-result').classList.add('active');
   const pct = Math.round(tfScore/tfQuestions.length*100);
   let emoji, title;
-  if(pct >= 90) { emoji='&#x1F3C6;'; title='Amazing!'; }
-  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
-  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
-  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  if(pct >= 90) { emoji='&#x1F3C6;'; title=t('amazing')||'Amazing!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title=t('great_job')||'Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title=t('not_bad')||'Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title=t('keep_studying')||'Keep Studying!'; }
   $('tf-result-emoji').innerHTML = emoji;
   $('tf-result-title').textContent = title;
-  $('tf-result-score').textContent = `You got ${tfScore} out of ${tfQuestions.length} (${pct}%)`;
+  $('tf-result-score').textContent = currentLang==='fr' ? `${tfScore} ${t('out_of')} ${tfQuestions.length} (${pct}%)` : `You got ${tfScore} out of ${tfQuestions.length} (${pct}%)`;
   $('tf-bar').style.width = '100%';
   if(pct >= 90) {
     sfxLevelUp(); haptic(150);
@@ -3781,8 +3915,8 @@ function startImgId() {
 function renderImgId() {
   if(imgIdIdx >= imgIdQuestions.length) return;
   const q = imgIdQuestions[imgIdIdx];
-  $('imgid-progress-label').textContent = `Question ${imgIdIdx+1} / ${imgIdQuestions.length}`;
-  $('imgid-score-label').textContent = `Score: ${imgIdScore}`;
+  $('imgid-progress-label').textContent = `${t('question_label')||'Question'} ${imgIdIdx+1} / ${imgIdQuestions.length}`;
+  $('imgid-score-label').textContent = `${t('score_label')||'Score'}: ${imgIdScore}`;
   $('imgid-bar').style.width = ((imgIdIdx)/imgIdQuestions.length*100)+'%';
   $('imgid-img').src = q.src;
   const options = [q.correct, ...q.wrong];
@@ -3821,7 +3955,7 @@ function handleImgIdAnswer(btn, selected, correct, container) {
       if(b.querySelector('span:last-child').textContent === correct) b.classList.add('correct');
     });
   }
-  $('imgid-score-label').textContent = `Score: ${imgIdScore}`;
+  $('imgid-score-label').textContent = `${t('score_label')||'Score'}: ${imgIdScore}`;
   if(imgIdIdx < imgIdQuestions.length - 1) {
     $('imgid-next').classList.add('visible');
   } else {
@@ -3839,13 +3973,13 @@ function showImgIdResult() {
   $('imgid-result').classList.add('active');
   const pct = Math.round(imgIdScore/imgIdQuestions.length*100);
   let emoji, title;
-  if(pct >= 90) { emoji='&#x1F441;'; title='Eagle Eye!'; }
-  else if(pct >= 70) { emoji='&#x1F31F;'; title='Great Job!'; }
-  else if(pct >= 50) { emoji='&#x1F4AA;'; title='Not Bad!'; }
-  else { emoji='&#x1F4DA;'; title='Keep Studying!'; }
+  if(pct >= 90) { emoji='&#x1F441;'; title=currentLang==='fr'?'Oeil d\'Aigle !':'Eagle Eye!'; }
+  else if(pct >= 70) { emoji='&#x1F31F;'; title=t('great_job')||'Great Job!'; }
+  else if(pct >= 50) { emoji='&#x1F4AA;'; title=t('not_bad')||'Not Bad!'; }
+  else { emoji='&#x1F4DA;'; title=t('keep_studying')||'Keep Studying!'; }
   $('imgid-result-emoji').innerHTML = emoji;
   $('imgid-result-title').textContent = title;
-  $('imgid-result-score').textContent = `You got ${imgIdScore} out of ${imgIdQuestions.length} (${pct}%)`;
+  $('imgid-result-score').textContent = currentLang==='fr' ? `${imgIdScore} ${t('out_of')} ${imgIdQuestions.length} (${pct}%)` : `You got ${imgIdScore} out of ${imgIdQuestions.length} (${pct}%)`;
   $('imgid-bar').style.width = '100%';
   if(pct >= 90) {
     sfxLevelUp(); haptic(150);
@@ -4142,7 +4276,7 @@ function renderLiveQuestion(d) {
     $('live-timer-fill').style.width = (timeLeft / LIVE_TIME * 100) + '%';
     if(!liveAnswered) {
       const avail = Math.round(1000 * (timeLeft / LIVE_TIME));
-      ptsEl.textContent = avail + ' pts available';
+      ptsEl.textContent = avail + ' ' + (t('pts_available')||'pts available');
       if(avail <= 300) ptsEl.classList.add('low');
     }
     if(timeLeft <= 5) {
